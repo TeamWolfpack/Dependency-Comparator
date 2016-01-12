@@ -1,3 +1,8 @@
 # ignoring the node_modules folder
-/node_modules
-# npm install to install all packages
+
+node_modules
+
+# "npm install" to install all packages
+
+# ignoring the idea folder from jetbrains
+.idea
