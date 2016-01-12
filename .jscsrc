@@ -1,0 +1,8 @@
+{
+	"disallowTrailingWhitespace": "ignoreEmptyLines",
+	"maximumLineLength": 200,
+	"preset": "google",
+	"validateIndentation": 4,
+	"validateQuoteMarks": "\"",
+	"esnext": true
+}
