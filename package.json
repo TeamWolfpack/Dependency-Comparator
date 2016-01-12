@@ -2,7 +2,7 @@
   "name": "sdl-brady-dependency-tool",
   "version": "1.0.0",
   "description": "Node.js dependency comparison tool.",
-  "main": "brady-tool.js",
+  "main": "src/brady-tool.js",
   "scripts": {
     "test": "test"
   },
