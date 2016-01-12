@@ -1,0 +1,3 @@
+# ignoring the node_modules folder
+/node_modules
+# npm install to install all packages
