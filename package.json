@@ -24,5 +24,8 @@
     "gulp-mocha": "^2.2.0",
     "jenkins": "^0.13.0",
     "mocha": "^2.3.4"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0"
   }
 }
