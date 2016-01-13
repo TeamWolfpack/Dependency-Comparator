@@ -1,6 +1,0 @@
-[submodule "res/b3-msoe-sample-webservice"]
-	path = res/b3-msoe-sample-webservice
-	url = git@bitbucket.org:bradycorporation/b3-msoe-sample-webservice.git
-[submodule "res/b3-msoe-sample-webservice2"]
-	path = res/b3-msoe-sample-webservice2
-	url = git@bitbucket.org:bradycorporation/b3-msoe-sample-webservice2.git
