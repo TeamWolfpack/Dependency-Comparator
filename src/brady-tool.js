@@ -3,7 +3,14 @@
  */
 
 var commander = require('commander');
+var pjson = require('../package.json');
 
+/**
+ * Method that runs when the user enters the 'compare' command
+ * @author Chris Farrow
+ * @param fileOne
+ * @param fileTwo
+ */
 function compare(fileOne, fileTwo){
 	//Method Stub for main compare method
 }
@@ -15,7 +22,7 @@ function compare(fileOne, fileTwo){
 //All commands need a command, description, alias, and action component
 
 commander
-	.version('1.0.0');
+	.version(pjson.version);
 
 commander
 	.command('compare [fileOne] [fileTwo]')
