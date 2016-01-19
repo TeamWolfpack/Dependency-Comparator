@@ -13,7 +13,8 @@ var allJSFiles = ["./test/unit/**/*.js", "./src/**/*.js",
     "./test/integration/**/*-test.js", "!./src/**/*.min.js",
     "!./src/public/**/*.js"];
 //directories containing unit tests javascript files
-var unitTestFiles = ["./test/unit/**/*-test.js"];
+//var unitTestFiles = ["./test/unit/**/*-test.js"];
+var unitTestFiles = ["./test/unitTests.js"];
 //directories containing integration tests javascript files
 var integrationTestFiles = ["./test/integration/**/*-test.js"];
 

@@ -19,6 +19,7 @@
   "homepage": "https://bitbucket.org/aaronchun7/sdl-brady-dependency-tool#readme",
   "dependencies": {
     "chai": "^3.4.1",
+    "chalk": "^1.1.1",
     "cli-table2": "^0.1.9",
     "commander": "^2.9.0",
     "gulp": "^3.9.0",
