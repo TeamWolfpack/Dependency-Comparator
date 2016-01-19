@@ -2,31 +2,14 @@ var cliTable = require('cli-table2'),
     chalk = require('chalk');
 
 /**
+
+		********* NOTE *********
+		This function needs to be rewritten
+		due to the JSON format change.
+
  * Creates a table based on the JSON objected passed in.
- * @param dependencies - JSON object that has the information as
- *     tableInfo = {
- *          project1 : {
- *              name : 'project1',
- *              path : 'path/to/project1',
- *              dependencies : [
- *                  {
- *                      name : name,
- *                      version : latest version
- *                      instances : [
- *                          {
- *                              version : version,
- *                              path : path
- *                          }, {...}
- *                      ]
- *                  }, {...}
- *              ]
- *           },
- *          project2 : {
- *              name : 'project2',
- *              path : 'path/to/project2',
- *              dependencies : []
- *          }
- *      }
+ * @param dependencies array - format has been changed!
+						Will redo the parsing and filling table.
  * @author Josh Leonard
  */
 function createTable(tableInfo){
@@ -130,63 +113,7 @@ function createTable(tableInfo){
     }
 }
 
-var tableInfo = {
-    project1 : {
-        name : 'project1',
-        path : 'path/to/project1',
-        dependencies : [{
-            name : 'async',
-            version : '1.0.0',
-            instances : [{
-                version : '1.0.0',
-                path : 'path/to/dep'
-            }]
-        }, {
-            name : 'mocha',
-            version : '1.0.0',
-            instances : [{
-                version : '1.0.0',
-                path : 'path/to/dep'
-            }]
-        }]
-    },
-    project2 : {
-        name : 'project2',
-        path : 'path/to/project2',
-        dependencies : [{
-            name : 'async',
-            version : '1.0.0',
-            instances : [{
-                version : '1.0.0',
-                path : 'path/to/dep'
-            }, {
-                version : '0.5.0',
-                path : 'path/to/dep'
-            }]
-        }, {
-            name : 'gulp',
-            version : '1.0.0',
-            instances : [{
-                version : '1.0.0',
-                path : 'path/to/dep'
-            }, {
-                version : '0.5.0',
-                path : 'path/to/dep'
-            }]
-        }, {
-            name : 'chai',
-            version : '1.0.0',
-            instances : [{
-                version : '1.0.0',
-                path : 'path/to/dep'
-            }, {
-                version : '0.5.0',
-                path : 'path/to/dep'
-            }]
-        }
-
-        ]
-    }
-}
-
-createTable(tableInfo);
+// Export for testing
+module.exports = {
+  createTable : createTable,
+};
