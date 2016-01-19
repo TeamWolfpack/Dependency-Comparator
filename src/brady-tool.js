@@ -4,7 +4,7 @@
 var cliTable = require('cli-table2'),
     chalk = require('chalk'),
     commander = require('commander'),
-    pjson = require('../package.json'),
+    pjson = require('../package.json');
 
 /**
 		********* NOTE *********
@@ -119,7 +119,7 @@ function createTable(tableInfo){
 
 // Export for testing
 module.exports = {
-  createTable : createTable,
+  createTable : createTable
 };
 
 
