@@ -18,6 +18,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/aaronchun7/sdl-brady-dependency-tool#readme",
   "dependencies": {
+    "cli-table2": "^0.1.9",
     "gulp": "^3.9.0",
     "gulp-eslint": "^1.1.1",
     "gulp-jscs": "^3.0.2",
