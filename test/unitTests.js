@@ -11,7 +11,7 @@ describe("Create Table", function(){
      this.sinon.stub(console, 'log');
    });
 	
-   it("should display an empty table", function(){
+   it("should display an empty table with headers", function(){
 			var emptyTable = {
 				project1 : {
 						name : 'project1',
