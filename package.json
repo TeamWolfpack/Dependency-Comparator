@@ -22,6 +22,7 @@
     "chalk": "^1.1.1",
     "cli-table2": "^0.1.9",
     "commander": "^2.9.0",
+    "fs": "0.0.2",
     "gulp": "^3.9.0",
     "gulp-eslint": "^1.1.1",
     "gulp-jscs": "^3.0.2",
