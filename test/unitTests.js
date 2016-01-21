@@ -1,9 +1,9 @@
-var expect = require("chai").expect,
-		sinon = require('mocha-sinon'),
-    bradyTool = require("../src/brady-tool");
+var expect = require("chai").expect;
+var sinon = require('mocha-sinon');
+var bradyTool = require("../src/brady-tool");
 
 /**
-	Unit test for the function that creates the table
+	Simple unit test fr testing in the CI
 	@author Josh Leonard
 */
 describe("Simple Test", function(){
