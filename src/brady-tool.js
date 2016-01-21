@@ -7,122 +7,84 @@ var commander = require("commander");
 var pjson = require("../package.json");
 
 /**
-		********* NOTE *********
-		This function needs to be rewritten
-		due to the JSON format change.
-
- * Creates a table based on the JSON objected passed in.
- * @param dependencies array - format has been changed!
-						Will redo the parsing and filling table.
+ * Creates, fills, and prints the table based on a list of
+ * dependencies. Since this function comes at the end
+ * of the process, and the array is built internally, it assumes
+ * the array and json objects have been formatted correctly.
+ *
+ * @param dependencies - Array of all dependencies
+ *
  * @author Josh Leonard
  */
-function createTable(tableInfo) {
-    if (tableInfo) {
-        var project1 = tableInfo.project1;
-        var project2 = tableInfo.project2;
-        if (project1 && project2) {
-            var table = new CliTable({ //Creates the table object
-                head: ["Module Name", project1.name, project1.path, project2.name, project2.path],
-                style: {
-                    head: [] //disable colors in header cells
-                },
-                wordWrap: true
-            });
-
-            var p1Dependencies = project1.dependencies;
-            var p2Dependencies = project2.dependencies;
-            var maxDependencies = Math.max(p1Dependencies.length, p2Dependencies.length);
-
-            var i;
-            for (i = 0; i < maxDependencies; i++) {
-                var p1Dependency = {
-                    name: "",
-                    instances: []
-                };
-                var p2Dependency = {
-                    name: "",
-                    instances: []
-                };
-                if (p1Dependencies[i]) {
-                    p1Dependency = p1Dependencies[i];
-                }
-                if (p2Dependencies[i]) {
-                    p2Dependency = p2Dependencies[i];
-                }
-
-                if (p1Dependency.name == p2Dependency.name) {
-                    var p1Instances = p1Dependency.instances;
-                    var p2Instances = p2Dependency.instances;
-                    var name = p1Dependency.name;
-                    var maxInstances = Math.max(p1Instances.length, p2Instances.length);
-                    var count;
-                    for (count = 0; count < maxInstances; count++) {
-                        var p1Instance = {
-                            version: "",
-                            path: ""
-                        };
-                        var p2Instance = {
-                            version: "",
-                            path: ""
-                        };
-                        if (p1Instances[count]) {
-                            p1Instance = p1Instances[count];
-                        }
-                        if (p2Instances[count]) {
-                            p2Instance = p2Instances[count];
-                        }
-                        if (count == 0) {
-                            table.push([{rowSpan: maxInstances, content: name}, p1Instance.version, p1Instance.path, p2Instance.version, p2Instance.path]);
-                        } else {
-                            table.push([p1Instance.version, p1Instance.path, p2Instance.version, p2Instance.path]);
-                        }
+function createTable(dependencies) {
+    var pOneName; //Name of project one
+    var pTwoName; //Name of project two
+	
+    //Create the table object
+    var table = new cliTable({
+        //Project names are originally blank and then found in the dependencies
+        //NOTE: The method for finding the names can be changed based on other variables
+        head: ["Module Name", "", "", "", ""],
+        style: {
+            head: [] //disable colors in header cells
+        },
+        wordWrap: true
+    });
+	
+    //Check that the param exists.
+    //Since this is made internally, it assumes everything else
+    //is there and correctly formatted.
+    if (dependencies) {
+        for (index in dependencies) { //loops through each dependency
+			//Grab info about the dependency
+            var dependency = dependencies[index];
+            var depName = Object.keys(dependency)[0];
+            var depInfo = dependency[depName];
+            var rowSpan = depInfo.maxinstances;
+            var instances = depInfo.instances;
+            var rows = [];
+            for (i in instances) { //loops through each instance of the dependency
+                var instance = instances[i];
+                if (i == 0) { //the first instance fills in the Module column of the table
+                    //the very first instance will set the Project One name
+                    //NOTE: this assumes the very first instanse is part of Project one
+                    if (!pOneName) {
+                        pOneName = instance.project;
+                        table.options.head[1] = pOneName;
+                        table.options.head[2] = pOneName + " Path";
                     }
-                } else {
-                    var dependencies = [p1Dependency, p2Dependency];
-                    var index;
-                    for (index = 0; index < dependencies.length; index++) {
-                        var name = dependencies[index].name;
-                        var instances = dependencies[index].instances;
-                        var total = instances.length;
-                        var count;
-                        for (count = 0; count < total; count++) {
-                            var instance = {
-                                version: "",
-                                path: ""
-                            };
-                            if (instances[count]) {
-                                instance = instances[count];
-                            }
-                            if (index == 0) {
-                                if (count == 0) {
-                                    table.push([{rowSpan: total, content: name}, instance.version, instance.path, "", ""]);
-                                } else {
-                                    table.push([instance.version, instance.path, "", ""]);
-                                }
-                            } else {
-                                if (count == 0) {
-                                    table.push([{rowSpan: total, content: name}, "", "", instance.version, instance.path]);
-                                } else {
-                                    table.push(["", "", instance.version, instance.path]);
-                                }
-                            }
-                        }
+                    //Determines location of instance based on project name
+                    if (instance.project == pOneName) {
+                        rows.push([{rowSpan: rowSpan, content: depName}, instance.version, instance.path, "", ""]);
+                    } else {
+                        rows.push([{rowSpan: rowSpan, content: depName}, "", "", instance.version, instance.path]);
                     }
+                } else if (i < rowSpan) { //based on the dependency format, this will fill the left most instance
+                    //Determines location of instance based on project name
+                    if (instance.project == pOneName) {
+                        rows.push([instance.version, instance.path, "", ""]);
+                    } else {
+                        rows.push(["", "", instance.version, instance.path]);
+                    }
+                } else { //fill any missing Project Two instances
+                    if (!pTwoName) { //sets the name of Project 2 if previously undefined
+                        pTwoName = instance.project;
+                        table.options.head[3] = pTwoName;
+                        table.options.head[4] = pTwoName + " Path";
+                    }
+                    rows[i - rowSpan][3] = instance.version;
+                    rows[i - rowSpan][4] = instance.path;
                 }
             }
-            console.log(table.toString()); //prints the table
-        } else {
-            console.error("Projects are undefined.");
+            for (r in rows) { //Pushes each row into the table
+                table.push(rows[r]);
+            }
         }
-    } else {
-        console.error("No table data.");
+        console.log(table.toString()); //prints the table
+    } else { //prints simple error message is there is no dependency array
+        console.error("No dependency data.");
     }
 }
-
-// Export for testing
-module.exports = {
-    createTable: createTable
-};
 
 /**
  * Method that runs when the user enters the 'compare' command
