@@ -8,77 +8,81 @@ var fs = require("fs");
 var pjson = require("../package.json");
 
 /**
- * Finds the maximum version of an array of instances of dependencies
- * @param instances an array of dependencies
- * @returns {{major: number, minor: number, patch: number}} an object that is the max version that contains the major, minor, and patch components
+ * Finds the maximum version of an array of instances of dependencies.
+ *
+ * @param {Array} instances an array of dependencies
+ * @returns  {{major: number, minor: number, patch: number}}
+ * an object that is the max version that contains the major, minor,
+ * and patch components
  */
-function findMaxVersion(instances){
-	//Initialize the max version, default is 0.0.0
-	var maxVersion = {
-		major: 0,
-		minor: 0,
-		patch: 0
-	};
-	for(var instance in instances){
-		//Initialize the version of this instance
-		var splitVersion = instances[instance].version.split(".");
-		var version = [0,0,0];
+function findMaxVersion(instances) {
+    //Initialize the max version, default is 0.0.0
+    var maxVersion = {
+        major: 0,
+        minor: 0,
+        patch: 0
+    };
+    for (var instance in instances) {
+        //Initialize the version of this instance
+        var splitVersion = instances[instance].version.split(".");
+        var version = [0,0,0];
 
-		//Set the version to the version of this instance
-		version[0] = Number(splitVersion[0]);
-		if(splitVersion.length>0){
-			version[1] = Number(splitVersion[1]);
-			if(splitVersion.length>1){
-				version[2] = Number(splitVersion[2]);
-			}
-		}
+        //Set the version to the version of this instance
+        version[0] = Number(splitVersion[0]);
+        if (splitVersion.length > 0) {
+            version[1] = Number(splitVersion[1]);
+            if (splitVersion.length > 1) {
+                version[2] = Number(splitVersion[2]);
+            }
+        }
 
-		//Compare the version of this instance with the current max version
-		if(version[0]>maxVersion.major){
-			maxVersion.major = version[0];
-			maxVersion.minor = version[1];
-			maxVersion.patch = version[2];
-		}else if(version[0] == maxVersion.major && version[1] > maxVersion.minor) {
-			maxVersion.minor = version[1];
-			maxVersion.patch = version[2];
-		}else if(version[0] == maxVersion.major && version[1] == maxVersion.minor && version[2] > maxVersion.patch){
-			maxVersion.patch = version[2];
-		}
-	}
-	return maxVersion;
+        //Compare the version of this instance with the current max version
+        if (version[0] > maxVersion.major) {
+            maxVersion.major = version[0];
+            maxVersion.minor = version[1];
+            maxVersion.patch = version[2];
+        }else if (version[0] == maxVersion.major && version[1] > maxVersion.minor) {
+            maxVersion.minor = version[1];
+            maxVersion.patch = version[2];
+        }else if (version[0] == maxVersion.major && version[1] == maxVersion.minor && version[2] > maxVersion.patch) {
+            maxVersion.patch = version[2];
+        }
+    }
+    return maxVersion;
 }
 
 /**
  * Assigns colors to instances in an array of instances of a dependency based off of the version of that instance and the
- * max version found
- * @param instances An array of instances of the dependency
+ * max version found.
+ *
+ * @param {Array} instances An array of instances of the dependency
  * @param maxVersion The most up-to-date instance's version found
  */
-function assignColor(instances, maxVersion){
-	for(var instance in instances){
-		//Initialize the version of this instance
-		var splitVersion = instances[instance].version.split(".");
-		var version = [0,0,0];
+function assignColor(instances, maxVersion) {
+    for (var instance in instances) {
+        //Initialize the version of this instance
+        var splitVersion = instances[instance].version.split(".");
+        var version = [0,0,0];
 
-		//Set the version to the version of this instance
-		version[0] = Number(splitVersion[0]);
-		if(splitVersion.length>0){
-			version[1] = Number(splitVersion[1]);
-			if(splitVersion.length>1){
-				version[2] = Number(splitVersion[2]);
-			}
-		}
-		//Compare the version of this instance with the current max version
-		if(version[0] < maxVersion.major){
-			instances[instance].color = "red";
-		}else if(version[0] == maxVersion.major && version[1] < maxVersion.minor) {
-			instances[instance].color = "magenta";
-		}else if(version[0] == maxVersion.major && version[1] == maxVersion.minor && version[2] < maxVersion.patch){
-			instances[instance].color = "yellow";
-		}else{
-			instances[instance].color = "green";
-		}
-	}
+        //Set the version to the version of this instance
+        version[0] = Number(splitVersion[0]);
+        if (splitVersion.length > 0) {
+            version[1] = Number(splitVersion[1]);
+            if (splitVersion.length > 1) {
+                version[2] = Number(splitVersion[2]);
+            }
+        }
+        //Compare the version of this instance with the current max version
+        if (version[0] < maxVersion.major) {
+            instances[instance].color = "red";
+        }else if (version[0] == maxVersion.major && version[1] < maxVersion.minor) {
+            instances[instance].color = "magenta";
+        }else if (version[0] == maxVersion.major && version[1] == maxVersion.minor && version[2] < maxVersion.patch) {
+            instances[instance].color = "yellow";
+        }else {
+            instances[instance].color = "green";
+        }
+    }
 }
 
 /**
@@ -87,7 +91,7 @@ function assignColor(instances, maxVersion){
  * of the process, and the array is built internally, it assumes
  * the array and json objects have been formatted correctly.
  *
- * @param dependencies - Array of all dependencies
+ * @param {Array} dependencies - Array of all dependencies
  *
  * @author Josh Leonard
  */
@@ -116,25 +120,24 @@ function createTable(dependencies) {
             var rowSpan = dependencies[index].maxinstances;
             var instances = dependencies[index].instances;
             var rows = [];
-			var maxVersion = findMaxVersion(instances);
-			assignColor(instances,maxVersion);
+            var maxVersion = findMaxVersion(instances);
+            assignColor(instances,maxVersion);
             for (i in instances) { //loops through each instance of the dependency
                 var instance = instances[i];
-				var instanceVersion = chalk.white(instance.version);
-				if(instances.length>1) {
-					if (instance.color == "green") {
-						var instanceVersion = chalk.green(instance.version);
-					} else if (instance.color == "magenta") {
-						var instanceVersion = chalk.magenta(instance.version);
-					} else if (instance.color == "yellow") {
-						var instanceVersion = chalk.yellow(instance.version);
-					} else if (instance.color == "red") {
-						var instanceVersion = chalk.red(instance.version);
-					}
-				}
+                var instanceVersion = chalk.white(instance.version);
+                if (instances.length > 1) {
+                    if (instance.color == "green") {
+                        var instanceVersion = chalk.green(instance.version);
+                    } else if (instance.color == "magenta") {
+                        var instanceVersion = chalk.magenta(instance.version);
+                    } else if (instance.color == "yellow") {
+                        var instanceVersion = chalk.yellow(instance.version);
+                    } else if (instance.color == "red") {
+                        var instanceVersion = chalk.red(instance.version);
+                    }
+                }
 
-
-				if (i == 0) { //the first instance fills in the Module column of the table
+                if (i == 0) { //the first instance fills in the Module column of the table
                     //the very first instance will set the Project One name
                     //NOTE: this assumes the very first instanse is part of Project one
                     if (!pOneName) {
@@ -176,8 +179,9 @@ function createTable(dependencies) {
 }
 
 /**
- * Compares and matches dependencies from two arrays of dependencies from projects
- * Must be edited for comparing with depth
+ * Compares and matches dependencies from two arrays of dependencies from projects.
+ * Must be edited for comparing with depth.
+ *
  * @param projectOne Dependencies from project 1
  * @param projectTwo Dependencies from project 2
  */
@@ -267,7 +271,8 @@ function compareAndMatch(projectOne, projectTwo) {
 /**
  * Takes in the location of the root file of the project and outputs an object with the
  * name, path, and dependencies of the project.
- * @param file Location of the root file of the project
+ *
+ * @param {File} file Location of the root file of the project
  * @returns {{name: Project Name, path: Project Path, dependencies: Array of Dependencies}}
  */
 function parseDependencies(file) {
@@ -288,38 +293,39 @@ function parseDependencies(file) {
     version: fileDep[dep],
     path: file.toString() + "/" + dep
 		};
-		if(isNaN(fileDep[dep][0])){
-			fileParsedDependencies.dependencies[dep].version = fileDep[dep].substring(1,fileDep[dep].length);
-		}
-	}
-	//Return the completed and parsed json object with the dependencies
-	return fileParsedDependencies;
+        if (isNaN(fileDep[dep][0])) {
+            fileParsedDependencies.dependencies[dep].version = fileDep[dep].substring(1,fileDep[dep].length);
+        }
+    }
+    //Return the completed and parsed json object with the dependencies
+    return fileParsedDependencies;
 	}
 
 /**
  * Method that runs when the user enters the 'compare' command.
  * Will compare the versions of the dependencies of two projects
  * and print out the differences.
+ *
  * @author Chris Farrow
- * @param fileOne The first project that will be compared
- * @param fileTwo The second project that will be compared
+ * @param {File} fileOne The first project that will be compared
+ * @param {File} fileTwo The second project that will be compared
  */
-function compare(fileOne, fileTwo){
-	var filesExist = true;
-	//Check to see if file one exists
-	fs.access(fileOne + "/package.json", fs.F_OK, function(err) {
-		if (err) {
-			filesExist = false;
+function compare(fileOne, fileTwo) {
+    var filesExist = true;
+    //Check to see if file one exists
+    fs.access(fileOne + "/package.json", fs.F_OK, function(err) {
+        if (err) {
+            filesExist = false;
             console.log("Can't find file one: " + fileOne + "/package.json");
         }
     });
-	//Check to see if file two exists
-	fs.access(fileTwo + "/package.json", fs.F_OK, function (err) {
-		if (err) {
-			filesExist = false;
-			console.log("Can't find file two: " + fileTwo + "/package.json");
-		}
-	});
+    //Check to see if file two exists
+    fs.access(fileTwo + "/package.json", fs.F_OK, function(err) {
+        if (err) {
+            filesExist = false;
+            console.log("Can't find file two: " + fileTwo + "/package.json");
+        }
+    });
     //If the files exist, parse them
     if (filesExist) {
         //Parse project one
