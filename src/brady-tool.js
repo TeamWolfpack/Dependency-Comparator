@@ -29,7 +29,7 @@ function createTable(dependencies) {
         style: {
             head: [] //disable colors in header cells
         },
-        wordWrap: true
+		wordWrap: true
     });
 	
     //Check that the param exists.
@@ -38,11 +38,9 @@ function createTable(dependencies) {
     if (dependencies) {
         for (index in dependencies) { //loops through each dependency
 			//Grab info about the dependency
-            var dependency = dependencies[index];
-            var depName = Object.keys(dependency)[0];
-            var depInfo = dependency[depName];
-            var rowSpan = depInfo.maxinstances;
-            var instances = depInfo.instances;
+            var depName = index;
+            var rowSpan = dependencies[index].maxinstances;
+            var instances = dependencies[index].instances;
             var rows = [];
             for (i in instances) { //loops through each instance of the dependency
                 var instance = instances[i];
@@ -50,26 +48,26 @@ function createTable(dependencies) {
                     //the very first instance will set the Project One name
                     //NOTE: this assumes the very first instanse is part of Project one
                     if (!pOneName) {
-                        pOneName = instance.project;
+                        pOneName = instance.Project;
                         table.options.head[1] = pOneName;
                         table.options.head[2] = pOneName + " Path";
                     }
                     //Determines location of instance based on project name
-                    if (instance.project == pOneName) {
+                    if (instance.Project == pOneName) {
                         rows.push([{rowSpan: rowSpan, content: depName}, instance.version, instance.path, "", ""]);
                     } else {
                         rows.push([{rowSpan: rowSpan, content: depName}, "", "", instance.version, instance.path]);
                     }
                 } else if (i < rowSpan) { //based on the dependency format, this will fill the left most instance
                     //Determines location of instance based on project name
-                    if (instance.project == pOneName) {
+                    if (instance.Project == pOneName) {
                         rows.push([instance.version, instance.path, "", ""]);
                     } else {
                         rows.push(["", "", instance.version, instance.path]);
                     }
                 } else { //fill any missing Project Two instances
                     if (!pTwoName) { //sets the name of Project 2 if previously undefined
-                        pTwoName = instance.project;
+                        pTwoName = instance.Project;
                         table.options.head[3] = pTwoName;
                         table.options.head[4] = pTwoName + " Path";
                     }
