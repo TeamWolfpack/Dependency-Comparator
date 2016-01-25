@@ -4,7 +4,7 @@
 var cliTable = require("cli-table2");
 var chalk = require("chalk");
 var commander = require("commander");
-var fs = require('fs');
+var fs = require("fs");
 var pjson = require("../package.json");
 
 /**
@@ -29,7 +29,7 @@ function createTable(dependencies) {
         style: {
             head: [] //disable colors in header cells
         },
-		wordWrap: true
+        wordWrap: true
     });
 	
     //Check that the param exists.
@@ -37,7 +37,7 @@ function createTable(dependencies) {
     //is there and correctly formatted.
     if (dependencies) {
         for (index in dependencies) { //loops through each dependency
-			//Grab info about the dependency
+            //Grab info about the dependency
             var depName = index;
             var rowSpan = dependencies[index].maxinstances;
             var instances = dependencies[index].instances;
@@ -91,88 +91,87 @@ function createTable(dependencies) {
  * @param projectOne Dependencies from project 1
  * @param projectTwo Dependencies from project 2
  */
-function compareAndMatch(projectOne, projectTwo){
-	//Create new object, ordered by dependencies
-	var projectOneDep = projectOne.dependencies;
-	var projectTwoDep = projectTwo.dependencies;
-	var dependencies = [];
+function compareAndMatch(projectOne, projectTwo) {
+    //Create new object, ordered by dependencies
+    var projectOneDep = projectOne.dependencies;
+    var projectTwoDep = projectTwo.dependencies;
+    var dependencies = [];
 
-	//Iterate through the first project's dependencies
-	for(var p1dep in projectOneDep){
-		//The array we will be storing matched dependencies in
-		var matchedDeps = [];
-		//Match dependencies by checking to see if it exists in the second project
-		if(projectTwoDep[p1dep]) {
-			//If they match, add the matched one to the array
-			matchedDeps[0] = {
-				version: projectOneDep[p1dep].version,
-				Project: projectOne.name,
-				path: projectOneDep[p1dep].path,
-				color: "white"
-			};
-			matchedDeps[1] = {
-				version: projectTwoDep[p1dep].version,
-				Project: projectTwo.name,
-				path: projectTwoDep[p1dep].path,
-				color: "white"
-			};
-			projectOneDep[p1dep] = undefined;
-			projectTwoDep[p1dep] = undefined;
+    //Iterate through the first project's dependencies
+    for (var p1dep in projectOneDep) {
+        //The array we will be storing matched dependencies in
+        var matchedDeps = [];
+        //Match dependencies by checking to see if it exists in the second project
+        if (projectTwoDep[p1dep]) {
+            //If they match, add the matched one to the array
+            matchedDeps[0] = {
+                version: projectOneDep[p1dep].version,
+                Project: projectOne.name,
+                path: projectOneDep[p1dep].path,
+                color: "white"
+            };
+            matchedDeps[1] = {
+                version: projectTwoDep[p1dep].version,
+                Project: projectTwo.name,
+                path: projectTwoDep[p1dep].path,
+                color: "white"
+            };
+            projectOneDep[p1dep] = undefined;
+            projectTwoDep[p1dep] = undefined;
 
+        }
+        //Adding the matched dependencies to the dependencies array
+        //Max instances will be implemented properly once we start checking depth
+        //For now, it will be 1
+        dependencies[p1dep] = {
+            maxinstances: 1,
+            instances: matchedDeps
+        };
+    }
 
-		}
-		//Adding the matched dependencies to the dependencies array
-		//Max instances will be implemented properly once we start checking depth
-		//For now, it will be 1
-		dependencies[p1dep]={
-			maxinstances: 1,
-			instances: matchedDeps
-		};
-	}
+    //Iterate through what remians in the first project, adding it to the end.
+    for (var p1dep in projectOneDep) {
+        if (projectOneDep[p1dep]) {
+            //The array we will be storing matched dependencies in
+            var matchedDeps = [];
 
-	//Iterate through what remians in the first project, adding it to the end.
-	for(var p1dep in projectOneDep){
-		if(projectOneDep[p1dep]) {
-			//The array we will be storing matched dependencies in
-			var matchedDeps = [];
+            matchedDeps[0] = {
+                version: projectOneDep[p1dep].version,
+                Project: projectOne.name,
+                path: projectOneDep[p1dep].path,
+                color: "white"
+            };
+            projectOneDep[p1dep] = undefined;
 
-			matchedDeps[0] = {
-				version: projectOneDep[p1dep].version,
-				Project: projectOne.name,
-				path: projectOneDep[p1dep].path,
-				color: "white"
-			};
-			projectOneDep[p1dep] = undefined;
+            dependencies[p1dep] = {
+                maxinstances: 1,
+                instances: matchedDeps
+            };
+        }
 
-			dependencies[p1dep] = {
-				maxinstances: 1,
-				instances: matchedDeps
-			};
-		}
+    }
 
-	}
+    //Iterate through what remians in the second project, adding it to the end.
+    for (var p2dep in projectTwoDep) {
+        if (projectTwoDep[p2dep]) {
+            //The array we will be storing matched dependencies in
+            var matchedDeps = [];
 
-	//Iterate through what remians in the second project, adding it to the end.
-	for(var p2dep in projectTwoDep){
-		if(projectTwoDep[p2dep]) {
-			//The array we will be storing matched dependencies in
-			var matchedDeps = [];
+            matchedDeps[0] = {
+                version: projectTwoDep[p2dep].version,
+                Project: projectTwo.name,
+                path: projectTwoDep[p2dep].path,
+                color: "white"
+            };
+            projectTwoDep[p2dep] = undefined;
 
-			matchedDeps[0] = {
-				version: projectTwoDep[p2dep].version,
-				Project: projectTwo.name,
-				path: projectTwoDep[p2dep].path,
-				color: "white"
-			};
-			projectTwoDep[p2dep] = undefined;
-
-			dependencies[p2dep] = {
-				maxinstances: 1,
-				instances: matchedDeps
-			};
-		}
-	}
-	return dependencies;
+            dependencies[p2dep] = {
+                maxinstances: 1,
+                instances: matchedDeps
+            };
+        }
+    }
+    return dependencies;
 }
 
 /**
@@ -181,27 +180,27 @@ function compareAndMatch(projectOne, projectTwo){
  * @param file Location of the root file of the project
  * @returns {{name: Project Name, path: Project Path, dependencies: Array of Dependencies}}
  */
-function parseDependencies(file){
-	//Get the package.json for the project
-	var filePackage = require(file.toString()+"/package.json");
-	//Get the dependencies of the project
-	var fileDep = filePackage.dependencies;
-	//Store the name and path of the project
-	var fileParsedDependencies = {
-		name :filePackage.name.toString(),
-		path :file.toString(),
-		dependencies: []
-	};
-	//Iterate through dependencies and save them in the specified format
-	for(dep in fileDep){
-		fileParsedDependencies.dependencies[dep] =
+function parseDependencies(file) {
+    //Get the package.json for the project
+    var filePackage = require(file.toString() + "/package.json");
+    //Get the dependencies of the project
+    var fileDep = filePackage.dependencies;
+    //Store the name and path of the project
+    var fileParsedDependencies = {
+        name: filePackage.name.toString(),
+        path: file.toString(),
+        dependencies: []
+    };
+    //Iterate through dependencies and save them in the specified format
+    for (dep in fileDep) {
+        fileParsedDependencies.dependencies[dep] =
 		{
-			version: fileDep[dep],
-			path: file.toString()+"/"+dep
+    version: fileDep[dep],
+    path: file.toString() + "/" + dep
 		};
-	}
-	//Return the completed and parsed json object with the dependencies
-	return fileParsedDependencies;
+    }
+    //Return the completed and parsed json object with the dependencies
+    return fileParsedDependencies;
 	}
 
 /**
@@ -212,44 +211,44 @@ function parseDependencies(file){
  * @param fileOne The first project that will be compared
  * @param fileTwo The second project that will be compared
  */
-function compare(fileOne, fileTwo){
-	var filesExist = true;
-	//Check to see if file one exists
-	fs.access(fileOne, fs.F_OK, function(err) {
-		if (err) {
-			filesExist = false;
+function compare(fileOne, fileTwo) {
+    var filesExist = true;
+    //Check to see if file one exists
+    fs.access(fileOne, fs.F_OK, function(err) {
+        if (err) {
+            filesExist = false;
 
-			console.log("Can't find file one: " + fileOne + "/package.json");
-		}
-	});
+            console.log("Can't find file one: " + fileOne + "/package.json");
+        }
+    });
 
-	//Check to see if file two exists
-	fs.access(fileTwo, fs.F_OK, function (err) {
-		if (err) {
-			filesExist = false;
-			console.log("Can't find file two: " + fileTwo + "/package.json");
-		}
-	});
+    //Check to see if file two exists
+    fs.access(fileTwo, fs.F_OK, function(err) {
+        if (err) {
+            filesExist = false;
+            console.log("Can't find file two: " + fileTwo + "/package.json");
+        }
+    });
 
-	//If the files exist, parse them
-	if (filesExist) {
-		//Parse project one
-		var fileOneParsedDependencies = parseDependencies(fileOne);
-		//Parse project two
-		var fileTwoParsedDependencies = parseDependencies(fileTwo);
-		//Combine the parsed projects
-		var combined = {
-			project1: fileOneParsedDependencies,
+    //If the files exist, parse them
+    if (filesExist) {
+        //Parse project one
+        var fileOneParsedDependencies = parseDependencies(fileOne);
+        //Parse project two
+        var fileTwoParsedDependencies = parseDependencies(fileTwo);
+        //Combine the parsed projects
+        var combined = {
+            project1: fileOneParsedDependencies,
 
-			project2: fileTwoParsedDependencies
-		};
-	}
+            project2: fileTwoParsedDependencies
+        };
+    }
 
-	//Here we will compare the dependencies
-	var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
+    //Here we will compare the dependencies
+    var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
 
-	//
-	createTable(matchedDependencies);
+    //
+    createTable(matchedDependencies);
 }
 
 //Commander lines go below this comment
