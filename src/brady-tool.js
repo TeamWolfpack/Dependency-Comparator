@@ -48,6 +48,12 @@ function findMaxVersion(instances){
 	return maxVersion;
 }
 
+/**
+ * Assigns colors to instances in an array of instances of a dependency based off of the version of that instance and the
+ * max version found
+ * @param instances An array of instances of the dependency
+ * @param maxVersion The most up-to-date instance's version found
+ */
 function assignColor(instances, maxVersion){
 	for(var instance in instances){
 		//Initialize the version of this instance
@@ -72,15 +78,8 @@ function assignColor(instances, maxVersion){
 		}else{
 			instances[instance].color = "green";
 		}
-
-
 	}
-	return instances;
 }
-
-
-
-
 
 /**
  * Creates, fills, and prints the table based on a list of
@@ -118,7 +117,7 @@ function createTable(dependencies) {
             var instances = dependencies[index].instances;
             var rows = [];
 			var maxVersion = findMaxVersion(instances);
-			isntances = assignColor(instances,maxVersion);
+			assignColor(instances,maxVersion);
             for (i in instances) { //loops through each instance of the dependency
                 var instance = instances[i];
 				var instanceVersion = chalk.white(instance.version);
