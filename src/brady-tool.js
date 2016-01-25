@@ -174,9 +174,6 @@ function compareAndMatch(projectOne, projectTwo){
 			};
 		}
 	}
-	console.log(projectOneDep);
-	console.log(projectTwoDep);
-	console.log(dependencies);
 	return dependencies;
 }
 
@@ -248,11 +245,13 @@ function compare(fileOne, fileTwo){
 
 			project2: fileTwoParsedDependencies
 		};
-		console.log(combined);
 	}
 
 	//Here we will compare the dependencies
-	compareAndMatch(combined.project1,combined.project2);
+	var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
+
+	//
+	createTable(matchedDependencies);
 }
 
 //Commander lines go below this comment
