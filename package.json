@@ -20,21 +20,22 @@
   "author": "team-wolfpack",
   "license": "ISC",
   "homepage": "https://bitbucket.org/aaronchun7/sdl-brady-dependency-tool#readme",
+  "devDependency": {
+	"chai": "^3.4.1",
+	"gulp": "^3.9.0",
+    "gulp-eslint": "^1.1.1",
+    "gulp-jscs": "^3.0.2",
+    "gulp-mocha": "^2.2.0",
+	"mocha": "^2.3.4",
+    "mocha-sinon": "^1.1.5",
+	"sinon": "^1.17.2"
+  },
   "dependencies": {
-    "async": "^1.5.2",
-    "chai": "^3.4.1",
     "chalk": "^1.1.1",
     "cli-table2": "^0.1.9",
     "commander": "^2.9.0",
     "fs": "0.0.2",
-    "gulp": "^3.9.0",
-    "gulp-eslint": "^1.1.1",
-    "gulp-jscs": "^3.0.2",
-    "gulp-mocha": "^2.2.0",
     "jenkins": "^0.13.0",
-    "mocha": "^2.3.4",
-    "mocha-sinon": "^1.1.5",
-    "npm": "^3.5.3",
-    "sinon": "^1.17.2"
+    "npm": "^3.5.3"
   }
 }
