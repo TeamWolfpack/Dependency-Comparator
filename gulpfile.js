@@ -3,6 +3,8 @@ var eslint = require('gulp-eslint');
 var jscs = require('gulp-jscs');
 var mocha = require('gulp-mocha');
 
+// NPM, needed for npm publish
+var npm = require('npm');
 // File io
 var fs = require("fs");
 // look into, might use colors at bottom of runMochaTest
@@ -113,10 +115,13 @@ var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
     });
 };
 
+/**
+ * Publishes module to npm.
+ */
 gulp.task('npmPublish', function (callback) {
-    var username = "bradyteamstark";
-    var password = "1PddAQLjXpWP";
-    var email = "kuczynskij@msoe.edu";
+    var username = process.argv.slice(2)[2];
+    var password = process.argv.slice(2)[4];
+    var email = process.argv.slice(2)[6];
     if (!username) {
         var usernameError = new Error("Username is required as an argument --username exampleUsername");
         return callback(usernameError);
@@ -129,7 +134,6 @@ gulp.task('npmPublish', function (callback) {
         var emailError = new Error("Email is required as an argument --email example@email.com");
         return callback(emailError);
     }
-	console.log("made it here");
     var uri = "http://registry.npmjs.org/";
     npm.load(null, function (loadError) {
         if (loadError) {
