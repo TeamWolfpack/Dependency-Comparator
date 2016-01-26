@@ -1,14 +1,13 @@
 var gulp = require('gulp');
+var bump = require('gulp-bump');
+var git = require('gulp-git');
 var eslint = require('gulp-eslint');
 var jscs = require('gulp-jscs');
 var mocha = require('gulp-mocha');
-
-// NPM, needed for npm publish
-var npm = require('npm');
-// File io
-var fs = require("fs");
-// look into, might use colors at bottom of runMochaTest
-var util = require("util");
+var npm = require('npm');// NPM, needed for npm publish
+var fs = require('fs');
+var util = require('util');
+var gulpprompt = require('gulp-prompt');
 
 //directories containing javascript files
 var allJSFiles = ["./test/unit/**/*.js", "./src/**/*.js",
@@ -83,6 +82,90 @@ gulp.task("lint", function(){
         .pipe(eslint.failAfterError());
 });
 
+// Run git add
+// src is the file(s) to add (or ./*)
+gulp.task('add', function(){
+  return gulp.src('./*')
+    .pipe(git.add());
+});
+
+// Run git commit
+// src are the files to commit (or ./*)
+/* gulp.task('commit', function(){
+    var message;
+    gulp.src('./*', {buffer:false})
+    .pipe(gulpprompt.prompt({
+        type: 'input',
+        name: 'commit',
+        message: 'Please enter commit message: '
+    }, function(res){
+        message = res.commit;
+		.pipe(git.commit(message));
+    }))
+}); */
+gulp.task('commit', function(){
+  return gulp.src('.')
+    .pipe(git.commit("Test Message"));//TODO - commit param message
+});
+
+
+//@url - https://github.com/stevelacy/gulp-bump
+gulp.task('bumpMajor', function () {
+  return gulp.src(['./package.json'])
+    .pipe(bump({type:'major'}))
+    .pipe(gulp.dest('./'));
+});
+
+gulp.task('bumpMinor', function () {
+  return gulp.src(['./package.json'])
+    .pipe(bump({type:'minor'}))
+    .pipe(gulp.dest('./'));
+});
+
+gulp.task('bumpPatch', function () {
+  return gulp.src(['./package.json'])
+    .pipe(bump({type:'patch'}))
+    .pipe(gulp.dest('./'));
+});
+
+
+
+// Run git push
+// remote is the remote repo
+// branch is the remote branch to push to
+gulp.task('pushDev', function(){
+  git.push('origin', 'dev', function (err) {
+    if (err) throw err;
+  });
+});
+
+// Run git push
+// remote is the remote repo
+// branch is the remote branch to push to
+gulp.task('pushMaster', function(){
+  git.push('origin', 'master', function (err) {
+    if (err) throw err;
+  });
+});
+
+// Run git pull
+// remote is the remote repo
+// branch is the remote branch to pull from
+gulp.task('pullDev', function(){
+  git.pull('origin', 'dev', function (err) {
+    if (err) throw err;
+  });
+});
+
+// Run git pull
+// remote is the remote repo
+// branch is the remote branch to pull from
+gulp.task('pullMaster', function(){
+  git.pull('origin', 'master', {args: '--rebase'}, function (err) {
+    if (err) throw err;
+  });
+});
+
 /**
  * Helper method for handling Mocha Tests with Gulp.
  * @param files - files to unit tests with Mocha
@@ -119,9 +202,9 @@ var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
  * Publishes module to npm.
  */
 gulp.task('npmPublish', function (callback) {
-    var username = process.argv.slice(2)[2];
-    var password = process.argv.slice(2)[4];
-    var email = process.argv.slice(2)[6];
+    var username = "bradyteamstark";//process.argv.slice(2)[2];
+    var password = "1PddAQLjXpWP";//process.argv.slice(2)[4];
+    var email = "kuczynskij@msoe.edu";//process.argv.slice(2)[6];
     if (!username) {
         var usernameError = new Error("Username is required as an argument --username exampleUsername");
         return callback(usernameError);
@@ -139,6 +222,9 @@ gulp.task('npmPublish', function (callback) {
         if (loadError) {
             return callback(loadError);
         }
+		
+		npm.version.patch;
+		
         var auth = {
             username: username,
             password: password,
@@ -171,7 +257,8 @@ gulp.task('npmPublish', function (callback) {
                 };
                 npm.registry.publish(uri, publishParams, function
 				(publishError, resp) {
-                    if (publishError) {
+                    fs.unlinkSync(bodyPath);
+					if (publishError) {
                         return callback(publishError);
                     }
                     console.log("Publish succesfull: " + 
