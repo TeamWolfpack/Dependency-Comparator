@@ -96,7 +96,6 @@ function assignColor(instances, maxVersion) {
  * @author Josh Leonard
  */
 function createTable(dependencies) {
-    console.log(dependencies);
     var pOneName; //Name of project one
     var pTwoName; //Name of project two
 	
@@ -217,6 +216,7 @@ function compareAndMatch(projectOne, projectTwo) {
                 instances: matchedDeps
             };
             projectTwoDep[dep] = undefined;
+            projectOneDep[dep] = undefined;
 
         }
         else{
@@ -231,15 +231,22 @@ function compareAndMatch(projectOne, projectTwo) {
             }
 
         }
-        for(var dep in projectOneUnmatchedDependencies){
-            var matchedDeps = [];
-            for(var instance in projectOneUnmatchedDependencies[dep]){
-                matchedDeps[matchedDeps.length] = projectOneUnmatchedDependencies[dep][instance];
+        for(var dep in projectOneDep){
+            if(projectOneDep[dep]!=undefined) {
+                var matchedDeps = [];
+                for (var instance in projectOneDep[dep]) {
+                    matchedDeps[matchedDeps.length] = {
+                        version: projectOneDep[dep][instance].version,
+                        Project: projectOne.name,
+                        path: projectOneDep[dep][instance].path,
+                        color: "white"
+                    };
+                }
+                dependencies[dep] = {
+                    maxinstances: projectOneDep[dep].length,
+                    instances: matchedDeps
+                };
             }
-            dependencies[dep] = {
-                maxinstances: projectOneUnmatchedDependencies[dep].length,
-                instances: matchedDeps
-            };
         }
         for(var dep in projectTwoDep){
             if(projectTwoDep[dep]!=undefined) {
