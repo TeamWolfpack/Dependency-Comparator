@@ -223,7 +223,7 @@ function compareAndMatch(projectOne, projectTwo) {
         };
     }
 
-    //Iterate through what remians in the first project, adding it to the end.
+    //Iterate through what remains in the first project, adding it to the end.
     for (var p1dep in projectOneDep) {
         if (projectOneDep[p1dep]) {
             //The array we will be storing matched dependencies in
@@ -288,10 +288,11 @@ function parseDependencies(file) {
     };
     //Iterate through dependencies and save them in the specified format
     for (dep in fileDep) {
+		var depenendency = require(file + "\\node_modules\\" + dep + "\\package.json");
         fileParsedDependencies.dependencies[dep] =
 		{
-    version: fileDep[dep],
-    path: file.toString() + "/" + dep
+			version: depenendency.version,
+			path: ".\\node_modules\\" + dep
 		};
         if (isNaN(fileDep[dep][0])) {
             fileParsedDependencies.dependencies[dep].version = fileDep[dep].substring(1,fileDep[dep].length);
@@ -307,17 +308,17 @@ function parseDependencies(file) {
  * and print out the differences.
  *
  * @author Chris Farrow
- * @param {File} fileOne The first project that will be compared
- * @param {File} fileTwo The second project that will be compared
+ * @param {File} projectOne The first project that will be compared
+ * @param {File} projectTwo The second project that will be compared
  */
-function compare(fileOne, fileTwo) {
+function compare(projectOne, projectTwo) {
     var filesExist = true;
     //Check to see if file one exists
-	if (fileOne){
-		fs.access(fileOne + "/package.json", fs.F_OK, function(err) {
+	if (projectOne){
+		fs.access(projectOne + "/package.json", fs.F_OK, function(err) {
 			if (err) {
 				filesExist = false;
-				console.log("Can't find file one: " + fileOne + "/package.json");
+				console.log("Can't find file one: " + projectOne + "/package.json");
 			}
 		});
 	} else {
@@ -326,11 +327,11 @@ function compare(fileOne, fileTwo) {
 	}
     
     //Check to see if file two exists
-	if (fileTwo){
-		fs.access(fileTwo + "/package.json", fs.F_OK, function(err) {
+	if (projectTwo){
+		fs.access(projectTwo + "/package.json", fs.F_OK, function(err) {
 			if (err) {
 				filesExist = false;
-				console.log("Can't find file two: " + fileTwo + "/package.json");
+				console.log("Can't find file two: " + projectTwo + "/package.json");
 			}
 		});
 	} else {
@@ -341,9 +342,9 @@ function compare(fileOne, fileTwo) {
     //If the files exist, parse them
     if (filesExist == true) {
         //Parse project one
-        var fileOneParsedDependencies = parseDependencies(fileOne);
+        var fileOneParsedDependencies = parseDependencies(projectOne);
         //Parse project two
-        var fileTwoParsedDependencies = parseDependencies(fileTwo);
+        var fileTwoParsedDependencies = parseDependencies(projectTwo);
         //Combine the parsed projects
         var combined = {
             project1: fileOneParsedDependencies,
