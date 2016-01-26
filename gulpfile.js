@@ -85,7 +85,7 @@ gulp.task("lint", function(){
 // Run git add
 // src is the file(s) to add (or ./*)
 gulp.task('add', function(){
-  return gulp.src('./*')
+  return gulp.src('.')
     .pipe(git.add());
 });
 
@@ -104,8 +104,18 @@ gulp.task('add', function(){
     }))
 }); */
 gulp.task('commit', function(){
-  return gulp.src('.')
-    .pipe(git.commit("Test Message"));//TODO - commit param message
+  // just source anything here - we just wan't to call the prompt for now
+    gulp.src('package.json')
+    .pipe(gulpprompt.prompt({
+        type: 'input',
+        name: 'commit',
+        message: 'Please enter commit message...'
+    },  function(res){
+      // now add all files that should be committed
+      // but make sure to exclude the .gitignored ones, since gulp-git tries to commit them, too
+      return gulp.src([ '!node_modules/', './*' ], {buffer:false})
+      .pipe(git.commit(res.commit));
+    }));
 });
 
 
