@@ -96,6 +96,7 @@ function assignColor(instances, maxVersion) {
  * @author Josh Leonard
  */
 function createTable(dependencies) {
+    console.log(dependencies);
     var pOneName; //Name of project one
     var pTwoName; //Name of project two
 	
@@ -215,14 +216,47 @@ function compareAndMatch(projectOne, projectTwo) {
                 maxinstances: Math.max(projectOneDep[dep].length, projectTwoDep[dep].length),
                 instances: matchedDeps
             };
+            projectTwoDep[dep] = undefined;
 
         }
         else{
             projectOneUnmatchedDependencies[dep] = [];
             for(var instance in projectOneDep[dep]){
-                projectOneUnmatchedDependencies[dep][projectOneUnmatchedDependencies[dep].length] = instance;
+                projectOneUnmatchedDependencies[matchedDeps.length] = {
+                    version: projectOneDep[dep][instance].version,
+                    Project: projectOne.name,
+                    path: projectOneDep[dep][instance].path,
+                    color: "white"
+                };
             }
 
+        }
+        for(var dep in projectOneUnmatchedDependencies){
+            var matchedDeps = [];
+            for(var instance in projectOneUnmatchedDependencies[dep]){
+                matchedDeps[matchedDeps.length] = projectOneUnmatchedDependencies[dep][instance];
+            }
+            dependencies[dep] = {
+                maxinstances: projectOneUnmatchedDependencies[dep].length,
+                instances: matchedDeps
+            };
+        }
+        for(var dep in projectTwoDep){
+            if(projectTwoDep[dep]!=undefined) {
+                var matchedDeps = [];
+                for (var instance in projectTwoDep[dep]) {
+                    matchedDeps[matchedDeps.length] = {
+                        version: projectTwoDep[dep][instance].version,
+                        Project: projectOne.name,
+                        path: projectTwoDep[dep][instance].path,
+                        color: "white"
+                    };
+                }
+                dependencies[dep] = {
+                    maxinstances: projectTwoDep[dep].length,
+                    instances: matchedDeps
+                };
+            }
         }
     }
     //
