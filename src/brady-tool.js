@@ -182,8 +182,8 @@ function createTable(dependencies) {
  * Compares and matches dependencies from two arrays of dependencies from projects.
  * Must be edited for comparing with depth.
  *
- * @param {JSON} projectOne Dependencies from project 1
- * @param {JSON} projectTwo Dependencies from project 2
+ * @param {Object} projectOne Dependencies from project 1
+ * @param {Object} projectTwo Dependencies from project 2
  */
 function compareAndMatch(projectOne, projectTwo) {
     //Create new object, ordered by dependencies
@@ -298,7 +298,7 @@ function compareAndMatch(projectOne, projectTwo) {
  *
  * @param {File} file Location of the root file of the project
  * @param depth
- * @returns {JSON} {{name: Project Name, path: Project Path, dependencies: Array of Dependencies}}
+ * @returns {Object} {{name: Project Name, path: Project Path, dependencies: Array of Dependencies}}
  */
 function parseDependencies(file, depth) {
     //Get the package.json for the project
@@ -341,6 +341,7 @@ function parseDependenciesRecursively(file,depth,dependencies,previousDependency
                 parseDependenciesRecursively(file + "\\node_modules\\" + dep, depth - 1, dependencies, previousDependencyPath + "\\node_modules\\" + dep);
             }
         }catch(err){
+            // No node_modules after a certain depth so module not found and is skipped
         }
     }
 
