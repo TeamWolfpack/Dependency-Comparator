@@ -215,7 +215,6 @@ function compareAndMatch(projectOne, projectTwo) {
                 maxinstances: Math.max(projectOneDep[dep].length, projectTwoDep[dep].length),
                 instances: matchedDeps
             };
-            console.log(matchedDeps);
 
         }
         else{
@@ -258,7 +257,6 @@ function compareAndMatch(projectOne, projectTwo) {
     //        instances: matchedDeps
     //    };
     //}
-    console.log(dependencies);
     return dependencies;
 }
 
@@ -284,28 +282,36 @@ function parseDependencies(file, depth) {
         dependencies: []
     };
     //Iterate through dependencies and save them in the specified format
-    parseDependenciesRecursively(file,depth,fileParsedDependencies.dependencies);
+    parseDependenciesRecursively(file,depth,fileParsedDependencies.dependencies,".");
 
     //Return the completed and parsed json object with the dependencies
     return fileParsedDependencies;
 	}
 
-function parseDependenciesRecursively(file,depth,dependencies){
+function parseDependenciesRecursively(file,depth,dependencies,previousDependencyPath){
+
     //Get the package.json for the project
     var filePackage = require(file + "/package.json");
     //Get the dependencies of the project
     var fileDep = filePackage.dependencies;
     //Iterate through dependencies and save them in the specified format
     for (dep in fileDep) {
-        if(dependencies[dep]==undefined){
-            dependencies[dep] = [];
+        try {
+            if (dependencies[dep] == undefined) {
+                dependencies[dep] = [];
+            }
+            var dependency = require(file + "\\node_modules\\" + dep + "\\package.json");
+            dependencies[dep][dependencies[dep].length] =
+            {
+                version: dependency.version,
+                path: previousDependencyPath + "\\node_modules\\" + dep
+            };
+
+            if (depth - 1 >= 0) {
+                parseDependenciesRecursively(file + "\\node_modules\\" + dep, depth - 1, dependencies, previousDependencyPath + "\\node_modules\\" + dep);
+            }
+        }catch(err){
         }
-        var dependency = require(file + "\\node_modules\\" + dep + "\\package.json");
-        dependencies[dep][dependencies[dep].length] =
-        {
-            version: dependency.version,
-            path: ".\\node_modules\\" + dep
-        };
     }
 
 }
@@ -351,9 +357,7 @@ function compare(projectOne, projectTwo) {
     if (filesExist == true) {
         var depth = 0;
         if(commander.depth>=0) {
-            console.log(commander.depth);
             depth = commander.depth;
-
             //Parse project one
             var fileOneParsedDependencies = parseDependencies(projectOne,depth);
             //Parse project two
