@@ -219,18 +219,7 @@ function compareAndMatch(projectOne, projectTwo) {
             projectOneDep[dep] = undefined;
 
         }
-        else{
-            projectOneUnmatchedDependencies[dep] = [];
-            for(var instance in projectOneDep[dep]){
-                projectOneUnmatchedDependencies[matchedDeps.length] = {
-                    version: projectOneDep[dep][instance].version,
-                    Project: projectOne.name,
-                    path: projectOneDep[dep][instance].path,
-                    color: "white"
-                };
-            }
-
-        }
+        
         for(var dep in projectOneDep){
             if(projectOneDep[dep]!=undefined) {
                 var matchedDeps = [];
