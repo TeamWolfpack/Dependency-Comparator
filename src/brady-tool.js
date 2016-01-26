@@ -96,8 +96,8 @@ function assignColor(instances, maxVersion) {
  * @author Josh Leonard
  */
 function createTable(dependencies) {
-    var pOneName; //Name of project one
-    var pTwoName; //Name of project two
+    var projectOneName; //Name of project one
+    var projectTwoName; //Name of project two
 	
     //Create the table object
     var table = new cliTable({
@@ -114,11 +114,10 @@ function createTable(dependencies) {
     //Since this is made internally, it assumes everything else
     //is there and correctly formatted.
     if (dependencies) {
-        for (index in dependencies) { //loops through each dependency
+        for (dependency in dependencies) { //loops through each dependency
             //Grab info about the dependency
-            var depName = index;
-            var rowSpan = dependencies[index].maxinstances;
-            var instances = dependencies[index].instances;
+            var rowSpan = dependencies[dependency].maxinstances;
+            var instances = dependencies[dependency].instances;
             var rows = [];
             var maxVersion = findMaxVersion(instances);
             assignColor(instances,maxVersion);
@@ -140,32 +139,37 @@ function createTable(dependencies) {
                 if (i == 0) { //the first instance fills in the Module column of the table
                     //the very first instance will set the Project One name
                     //NOTE: this assumes the very first instanse is part of Project one
-                    if (!pOneName) {
-                        pOneName = instance.Project;
-                        table.options.head[1] = pOneName;
-                        table.options.head[2] = pOneName + " Path";
+                    if (!projectOneName) {
+                        projectOneName = instance.Project;
+                        table.options.head[1] = projectOneName;
+                        table.options.head[2] = projectOneName + " Path";
                     }
                     //Determines location of instance based on project name
-                    if (instance.Project == pOneName) {
-                        rows.push([{rowSpan: rowSpan, content: depName}, instanceVersion, instance.path, "", ""]);
+                    if (instance.Project == projectOneName) {
+                        rows.push([{rowSpan: rowSpan, content: dependency}, instanceVersion, instance.path, "", ""]);
                     } else {
-                        rows.push([{rowSpan: rowSpan, content: depName}, "", "", instanceVersion, instance.path]);
+                        rows.push([{rowSpan: rowSpan, content: dependency}, "", "", instanceVersion, instance.path]);
                     }
                 } else if (i < rowSpan) { //based on the dependency format, this will fill the left most instance
                     //Determines location of instance based on project name
-                    if (instance.Project == pOneName) {
+                    if (instance.Project == projectOneName) {
                         rows.push([instanceVersion, instance.path, "", ""]);
                     } else {
                         rows.push(["", "", instanceVersion, instance.path]);
                     }
                 } else { //fill any missing Project Two instances
-                    if (!pTwoName) { //sets the name of Project 2 if previously undefined
-                        pTwoName = instance.Project;
-                        table.options.head[3] = pTwoName;
-                        table.options.head[4] = pTwoName + " Path";
+                    if (!projectTwoName) { //sets the name of Project 2 if previously undefined
+                        projectTwoName = instance.Project;
+                        table.options.head[3] = projectTwoName;
+                        table.options.head[4] = projectTwoName + " Path";
                     }
-                    rows[i - rowSpan][3] = instanceVersion;
-                    rows[i - rowSpan][4] = instance.path;
+					if (rows[i - rowSpan].length == 5){
+						rows[i - rowSpan][3] = instanceVersion;
+						rows[i - rowSpan][4] = instance.path;
+					} else if (rows[i - rowSpan].length == 4){
+						rows[i - rowSpan][2] = instanceVersion;
+						rows[i - rowSpan][3] = instance.path;
+					}
                 }
             }
             for (r in rows) { //Pushes each row into the table
