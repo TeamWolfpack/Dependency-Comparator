@@ -288,11 +288,11 @@ function parseDependencies(file) {
     };
     //Iterate through dependencies and save them in the specified format
     for (dep in fileDep) {
-		var depenendency = require(file + "\\node_modules\\" + dep + "\\package.json");
+        var depenendency = require(file + "\\node_modules\\" + dep + "\\package.json");
         fileParsedDependencies.dependencies[dep] =
 		{
-			version: depenendency.version,
-			path: ".\\node_modules\\" + dep
+    version: depenendency.version,
+    path: ".\\node_modules\\" + dep
 		};
         if (isNaN(fileDep[dep][0])) {
             fileParsedDependencies.dependencies[dep].version = fileDep[dep].substring(1,fileDep[dep].length);
@@ -314,30 +314,30 @@ function parseDependencies(file) {
 function compare(projectOne, projectTwo) {
     var filesExist = true;
     //Check to see if file one exists
-	if (projectOne){
-		fs.access(projectOne + "/package.json", fs.F_OK, function(err) {
-			if (err) {
-				filesExist = false;
-				console.log("Can't find file one: " + projectOne + "/package.json");
-			}
-		});
-	} else {
-		console.log("First project is undefined.");
-		filesExist = false;
-	}
+    if (projectOne) {
+        fs.access(projectOne + "/package.json", fs.F_OK, function(err) {
+            if (err) {
+                filesExist = false;
+                console.log("Can't find file one: " + projectOne + "/package.json");
+            }
+        });
+    } else {
+        console.log("First project is undefined.");
+        filesExist = false;
+    }
     
     //Check to see if file two exists
-	if (projectTwo){
-		fs.access(projectTwo + "/package.json", fs.F_OK, function(err) {
-			if (err) {
-				filesExist = false;
-				console.log("Can't find file two: " + projectTwo + "/package.json");
-			}
-		});
-	} else {
-		console.log("Second project is undefined.");
-		filesExist = false;
-	}
+    if (projectTwo) {
+        fs.access(projectTwo + "/package.json", fs.F_OK, function(err) {
+            if (err) {
+                filesExist = false;
+                console.log("Can't find file two: " + projectTwo + "/package.json");
+            }
+        });
+    } else {
+        console.log("Second project is undefined.");
+        filesExist = false;
+    }
 
     //If the files exist, parse them
     if (filesExist == true) {
@@ -350,9 +350,9 @@ function compare(projectOne, projectTwo) {
             project1: fileOneParsedDependencies,
             project2: fileTwoParsedDependencies
         };
-		//Here we will compare the dependencies
-		var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
-		createTable(matchedDependencies);
+        //Here we will compare the dependencies
+        var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
+        createTable(matchedDependencies);
     }
 }
 
