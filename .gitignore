@@ -1,6 +1,8 @@
 # ignoring the node_modules folder
 # "npm install" to install all packages
-node_modules/
+node_modules/*
+
+*.tgz
 
 # ignoring the idea folder from jetbrains
 .idea/*

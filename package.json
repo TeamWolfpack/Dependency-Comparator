@@ -2,7 +2,10 @@
   "name": "sdl-brady-dependency-tool",
   "version": "1.0.6",
   "description": "Node.js dependency comparison tool.",
-  "main": "src/brady-tool.js",
+  "bin": {
+    "brady-tool": "bin/brady-tool.js"
+  },
+  "main": "./bin/brady-tool.js",
   "scripts": {
     "test": "test"
   },
@@ -18,6 +21,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/aaronchun7/sdl-brady-dependency-tool#readme",
   "dependencies": {
+    "async": "^1.5.2",
     "chai": "^3.4.1",
     "chalk": "^1.1.1",
     "cli-table2": "^0.1.9",
