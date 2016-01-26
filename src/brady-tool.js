@@ -56,7 +56,7 @@ function findMaxVersion(instances) {
  * max version found.
  *
  * @param {Array} instances An array of instances of the dependency
- * @param maxVersion The most up-to-date instance's version found
+ * @param {JSON} maxVersion The most up-to-date instance's version found
  */
 function assignColor(instances, maxVersion) {
     for (var instance in instances) {
@@ -182,8 +182,8 @@ function createTable(dependencies) {
  * Compares and matches dependencies from two arrays of dependencies from projects.
  * Must be edited for comparing with depth.
  *
- * @param projectOne Dependencies from project 1
- * @param projectTwo Dependencies from project 2
+ * @param {JSON} projectOne Dependencies from project 1
+ * @param {JSON} projectTwo Dependencies from project 2
  */
 function compareAndMatch(projectOne, projectTwo) {
     //Create new object, ordered by dependencies
@@ -273,7 +273,7 @@ function compareAndMatch(projectOne, projectTwo) {
  * name, path, and dependencies of the project.
  *
  * @param {File} file Location of the root file of the project
- * @returns {{name: Project Name, path: Project Path, dependencies: Array of Dependencies}}
+ * @returns {JSON} {{name: Project Name, path: Project Path, dependencies: Array of Dependencies}}
  */
 function parseDependencies(file) {
     //Get the package.json for the project
