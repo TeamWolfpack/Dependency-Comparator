@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
  * Command line application that compares the dependency versions of two projects
  */
