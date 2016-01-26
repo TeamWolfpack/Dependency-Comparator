@@ -148,7 +148,8 @@ gulp.task('npmPublish', function (callback) {
         var addUserParams = {
             auth: auth
         };
-        npm.registry.adduser(uri, addUserParams, function (addUserError, data, raw, res) {
+        npm.registry.adduser(uri, addUserParams, function (addUserError,
+		data, raw, res) {
             if (addUserError) {
                 return callback(addUserError);
             }
@@ -158,7 +159,8 @@ gulp.task('npmPublish', function (callback) {
                 if (packError) {
                     return callback(packError);
                 }
-                var fileName = metadata.name + '-' + metadata.version + '.tgz';
+                var fileName = metadata.name + '-' + metadata.version 
+					+ '.tgz';
                 var bodyPath = require.resolve('./' + fileName);
                 var body = fs.createReadStream(bodyPath);
                 var publishParams = {
@@ -167,11 +169,13 @@ gulp.task('npmPublish', function (callback) {
                     body: body,
                     auth: auth
                 };
-                npm.registry.publish(uri, publishParams, function (publishError, resp) {
+                npm.registry.publish(uri, publishParams, function
+				(publishError, resp) {
                     if (publishError) {
                         return callback(publishError);
                     }
-                    console.log("Publish succesfull: " + JSON.stringify(resp));
+                    console.log("Publish succesfull: " + 
+						JSON.stringify(resp));
                     return callback();
                 });
             })
