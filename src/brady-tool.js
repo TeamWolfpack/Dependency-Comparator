@@ -277,7 +277,7 @@ function compareAndMatch(projectOne, projectTwo) {
  */
 function parseDependencies(file) {
     //Get the package.json for the project
-    var filePackage = require(file.toString() + "/package.json");
+    var filePackage = require(file + "/package.json");
     //Get the dependencies of the project
     var fileDep = filePackage.dependencies;
     //Store the name and path of the project
@@ -313,21 +313,33 @@ function parseDependencies(file) {
 function compare(fileOne, fileTwo) {
     var filesExist = true;
     //Check to see if file one exists
-    fs.access(fileOne + "/package.json", fs.F_OK, function(err) {
-        if (err) {
-            filesExist = false;
-            console.log("Can't find file one: " + fileOne + "/package.json");
-        }
-    });
+	if (fileOne){
+		fs.access(fileOne + "/package.json", fs.F_OK, function(err) {
+			if (err) {
+				filesExist = false;
+				console.log("Can't find file one: " + fileOne + "/package.json");
+			}
+		});
+	} else {
+		console.log("First project is undefined.");
+		filesExist = false;
+	}
+    
     //Check to see if file two exists
-    fs.access(fileTwo + "/package.json", fs.F_OK, function(err) {
-        if (err) {
-            filesExist = false;
-            console.log("Can't find file two: " + fileTwo + "/package.json");
-        }
-    });
+	if (fileTwo){
+		fs.access(fileTwo + "/package.json", fs.F_OK, function(err) {
+			if (err) {
+				filesExist = false;
+				console.log("Can't find file two: " + fileTwo + "/package.json");
+			}
+		});
+	} else {
+		console.log("Second project is undefined.");
+		filesExist = false;
+	}
+
     //If the files exist, parse them
-    if (filesExist) {
+    if (filesExist == true) {
         //Parse project one
         var fileOneParsedDependencies = parseDependencies(fileOne);
         //Parse project two
@@ -335,16 +347,12 @@ function compare(fileOne, fileTwo) {
         //Combine the parsed projects
         var combined = {
             project1: fileOneParsedDependencies,
-
             project2: fileTwoParsedDependencies
         };
+		//Here we will compare the dependencies
+		var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
+		createTable(matchedDependencies);
     }
-
-    //Here we will compare the dependencies
-    var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
-
-    //
-    createTable(matchedDependencies);
 }
 
 //Commander lines go below this comment
