@@ -140,8 +140,6 @@ gulp.task('bumpPatch', function () {
     .pipe(gulp.dest('./'));
 });
 
-
-
 // Run git push
 // remote is the remote repo
 // branch is the remote branch to push to
@@ -210,6 +208,18 @@ var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
     });
 };
 
+//git pull
+//git add .
+//git commit -m "something"
+//npm version patch
+//git push
+//git npmPublish -> I'm thinking only to let Jenkins do this
+/**
+ * Will do everything you would want to do before pushing up to Dev.
+ */
+gulp.task('ciDev', ['pullDev', 'add', 'commit', 'bumpPatch',
+ 'pushDev']);
+
 /**
  * Publishes module to npm.
  */
@@ -217,7 +227,7 @@ gulp.task('npmPublish', function (callback) {
     var username = "bradyteamstark";//process.argv.slice(2)[2];
     var password = "1PddAQLjXpWP";//process.argv.slice(2)[4];
     var email = "kuczynskij@msoe.edu";//process.argv.slice(2)[6];
-    if (!username) {
+    /* if (!username) {
         var usernameError = new Error("Username is required as an argument --username exampleUsername");
         return callback(usernameError);
     }
@@ -228,7 +238,7 @@ gulp.task('npmPublish', function (callback) {
     if (!email) {
         var emailError = new Error("Email is required as an argument --email example@email.com");
         return callback(emailError);
-    }
+    } */
     var uri = "http://registry.npmjs.org/";
     npm.load(null, function (loadError) {
         if (loadError) {
