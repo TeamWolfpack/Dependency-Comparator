@@ -9,78 +9,59 @@ var fs = require('fs');
 var util = require('util');
 var gulpprompt = require('gulp-prompt');
 
-var gulp = require('gulp-param')(require('gulp'), process.argv);
-
-//https://ponyfoo.com/articles/my-first-gulp-adventure
-
 //directories containing javascript files
 var allJSFiles = ["./test/unit/**/*.js", "./src/**/*.js",
     "./test/integration/**/*-test.js", "!./src/**/*.min.js",
     "!./src/public/**/*.js"];
 //directories containing unit tests javascript files
-//var unitTestFiles = ["./test/unit/**/*-test.js"];
 var unitTestFiles = ["./test/unitTests.js"];
 //directories containing integration tests javascript files
 var integrationTestFiles = ["./test/integration/**/*-test.js"];
 
-var message;//commit message
-
-/**
- * Default task ran by gulp. Does 'compile' like function. Points gulp
- * destination folder.
- * @command: ''
- * @command: default
- */
+//Default task ran by gulp. Does 'compile' like function. Points gulp
+//destination folder.
+//@command: ''
+//@command: default
 gulp.task('default', function() {
     //may use this to perform code compilation
     gulp.src('src/**/*.js')
         .pipe(gulp.dest('dist'));
 });
 
-/**
- * Runs unit tests with mocha.
- * @command: Allows for "run tests with mocha".
- * @return see @(var runMochaTest)
- */
+//Runs unit tests with mocha.
+//@command: Allows for "run tests with mocha".
+//@return see @(var runMochaTest)
 gulp.task("unitTests", function(done){
     runMochaTest(unitTestFiles, 120000, true, done);
 });
 
-/**
- * Runs integration tests with mocha.
- * @command: Allows for "run tests with mocha".
- * @return see @(var runMochaTest)
- */
+//Runs integration tests with mocha.
+//@command: Allows for "run tests with mocha".
+//@return see @(var runMochaTest)
 gulp.task("integrationTests", function(done){
     runMochaTest(integrationTestFiles, 120000, true, done);
 });
 
-/**
- * Run static analysis for 'style' with jscs.
- * Tests style of code with jscs package.
- * @command: Allows for Formatting Code.
- */
+//Run static analysis for 'style' with jscs.
+//Tests style of code with jscs package.
+//@command: Allows for Formatting Code.
 gulp.task("jscs", function() {
     return gulp.src(allJSFiles)
         .pipe(jscs({configPath:"./.jscsrc"}))
         .pipe(jscs.reporter());
 });
 
-/**
- * Runs jscs with fix flag to format code.
- * Formats code with jscs package.
- * @command: Allows for lint to format code.
- */
+//Runs jscs with fix flag to format code.
+//Formats code with jscs package.
+//@command: Allows for lint to format code.
 gulp.task("format", function(){
     return gulp.src(allJSFiles, {base: "./"})
         .pipe(jscs({fix:true, configPath:"./.jscsrc"}))
         .pipe(gulp.dest("./"));
 });
 
-/**
- * Run eslint through gulp.
- * @command: Allows for linting with gulp..
- */
+//Run eslint through gulp.
+//@command: Allows for linting with gulp..
 gulp.task("lint", function(){
     return gulp.src(allJSFiles)
         .pipe(eslint({useEslintrc:true}))
@@ -88,16 +69,14 @@ gulp.task("lint", function(){
         .pipe(eslint.failAfterError());
 });
 
-// Run git add
-// src is the file(s) to add (or ./*)
-gulp.task('add', ['bumpPatch'], function(callback){
+//Run git add; src is the file(s) to add (or ./*)
+gulp.task('add', function(callback){
   gulp.src('.')
     .pipe(git.add());
 	return callback();
 });
 
-// Run git commit
-// src are the files to commit (or ./*)
+//Run git commit; src are the files to commit (or ./*)
 gulp.task('commit', function(){
   // just source anything here - we just wan't to call 
   //the prompt for now
@@ -110,9 +89,8 @@ gulp.task('commit', function(){
       // now add all files that should be committed
       // but make sure to exclude the .gitignored ones, 
 	  //since gulp-git tries to commit them, too
-      
-		  gulp.src([ '!node_modules/', './*' ], {buffer:false})
-			.pipe(git.commit(res.commit));
+      gulp.src([ '!node_modules/', './*' ], {buffer:false})
+	  .pipe(git.commit(res.commit));
 	 
     }));
 });
@@ -180,19 +158,11 @@ gulp.task('pullMaster', function(){
 var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
     return gulp.src(files)
     .pipe(mocha({
-        reporter: "spec", // look into spec
-        ui: "bdd", // look into ui: bdd and whether we can run tdd vs bdd
+        reporter: "spec",
+        ui: "bdd",
         timeout: timeoutInMillis,
     }))
     .once("error", function(error) {
-        /*
-         * gehred added this console log, because when there is a
-         * runtime error the tests just abort at that spot. It is
-         * nice to get information. The whole handler was added
-         * because examples of using mocha in gulp said that when
-         * mocha does not close correctly on timeouts the gulp
-         * task would never end.
-         */
         console.log("Error Information -> " + util.inspect(arguments,
                 {depth: 2, colors: true}));
         if (exitOnError) {
@@ -203,21 +173,9 @@ var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
 
 //Publishes module to npm.
 gulp.task('npmPublish', function (callback) {
-    var username = "bradyteamstark";//process.argv.slice(2)[2];
-    var password = "1PddAQLjXpWP";//process.argv.slice(2)[4];
-    var email = "kuczynskij@msoe.edu";//process.argv.slice(2)[6];
-    /* if (!username) {
-        var usernameError = new Error("Username is required as an argument --username exampleUsername");
-        return callback(usernameError);
-    }
-    if (!password) {
-        var passwordError = new Error("Password is required as an argument --password  examplepassword");
-        return callback(passwordError);
-    }
-    if (!email) {
-        var emailError = new Error("Email is required as an argument --email example@email.com");
-        return callback(emailError);
-    } */
+    var username = "bradyteamstark";
+    var password = "1PddAQLjXpWP";
+    var email = "kuczynskij@msoe.edu";
     var uri = "http://registry.npmjs.org/";
     npm.load(null, function (loadError) {
         if (loadError) {
