@@ -9,6 +9,8 @@ var fs = require('fs');
 var util = require('util');
 var gulpprompt = require('gulp-prompt');
 
+var gulp = require('gulp-param')(require('gulp'), process.argv);
+
 //https://ponyfoo.com/articles/my-first-gulp-adventure
 
 //directories containing javascript files
@@ -20,6 +22,8 @@ var allJSFiles = ["./test/unit/**/*.js", "./src/**/*.js",
 var unitTestFiles = ["./test/unitTests.js"];
 //directories containing integration tests javascript files
 var integrationTestFiles = ["./test/integration/**/*-test.js"];
+
+var message;//commit message
 
 /**
  * Default task ran by gulp. Does 'compile' like function. Points gulp
@@ -96,6 +100,11 @@ gulp.task('staticcommit', ['add'], function(){
     .pipe(git.commit('initial commit'));
 });
 
+gulp.task('staticcommit2', function(m){
+  return gulp.src('package.json')
+    .pipe(git.commit(m));
+});
+
 // Run git commit
 // src are the files to commit (or ./*)
 /* gulp.task('commit', function(){
@@ -149,7 +158,7 @@ gulp.task('bumpPatch', ['pullDev'], function () {
 // Run git push
 // remote is the remote repo
 // branch is the remote branch to push to
-gulp.task('pushDev', ['commit'], function(){
+gulp.task('pushDev', ['commit'], function(call){
   return git.push('origin', 'dev', function (err) {
     if (err) throw err;
   });
@@ -225,7 +234,7 @@ var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
 /**
  * Will do everything you would want to do before pushing up to Dev.
  */
-gulp.task('ciDev', ['pushDev']);
+gulp.task('ciDev', ['staticcommit2']);
 
 /**
  * Publishes module to npm.
