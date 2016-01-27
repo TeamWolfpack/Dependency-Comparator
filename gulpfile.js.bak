@@ -223,7 +223,11 @@ var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
 /**
  * Will do everything you would want to do before pushing up to Dev.
  */
+<<<<<<< HEAD
+gulp.task('ciDev', ['pullDev', 'add', 'commit', 'bumpPatch', 'pushDev']);
+=======
 gulp.task('ciDev', ['pushDev']);
+>>>>>>> 0f6c090ac42ec54b9384e2a2be9515c9c3019fe2
 
 /**
  * Publishes module to npm.
