@@ -125,9 +125,7 @@ gulp.task('commit', ['add'], function(callback){
       if (res) {
 		  gulp.src([ '!node_modules/', './*' ], {buffer:false})
 			.pipe(git.commit(res.commit));
-		  return callback();
 	  }
-	  return callback();
     }));
 });
 
@@ -146,10 +144,9 @@ gulp.task('bumpMinor', function () {
 });
 
 gulp.task('bumpPatch', ['pullDev'], function (callback) {
-  gulp.src(['./package.json'])
+  return gulp.src(['./package.json'])
     .pipe(bump({type:'patch'}))
     .pipe(gulp.dest('./'));
-	return callback();
 });
 
 // Run git push
