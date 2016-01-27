@@ -119,13 +119,17 @@ function createTable(dependencies) {
             var rowSpan = dependencies[dependency].maxinstances;
             var instances = dependencies[dependency].instances;
             var rows = [];
-            var maxVersion = findMaxVersion(instances);
-            assignColor(instances,maxVersion);
+
+            if(!dependency.unmatched){
+                var maxVersion = findMaxVersion(instances);
+                assignColor(instances,maxVersion);
+            }
             for (i in instances) { //loops through each instance of the dependency
                 var instance = instances[i];
                 var instanceVersion = chalk.white(instance.version);
                 if (instances.length > 1) {
-                    if (instance.color == "green") {
+                    if(dependency.unmatched){}
+                    else if (instance.color == "green") {
                         var instanceVersion = chalk.green(instance.version);
                     } else if (instance.color == "magenta") {
                         var instanceVersion = chalk.magenta(instance.version);
@@ -234,11 +238,6 @@ function compareAndMatch(projectOne, projectTwo) {
                     color: "white"
                 };
             }
-            unmatchedDependencies[unmatchedDependencies.length] = {
-                name: dep,
-                maxinstances: projectOneDep[dep].length,
-                instances: matchedDeps
-            };
         }
     }
     for(var dep in projectOneDep){
@@ -255,7 +254,8 @@ function compareAndMatch(projectOne, projectTwo) {
             dependencies[dependencies.length] = {
                 name: dep,
                 maxinstances: projectOneDep[dep].length,
-                instances: matchedDeps
+                instances: matchedDeps,
+                unmatched: true
             };
         }
     }
@@ -273,7 +273,8 @@ function compareAndMatch(projectOne, projectTwo) {
             dependencies[dependencies.length] = {
                 name: dep,
                 maxinstances: projectTwoDep[dep],
-                instances: matchedDeps
+                instances: matchedDeps,
+                unmatched: true
             };
         }
     }
