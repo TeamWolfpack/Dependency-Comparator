@@ -8,6 +8,12 @@ var commander = require("commander");
 var fs = require("fs");
 var pjson = require("../package.json");
 
+//For Testing
+module.exports = {
+	createTable: createTable,
+	findMaxVersion: findMaxVersion
+}
+
 /**
  * Finds the maximum version of an array of instances of dependencies.
  *
@@ -175,7 +181,7 @@ function createTable(dependencies) {
         }
         console.log(table.toString()); //prints the table
     } else { //prints simple error message is there is no dependency array
-        console.error("No dependency data.");
+        console.error("Undefined dependencies parameter.");
     }
 }
 

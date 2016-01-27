@@ -86,12 +86,12 @@ gulp.task("lint", function(){
 
 // Run git add
 // src is the file(s) to add (or ./*)
-gulp.task('add', function(){
+gulp.task('add', ['bumpPatch'], function(){
   return gulp.src('.')
     .pipe(git.add());
 });
 
-gulp.task('staticcommit', function(){
+gulp.task('staticcommit', ['add'], function(){
   return gulp.src('package.json')
     .pipe(git.commit('initial commit'));
 });
@@ -112,7 +112,7 @@ gulp.task('staticcommit', function(){
 }); */
 gulp.task('commit', function(){
   // just source anything here - we just wan't to call the prompt for now
-    gulp.src('package.json')
+    return gulp.src('package.json')
     .pipe(gulpprompt.prompt({
         type: 'input',
         name: 'commit',
@@ -148,8 +148,8 @@ gulp.task('bumpPatch', function () {
 // Run git push
 // remote is the remote repo
 // branch is the remote branch to push to
-gulp.task('pushDev', function(){
-  git.push('origin', 'dev', function (err) {
+gulp.task('pushDev', ['staticcommit'], function(){
+  return git.push('origin', 'dev', function (err) {
     if (err) throw err;
   });
 });
@@ -158,7 +158,7 @@ gulp.task('pushDev', function(){
 // remote is the remote repo
 // branch is the remote branch to push to
 gulp.task('pushMaster', function(){
-  git.push('origin', 'master', function (err) {
+  return git.push('origin', 'master', function (err) {
     if (err) throw err;
   });
 });
@@ -166,9 +166,10 @@ gulp.task('pushMaster', function(){
 // Run git pull
 // remote is the remote repo
 // branch is the remote branch to pull from
-gulp.task('pullDev', function(){
-  git.pull('origin', 'dev', function (err) {
-    if (err) throw err;
+gulp.task('pullDev', function(callback){
+  return git.pull('origin', 'dev', function (err) {
+    if (err) return callback(err);
+	return callback();
   });
 });
 
@@ -222,7 +223,7 @@ var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
 /**
  * Will do everything you would want to do before pushing up to Dev.
  */
-gulp.task('ciDev', ['pullDev', 'add', 'staticcommit', 'bumpPatch', 'pushDev']);
+gulp.task('ciDev', ['pushDev']);
 
 /**
  * Publishes module to npm.
