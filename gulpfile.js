@@ -120,7 +120,7 @@ gulp.task('commit', ['add'], function(callback){
     },  function(res){
       // now add all files that should be committed
       // but make sure to exclude the .gitignored ones, since gulp-git tries to commit them, too
-      gulp.src([ '!node_modules/', './*' ], {buffer:false})
+      return gulp.src([ '!node_modules/', './*' ], {buffer:false})
       .pipe(git.commit(res.commit));
     }));
 	return callback();
@@ -149,9 +149,10 @@ gulp.task('bumpPatch', ['pullDev'], function () {
 // Run git push
 // remote is the remote repo
 // branch is the remote branch to push to
-gulp.task('pushDev', ['commit'], function(){
+gulp.task('pushDev', ['commit'], function(callback){
   return git.push('origin', 'dev', function (err) {
-    if (err) throw err;
+    if (err) return callback(err);
+	return callback();
   });
 });
 
