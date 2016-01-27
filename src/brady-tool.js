@@ -271,7 +271,7 @@ function compareAndMatch(projectOne, projectTwo) {
             }
             dependencies[dependencies.length] = {
                 name: dep,
-                maxinstances: projectTwoDep[dep],
+                maxinstances: projectTwoDep[dep].length,
                 instances: matchedDeps,
             };
         }
