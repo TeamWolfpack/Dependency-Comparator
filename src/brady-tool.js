@@ -120,16 +120,12 @@ function createTable(dependencies) {
             var instances = dependencies[dependency].instances;
             var rows = [];
 
-            if(!dependency.unmatched){
-                var maxVersion = findMaxVersion(instances);
-                assignColor(instances,maxVersion);
-            }
             for (i in instances) { //loops through each instance of the dependency
                 var instance = instances[i];
-                var instanceVersion = chalk.white(instance.version);
                 if (instances.length > 1) {
-                    if(dependency.unmatched){}
-                    else if (instance.color == "green") {
+					var maxVersion = findMaxVersion(instances);
+					assignColor(instances,maxVersion);
+                    if (instance.color == "green") {
                         var instanceVersion = chalk.green(instance.version);
                     } else if (instance.color == "magenta") {
                         var instanceVersion = chalk.magenta(instance.version);
@@ -137,8 +133,12 @@ function createTable(dependencies) {
                         var instanceVersion = chalk.yellow(instance.version);
                     } else if (instance.color == "red") {
                         var instanceVersion = chalk.red(instance.version);
-                    }
-                }
+                    } else {
+						var instanceVersion = chalk.white(instance.version);
+					}
+                } else {
+					var instanceVersion = chalk.white(instance.version);
+				}
 
                 if (i == 0) { //the first instance fills in the Module column of the table
                     //the very first instance will set the Project One name
@@ -259,7 +259,6 @@ function compareAndMatch(projectOne, projectTwo) {
                 name: dep,
                 maxinstances: projectOneDep[dep].length,
                 instances: matchedDeps,
-                unmatched: true
             };
             //console.log("unmatchedDependencies.length: " + unmatchedDependencies.length); //TODO
         }
@@ -279,7 +278,6 @@ function compareAndMatch(projectOne, projectTwo) {
                 name: dep,
                 maxinstances: projectTwoDep[dep],
                 instances: matchedDeps,
-                unmatched: true
             };
         }
     }
