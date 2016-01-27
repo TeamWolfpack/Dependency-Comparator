@@ -10,8 +10,7 @@ var pjson = require("../package.json");
 
 //For Testing
 module.exports = {
-	createTable: createTable,
-	findMaxVersion: findMaxVersion
+	createTable: createTable
 }
 
 /**
@@ -120,7 +119,7 @@ function createTable(dependencies) {
     //Check that the param exists.
     //Since this is made internally, it assumes everything else
     //is there and correctly formatted.
-    if (dependencies) {
+    if (dependencies instanceof Array) {
         for (index in dependencies) { //loops through each dependency
             //Grab info about the dependency
             var depName = index;
@@ -181,7 +180,7 @@ function createTable(dependencies) {
         }
         console.log(table.toString()); //prints the table
     } else { //prints simple error message is there is no dependency array
-        console.error("Undefined dependencies parameter.");
+        console.log("Undefined dependencies parameter.");
     }
 }
 
