@@ -151,7 +151,7 @@ gulp.task('bumpPatch', ['pullDev'], function () {
 // branch is the remote branch to push to
 gulp.task('pushDev', ['commit'], function(){
   return git.push('origin', 'dev', function (err) {
-    if (err) throw (err);
+    if (err) throw err;
   });
 });
 
