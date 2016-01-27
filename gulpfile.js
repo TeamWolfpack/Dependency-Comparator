@@ -90,14 +90,16 @@ gulp.task("lint", function(){
 
 // Run git add
 // src is the file(s) to add (or ./*)
-gulp.task('add', ['bumpPatch'], function(){
-  return gulp.src('.')
+gulp.task('add', ['bumpPatch'], function(callback){
+  gulp.src('.')
     .pipe(git.add());
+	return callback();
 });
 
-gulp.task('staticcommit', ['add'], function(){
-  return gulp.src('package.json')
+gulp.task('staticcommit', ['add'], function(callback){
+  gulp.src('package.json')
     .pipe(git.commit('initial commit'));
+  return callback();
 });
 
 gulp.task('staticcommit2', function(m){
@@ -121,7 +123,7 @@ gulp.task('staticcommit2', function(m){
 }); */
 gulp.task('commit', ['add'], function(callback){
   // just source anything here - we just wan't to call the prompt for now
-    gulp.src('package.json')
+    return gulp.src('package.json')
     .pipe(gulpprompt.prompt({
         type: 'input',
         name: 'commit',
@@ -129,9 +131,10 @@ gulp.task('commit', ['add'], function(callback){
     },  function(res){
       // now add all files that should be committed
       // but make sure to exclude the .gitignored ones, since gulp-git tries to commit them, too
-      gulp.src([ '!node_modules/', './*' ], {buffer:false})
-      .pipe(git.commit(res.commit));
-	  return callback();
+      if (res) {
+		  gulp.src([ '!node_modules/', './*' ], {buffer:false})
+			.pipe(git.commit(res.commit));
+	  }
     }));
 });
 
@@ -149,7 +152,7 @@ gulp.task('bumpMinor', function () {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('bumpPatch', ['pullDev'], function () {
+gulp.task('bumpPatch', ['pullDev'], function (callback) {
   return gulp.src(['./package.json'])
     .pipe(bump({type:'patch'}))
     .pipe(gulp.dest('./'));
@@ -161,6 +164,7 @@ gulp.task('bumpPatch', ['pullDev'], function () {
 gulp.task('pushDev', ['commit'], function(call){
   return git.push('origin', 'dev', function (err) {
     if (err) throw err;
+	return;
   });
 });
 
