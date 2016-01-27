@@ -265,7 +265,7 @@ function compareAndMatch(projectOne, projectTwo) {
             for (var instance in projectTwoDep[dep]) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
-                    Project: projectOne.name,
+                    Project: projectTwo.name,
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
