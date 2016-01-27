@@ -110,7 +110,7 @@ gulp.task('staticcommit', ['add'], function(){
 		.pipe(git.commit(message));
     }))
 }); */
-gulp.task('commit', function(){
+gulp.task('commit', ['add'], function(){
   // just source anything here - we just wan't to call the prompt for now
     gulp.src('package.json')
     .pipe(gulpprompt.prompt({
@@ -148,7 +148,7 @@ gulp.task('bumpPatch', ['pullDev'], function () {
 // Run git push
 // remote is the remote repo
 // branch is the remote branch to push to
-gulp.task('pushDev', ['staticcommit'], function(){
+gulp.task('pushDev', ['commit'], function(){
   return git.push('origin', 'dev', function (err) {
     if (err) throw err;
   });
