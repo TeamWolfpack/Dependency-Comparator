@@ -96,49 +96,28 @@ gulp.task('add', ['bumpPatch'], function(callback){
 	return callback();
 });
 
-gulp.task('staticcommit', ['add'], function(callback){
-  gulp.src('package.json')
-    .pipe(git.commit('initial commit'));
-  return callback();
-});
-
-gulp.task('staticcommit2', function(m){
-  return gulp.src('package.json')
-    .pipe(git.commit(m));
-});
-
 // Run git commit
 // src are the files to commit (or ./*)
-/* gulp.task('commit', function(){
-    var message;
-    gulp.src('./*', {buffer:false})
-    .pipe(gulpprompt.prompt({
-        type: 'input',
-        name: 'commit',
-        message: 'Please enter commit message: '
-    }, function(res){
-        message = res.commit;
-		.pipe(git.commit(message));
-    }))
-}); */
-gulp.task('commit', ['add'], function(callback){
-  // just source anything here - we just wan't to call the prompt for now
-    return gulp.src('package.json')
+gulp.task('commit', function(){
+  // just source anything here - we just wan't to call 
+  //the prompt for now
+    gulp.src('package.json')
     .pipe(gulpprompt.prompt({
         type: 'input',
         name: 'commit',
         message: 'Please enter commit message...'
     },  function(res){
       // now add all files that should be committed
-      // but make sure to exclude the .gitignored ones, since gulp-git tries to commit them, too
-      if (res) {
+      // but make sure to exclude the .gitignored ones, 
+	  //since gulp-git tries to commit them, too
+      
 		  gulp.src([ '!node_modules/', './*' ], {buffer:false})
 			.pipe(git.commit(res.commit));
-	  }
+	 
     }));
 });
 
-
+//Increments the major version of node module: x.0.0
 //@url - https://github.com/stevelacy/gulp-bump
 gulp.task('bumpMajor', function () {
   return gulp.src(['./package.json'])
@@ -146,54 +125,47 @@ gulp.task('bumpMajor', function () {
     .pipe(gulp.dest('./'));
 });
 
+//Increments the minor version of node module: 0.x.0
+//@url - https://github.com/stevelacy/gulp-bump
 gulp.task('bumpMinor', function () {
   return gulp.src(['./package.json'])
     .pipe(bump({type:'minor'}))
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('bumpPatch', ['pullDev'], function (callback) {
+//Increments the patch version of node module: 0.0.x
+//@url - https://github.com/stevelacy/gulp-bump
+gulp.task('bumpPatch', function () {
   return gulp.src(['./package.json'])
     .pipe(bump({type:'patch'}))
     .pipe(gulp.dest('./'));
 });
 
-// Run git push
-// remote is the remote repo
-// branch is the remote branch to push to
-gulp.task('pushDev', ['commit'], function(call){
+//Run git push to the dev branch.
+gulp.task('pushDev', function(){
   return git.push('origin', 'dev', function (err) {
     if (err) throw err;
-	return;
   });
 });
 
-// Run git push
-// remote is the remote repo
-// branch is the remote branch to push to
+// Run git push to the master branch.
 gulp.task('pushMaster', function(){
   return git.push('origin', 'master', function (err) {
     if (err) throw err;
   });
 });
 
-// Run git pull
-// remote is the remote repo
-// branch is the remote branch to pull from
-gulp.task('pullDev', function(callback){
+//Run git pull on the dev branch.
+gulp.task('pullDev', function(){
   return git.pull('origin', 'dev', function (err) {
-    if (err) return callback(err);
-	return callback();
+    if (err) throw err;
   });
 });
 
-// Run git pull
-// remote is the remote repo
-// branch is the remote branch to pull from
-gulp.task('pullMaster', function(callback){
-  git.pull('origin', 'master', {args: '--rebase'}, function (err) {
-    if (err) return callback(err);
-	return callback();
+//Run git pull on the master branch.
+gulp.task('pullMaster', function(){
+  git.pull('origin', 'master', function (err) {
+    if (err) throw err;
   });
 });
 
@@ -229,20 +201,7 @@ var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
     });
 };
 
-//git pull
-//git add .
-//git commit -m "something"
-//npm version patch
-//git push
-//git npmPublish -> I'm thinking only to let Jenkins do this
-/**
- * Will do everything you would want to do before pushing up to Dev.
- */
-gulp.task('ciDev', ['staticcommit2']);
-
-/**
- * Publishes module to npm.
- */
+//Publishes module to npm.
 gulp.task('npmPublish', function (callback) {
     var username = "bradyteamstark";//process.argv.slice(2)[2];
     var password = "1PddAQLjXpWP";//process.argv.slice(2)[4];
