@@ -114,7 +114,7 @@ function createTable(dependencies) {
     //Since this is made internally, it assumes everything else
     //is there and correctly formatted.
     if (dependencies) {
-        for (dependency in dependencies) { //loops through each dependency
+        for (var dependency in dependencies) { //loops through each dependency
             //Grab info about the dependency
             var rowSpan = dependencies[dependency].maxinstances;
             var instances = dependencies[dependency].instances;
@@ -146,9 +146,9 @@ function createTable(dependencies) {
                     }
                     //Determines location of instance based on project name
                     if (instance.Project == projectOneName) {
-                        rows.push([{rowSpan: rowSpan, content: dependency}, instanceVersion, instance.path, "", ""]);
+                        rows.push([{rowSpan: rowSpan, content: dependencies[dependency].name}, instanceVersion, instance.path, "", ""]);
                     } else {
-                        rows.push([{rowSpan: rowSpan, content: dependency}, "", "", instanceVersion, instance.path]);
+                        rows.push([{rowSpan: rowSpan, content: dependencies[dependency].name}, "", "", instanceVersion, instance.path]);
                     }
                 } else if (i < rowSpan) { //based on the dependency format, this will fill the left most instance
                     //Determines location of instance based on project name
@@ -208,7 +208,7 @@ function compareAndMatch(projectOne, projectTwo) {
                     color: "white"
                 };
             }
-            for(var instance in projectTwoDep[dep]){
+            for(var instance in projectTwoDep[dep]) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
@@ -216,7 +216,8 @@ function compareAndMatch(projectOne, projectTwo) {
                     color: "white"
                 };
             }
-            dependencies[dep] = {
+            dependencies[dependencies.length] = {
+                name: dep,
                 maxinstances: Math.max(projectOneDep[dep].length, projectTwoDep[dep].length),
                 instances: matchedDeps
             };
@@ -233,45 +234,30 @@ function compareAndMatch(projectOne, projectTwo) {
                     color: "white"
                 };
             }
-            unmatchedDependencies[dep] = {
+            unmatchedDependencies[unmatchedDependencies.length] = {
+                name: dep,
                 maxinstances: projectOneDep[dep].length,
                 instances: matchedDeps
             };
         }
-        //for(var dep in projectOneDep){
-        //    if(projectOneDep[dep]) {
-        //        var matchedDeps = [];
-        //        for (var instance in projectOneDep[dep]) {
-        //            matchedDeps[matchedDeps.length] = {
-        //                version: projectOneDep[dep][instance].version,
-        //                Project: projectOne.name,
-        //                path: projectOneDep[dep][instance].path,
-        //                color: "white"
-        //            };
-        //        }
-        //        dependencies[dep] = {
-        //            maxinstances: projectOneDep[dep].length,
-        //            instances: matchedDeps
-        //        };
-        //    }
-        //}
-        //for(var dep in projectTwoDep){
-        //    if(projectTwoDep[dep]) {
-        //        var matchedDeps = [];
-        //        for (var instance in projectTwoDep[dep]) {
-        //            matchedDeps[matchedDeps.length] = {
-        //                version: projectTwoDep[dep][instance].version,
-        //                Project: projectTwo.name,
-        //                path: projectTwoDep[dep][instance].path,
-        //                color: "white"
-        //            };
-        //        }
-        //        dependencies[dep] = {
-        //            maxinstances: projectTwoDep[dep].length,
-        //            instances: matchedDeps
-        //        };
-        //    }
-        //}
+    }
+    for(var dep in projectOneDep){
+        if(projectOneDep[dep]) {
+            var matchedDeps = [];
+            for (var instance in projectOneDep[dep]) {
+                matchedDeps[matchedDeps.length] = {
+                    version: projectOneDep[dep][instance].version,
+                    Project: projectOne.name,
+                    path: projectOneDep[dep][instance].path,
+                    color: "white"
+                };
+            }
+            dependencies[dependencies.length] = {
+                name: dep,
+                maxinstances: projectOneDep[dep].length,
+                instances: matchedDeps
+            };
+        }
     }
     for(var dep in projectTwoDep){
         if(projectTwoDep[dep]) {
@@ -279,53 +265,17 @@ function compareAndMatch(projectOne, projectTwo) {
             for (var instance in projectTwoDep[dep]) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
-                    Project: projectTwo.name,
+                    Project: projectOne.name,
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
             }
-            unmatchedDependencies[dep] = {
-                maxinstances: projectTwoDep[dep].length,
+            dependencies[dependencies.length] = {
+                name: dep,
+                maxinstances: projectTwoDep[dep],
                 instances: matchedDeps
             };
         }
-    }
-    //for(var dep in projectOneDep){
-    //    if(projectOneDep[dep]) {
-    //        var matchedDeps = [];
-    //        for (var instance in projectOneDep[dep]) {
-    //            matchedDeps[matchedDeps.length] = {
-    //                version: projectOneDep[dep][instance].version,
-    //                Project: projectOne.name,
-    //                path: projectOneDep[dep][instance].path,
-    //                color: "white"
-    //            };
-    //        }
-    //        unmatchedDependencies[dep] = {
-    //            maxinstances: projectOneDep[dep].length,
-    //            instances: matchedDeps
-    //        };
-    //    }
-    //}
-    //for(var dep in projectTwoDep){
-    //    if(projectTwoDep[dep]) {
-    //        var matchedDeps = [];
-    //        for (var instance in projectTwoDep[dep]) {
-    //            matchedDeps[matchedDeps.length] = {
-    //                version: projectTwoDep[dep][instance].version,
-    //                Project: projectTwo.name,
-    //                path: projectTwoDep[dep][instance].path,
-    //                color: "white"
-    //            };
-    //        }
-    //        unmatchedDependencies[dep] = {
-    //            maxinstances: projectTwoDep[dep].length,
-    //            instances: matchedDeps
-    //        };
-    //    }
-    //}
-    for (unmatched in unmatchedDependencies) {
-        dependencies.push(unmatched);
     }
     return dependencies;
 }
