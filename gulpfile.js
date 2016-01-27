@@ -110,7 +110,7 @@ gulp.task('staticcommit', ['add'], function(){
 		.pipe(git.commit(message));
     }))
 }); */
-gulp.task('commit', ['add'], function(){
+gulp.task('commit', ['add'], function(callback){
   // just source anything here - we just wan't to call the prompt for now
     gulp.src('package.json')
     .pipe(gulpprompt.prompt({
@@ -120,8 +120,9 @@ gulp.task('commit', ['add'], function(){
     },  function(res){
       // now add all files that should be committed
       // but make sure to exclude the .gitignored ones, since gulp-git tries to commit them, too
-      return gulp.src([ '!node_modules/', './*' ], {buffer:false})
+      gulp.src([ '!node_modules/', './*' ], {buffer:false})
       .pipe(git.commit(res.commit));
+	  return callback();
     }));
 });
 
@@ -176,9 +177,10 @@ gulp.task('pullDev', function(callback){
 // Run git pull
 // remote is the remote repo
 // branch is the remote branch to pull from
-gulp.task('pullMaster', function(){
+gulp.task('pullMaster', function(callback){
   git.pull('origin', 'master', {args: '--rebase'}, function (err) {
-    if (err) throw err;
+    if (err) return callback(err);
+	return callback();
   });
 });
 
