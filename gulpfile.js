@@ -113,7 +113,7 @@ gulp.task('staticcommit', ['add'], function(callback){
 }); */
 gulp.task('commit', ['add'], function(callback){
   // just source anything here - we just wan't to call the prompt for now
-    return gulp.src('package.json')
+    gulp.src('package.json')
     .pipe(gulpprompt.prompt({
         type: 'input',
         name: 'commit',
@@ -121,9 +121,10 @@ gulp.task('commit', ['add'], function(callback){
     },  function(res){
       // now add all files that should be committed
       // but make sure to exclude the .gitignored ones, since gulp-git tries to commit them, too
-      return gulp.src([ '!node_modules/', './*' ], {buffer:false})
+      gulp.src([ '!node_modules/', './*' ], {buffer:false})
       .pipe(git.commit(res.commit));
     }));
+	return callback();
 });
 
 
