@@ -2,6 +2,8 @@
 # "npm install" to install all packages
 node_modules/*
 
+*.bak
+*.orig
 *.tgz
 
 # ignoring the idea folder from jetbrains
