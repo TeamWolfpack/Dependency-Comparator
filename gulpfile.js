@@ -9,6 +9,8 @@ var fs = require('fs');
 var util = require('util');
 var gulpprompt = require('gulp-prompt');
 
+//https://ponyfoo.com/articles/my-first-gulp-adventure
+
 //directories containing javascript files
 var allJSFiles = ["./test/unit/**/*.js", "./src/**/*.js",
     "./test/integration/**/*-test.js", "!./src/**/*.min.js",
