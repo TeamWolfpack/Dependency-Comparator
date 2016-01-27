@@ -122,8 +122,8 @@ gulp.task('commit', ['add'], function(callback){
       // but make sure to exclude the .gitignored ones, since gulp-git tries to commit them, too
       gulp.src([ '!node_modules/', './*' ], {buffer:false})
       .pipe(git.commit(res.commit));
-	  return callback();
     }));
+	return callback();
 });
 
 
