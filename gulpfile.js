@@ -86,9 +86,10 @@ gulp.task("lint", function(){
 
 // Run git add
 // src is the file(s) to add (or ./*)
-gulp.task('add', ['bumpPatch'], function(){
-  return gulp.src('.')
+gulp.task('add', ['bumpPatch'], function(callback){
+  gulp.src('.')
     .pipe(git.add());
+	return callback();
 });
 
 gulp.task('staticcommit', ['add'], function(callback){
@@ -121,9 +122,8 @@ gulp.task('commit', ['add'], function(callback){
     },  function(res){
       // now add all files that should be committed
       // but make sure to exclude the .gitignored ones, since gulp-git tries to commit them, too
-      gulp.src([ '!node_modules/', './*' ], {buffer:false})
+      return gulp.src([ '!node_modules/', './*' ], {buffer:false})
       .pipe(git.commit(res.commit));
-	  return res;
     }));
 });
 
