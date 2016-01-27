@@ -201,6 +201,7 @@ function compareAndMatch(projectOne, projectTwo) {
         if(projectTwoDep[dep]){
             var matchedDeps = [];
             for(var instance in projectOneDep[dep]){
+                //console.log("Matched1:    matchedDeps.length: " + matchedDeps.length); //TODO
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
@@ -209,6 +210,7 @@ function compareAndMatch(projectOne, projectTwo) {
                 };
             }
             for(var instance in projectTwoDep[dep]){
+                //console.log("Matched2:    matchedDeps.length: " + matchedDeps.length); //TODO
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
@@ -220,12 +222,14 @@ function compareAndMatch(projectOne, projectTwo) {
                 maxinstances: Math.max(projectOneDep[dep].length, projectTwoDep[dep].length),
                 instances: matchedDeps
             };
+            //console.log("dependencies.length: " + dependencies); //TODO
             projectTwoDep[dep] = undefined;
             projectOneDep[dep] = undefined;
 
         }else{
             var matchedDeps = [];
             for (var instance in projectOneDep[dep]) {
+                //console.log("Unmatched:    matchedDeps.length: " + matchedDeps.length); //TODO
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
@@ -233,10 +237,12 @@ function compareAndMatch(projectOne, projectTwo) {
                     color: "white"
                 };
             }
+            //console.log("check instances and maxinstances to be put into unmatchedDependencies:\n" + "\t" + "maxinstances: " + projectOneDep[dep].length + "\n\t" + "instances: " + JSON.stringify(matchedDeps)); //TODO
             unmatchedDependencies[dep] = {
                 maxinstances: projectOneDep[dep].length,
                 instances: matchedDeps
             };
+            //console.log("unmatchedDependencies.length: " + unmatchedDependencies.length); //TODO
         }
         //for(var dep in projectOneDep){
         //    if(projectOneDep[dep]) {
@@ -325,6 +331,9 @@ function compareAndMatch(projectOne, projectTwo) {
     //    }
     //}
     for (unmatched in unmatchedDependencies) {
+        //console.log("JSON.stringify(unmatched): " + JSON.stringify(unmatched));
+        //console.log("JSON.stringify(unmatched.maxinstances): " + JSON.stringify(unmatched.maxinstances)); //TODO
+        //console.log("JSON.stringify(unmatched.instances): " + JSON.stringify(unmatched.instances));
         dependencies.push(unmatched);
     }
     return dependencies;
