@@ -113,7 +113,7 @@ gulp.task('staticcommit', ['add'], function(callback){
 }); */
 gulp.task('commit', ['add'], function(callback){
   // just source anything here - we just wan't to call the prompt for now
-    gulp.src('package.json')
+    return gulp.src('package.json')
     .pipe(gulpprompt.prompt({
         type: 'input',
         name: 'commit',
@@ -121,10 +121,9 @@ gulp.task('commit', ['add'], function(callback){
     },  function(res){
       // now add all files that should be committed
       // but make sure to exclude the .gitignored ones, since gulp-git tries to commit them, too
-      gulp.src([ '!node_modules/', './*' ], {buffer:false})
+      return gulp.src([ '!node_modules/', './*' ], {buffer:false})
       .pipe(git.commit(res.commit));
     }));
-	return callback();
 });
 
 
@@ -141,10 +140,11 @@ gulp.task('bumpMinor', function () {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('bumpPatch', ['pullDev'], function () {
-  return gulp.src(['./package.json'])
+gulp.task('bumpPatch', ['pullDev'], function (callback) {
+  gulp.src(['./package.json'])
     .pipe(bump({type:'patch'}))
     .pipe(gulp.dest('./'));
+	return callback();
 });
 
 // Run git push

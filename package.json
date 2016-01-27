@@ -1,6 +1,6 @@
 {
   "name": "sdl-brady-dependency-tool",
-  "version": "1.0.43",
+  "version": "1.0.44",
   "description": "Node.js dependency comparison tool.",
   "bin": {
     "brady-tool": "bin/brady-tool.js"
