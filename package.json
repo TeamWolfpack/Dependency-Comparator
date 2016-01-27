@@ -1,6 +1,6 @@
 {
   "name": "sdl-brady-dependency-tool",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "Node.js dependency comparison tool.",
   "bin": {
     "brady-tool": "bin/brady-tool.js"
@@ -23,9 +23,12 @@
   "devDependency": {
     "chai": "^3.4.1",
     "gulp": "^3.9.0",
+    "gulp-bump": "^1.0.0",
     "gulp-eslint": "^1.1.1",
+    "gulp-git": "^1.6.1",
     "gulp-jscs": "^3.0.2",
     "gulp-mocha": "^2.2.0",
+    "gulp-prompt": "^0.1.2",
     "mocha": "^2.3.4",
     "mocha-sinon": "^1.1.5",
     "sinon": "^1.17.2"
@@ -35,13 +38,6 @@
     "cli-table2": "^0.1.9",
     "commander": "^2.9.0",
     "fs": "0.0.2",
-    "gulp": "^3.9.0",
-    "gulp-bump": "^1.0.0",
-    "gulp-eslint": "^1.1.1",
-    "gulp-git": "^1.6.1",
-    "gulp-jscs": "^3.0.2",
-    "gulp-mocha": "^2.2.0",
-    "gulp-prompt": "^0.1.2",
     "jenkins": "^0.13.0",
     "npm": "^3.5.3"
   }
