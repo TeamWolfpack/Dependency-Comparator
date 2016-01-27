@@ -112,7 +112,7 @@ gulp.task('staticcommit', ['add'], function(){
 }); */
 gulp.task('commit', function(){
   // just source anything here - we just wan't to call the prompt for now
-    return gulp.src('package.json')
+    gulp.src('package.json')
     .pipe(gulpprompt.prompt({
         type: 'input',
         name: 'commit',
@@ -139,7 +139,7 @@ gulp.task('bumpMinor', function () {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('bumpPatch', function () {
+gulp.task('bumpPatch', ['pullDev'], function () {
   return gulp.src(['./package.json'])
     .pipe(bump({type:'patch'}))
     .pipe(gulp.dest('./'));
