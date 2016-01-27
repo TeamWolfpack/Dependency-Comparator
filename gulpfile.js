@@ -91,9 +91,10 @@ gulp.task('add', ['bumpPatch'], function(){
     .pipe(git.add());
 });
 
-gulp.task('staticcommit', ['add'], function(){
-  return gulp.src('package.json')
+gulp.task('staticcommit', ['add'], function(callback){
+  gulp.src('package.json')
     .pipe(git.commit('initial commit'));
+  return callback();
 });
 
 // Run git commit
@@ -112,7 +113,7 @@ gulp.task('staticcommit', ['add'], function(){
 }); */
 gulp.task('commit', ['add'], function(callback){
   // just source anything here - we just wan't to call the prompt for now
-    gulp.src('package.json')
+    return gulp.src('package.json')
     .pipe(gulpprompt.prompt({
         type: 'input',
         name: 'commit',
@@ -123,7 +124,6 @@ gulp.task('commit', ['add'], function(callback){
       return gulp.src([ '!node_modules/', './*' ], {buffer:false})
       .pipe(git.commit(res.commit));
     }));
-	return callback();
 });
 
 
