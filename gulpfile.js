@@ -86,12 +86,12 @@ gulp.task("lint", function(){
 
 // Run git add
 // src is the file(s) to add (or ./*)
-gulp.task('add', function(){
+gulp.task('add', ['pullDev'], function(){
   return gulp.src('.')
     .pipe(git.add());
 });
 
-gulp.task('staticcommit', function(){
+gulp.task('staticcommit', ['pullDev', 'add'], function(){
   return gulp.src('package.json')
     .pipe(git.commit('initial commit'));
 });
@@ -110,7 +110,7 @@ gulp.task('staticcommit', function(){
 		.pipe(git.commit(message));
     }))
 }); */
-gulp.task('commit', function(){
+gulp.task('commit', ['pullDev', 'add'], function(){
   // just source anything here - we just wan't to call the prompt for now
     gulp.src('package.json')
     .pipe(gulpprompt.prompt({
@@ -139,7 +139,7 @@ gulp.task('bumpMinor', function () {
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('bumpPatch', function () {
+gulp.task('bumpPatch', ['pullDev', 'commit'], function () {
   return gulp.src(['./package.json'])
     .pipe(bump({type:'patch'}))
     .pipe(gulp.dest('./'));
@@ -148,8 +148,8 @@ gulp.task('bumpPatch', function () {
 // Run git push
 // remote is the remote repo
 // branch is the remote branch to push to
-gulp.task('pushDev', function(){
-  git.push('origin', 'dev', function (err) {
+gulp.task('pushDev', ['pullDev', 'bumpPatch'], function(){
+  return git.push('origin', 'dev', function (err) {
     if (err) throw err;
   });
 });
@@ -158,7 +158,7 @@ gulp.task('pushDev', function(){
 // remote is the remote repo
 // branch is the remote branch to push to
 gulp.task('pushMaster', function(){
-  git.push('origin', 'master', function (err) {
+  return git.push('origin', 'master', function (err) {
     if (err) throw err;
   });
 });
@@ -167,8 +167,8 @@ gulp.task('pushMaster', function(){
 // remote is the remote repo
 // branch is the remote branch to pull from
 gulp.task('pullDev', function(){
-  git.pull('origin', 'dev', function (err) {
-    if (err) throw err;
+  return git.pull('origin', 'dev', function (err) {
+    //if (err) throw err;
   });
 });
 
@@ -176,7 +176,7 @@ gulp.task('pullDev', function(){
 // remote is the remote repo
 // branch is the remote branch to pull from
 gulp.task('pullMaster', function(){
-  git.pull('origin', 'master', {args: '--rebase'}, function (err) {
+  return git.pull('origin', 'master', {args: '--rebase'}, function (err) {
     if (err) throw err;
   });
 });
