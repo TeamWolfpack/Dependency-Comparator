@@ -91,6 +91,11 @@ gulp.task('add', function(){
     .pipe(git.add());
 });
 
+gulp.task('staticcommit', function(){
+  return gulp.src('package.json')
+    .pipe(git.commit('initial commit'));
+});
+
 // Run git commit
 // src are the files to commit (or ./*)
 /* gulp.task('commit', function(){
@@ -217,7 +222,7 @@ var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
 /**
  * Will do everything you would want to do before pushing up to Dev.
  */
-gulp.task('ciDev', ['pullDev', 'add', 'commit', 'bumpPatch', 'pushDev']);
+gulp.task('ciDev', ['pullDev', 'add', 'staticcommit', 'bumpPatch', 'pushDev']);
 
 /**
  * Publishes module to npm.
