@@ -144,7 +144,7 @@ gulp.task('bumpPatch', ['pullDev'], function (callback) {
   gulp.src(['./package.json'])
     .pipe(bump({type:'patch'}))
     .pipe(gulp.dest('./'));
-	return callback();
+	return callback()
 });
 
 // Run git push
