@@ -119,8 +119,8 @@ function createTable(dependencies) {
     //Check that the param exists.
     //Since this is made internally, it assumes everything else
     //is there and correctly formatted.
-    if (dependencies instanceof Array) {
-        for (index in dependencies) { //loops through each dependency
+    if (dependencies) {
+        for (var dependency in dependencies) { //loops through each dependency
             //Grab info about the dependency
             var rowSpan = dependencies[dependency].maxinstances;
             var instances = dependencies[dependency].instances;
@@ -319,7 +319,7 @@ function parseDependenciesRecursively(file,depth,dependencies,previousDependency
     var filePackage = require(file + "/package.json");
     //Get the dependencies of the project
     var fileDep = filePackage.dependencies;
-    if(commander.devDependencies) {
+    if(commander.all) {
         for (devDep in filePackage.devDependencies) {
             if (!fileDep[devDep]) {
                 fileDep[devDep] = devDep.version;

@@ -20,7 +20,7 @@
   "author": "team-wolfpack",
   "license": "ISC",
   "homepage": "https://bitbucket.org/aaronchun7/sdl-brady-dependency-tool#readme",
-  "devDependency": {
+  "devDependencies": {
     "chai": "^3.4.1",
     "gulp": "^3.9.0",
     "gulp-bump": "^1.0.0",
