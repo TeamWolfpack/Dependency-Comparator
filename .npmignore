@@ -2,3 +2,7 @@
 
 # ignoring the idea folder from jetbrains
 .idea/*
+
+# ignore test folder and dist folder
+dist/*
+test/*
