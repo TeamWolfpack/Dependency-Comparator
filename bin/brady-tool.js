@@ -102,8 +102,8 @@ function assignColor(instances, maxVersion) {
  * @author Josh Leonard
  */
 function createTable(dependencies) {
-    var pOneName; //Name of project one
-    var pTwoName; //Name of project two
+    var projectOneName; //Name of project one
+    var projectTwoName; //Name of project two
 	
     //Create the table object
     var table = new cliTable({
@@ -122,16 +122,15 @@ function createTable(dependencies) {
     if (dependencies instanceof Array) {
         for (index in dependencies) { //loops through each dependency
             //Grab info about the dependency
-            var depName = index;
-            var rowSpan = dependencies[index].maxinstances;
-            var instances = dependencies[index].instances;
+            var rowSpan = dependencies[dependency].maxinstances;
+            var instances = dependencies[dependency].instances;
             var rows = [];
-            var maxVersion = findMaxVersion(instances);
-            assignColor(instances,maxVersion);
+
             for (i in instances) { //loops through each instance of the dependency
                 var instance = instances[i];
-                var instanceVersion = chalk.white(instance.version);
                 if (instances.length > 1) {
+					var maxVersion = findMaxVersion(instances);
+					assignColor(instances,maxVersion);
                     if (instance.color == "green") {
                         var instanceVersion = chalk.green(instance.version);
                     } else if (instance.color == "magenta") {
@@ -140,38 +139,47 @@ function createTable(dependencies) {
                         var instanceVersion = chalk.yellow(instance.version);
                     } else if (instance.color == "red") {
                         var instanceVersion = chalk.red(instance.version);
-                    }
-                }
+                    } else {
+						var instanceVersion = chalk.white(instance.version);
+					}
+                } else {
+					var instanceVersion = chalk.white(instance.version);
+				}
 
                 if (i == 0) { //the first instance fills in the Module column of the table
                     //the very first instance will set the Project One name
                     //NOTE: this assumes the very first instanse is part of Project one
-                    if (!pOneName) {
-                        pOneName = instance.Project;
-                        table.options.head[1] = pOneName;
-                        table.options.head[2] = pOneName + " Path";
+                    if (!projectOneName) {
+                        projectOneName = instance.Project;
+                        table.options.head[1] = projectOneName;
+                        table.options.head[2] = projectOneName + " Path";
                     }
                     //Determines location of instance based on project name
-                    if (instance.Project == pOneName) {
-                        rows.push([{rowSpan: rowSpan, content: depName}, instanceVersion, instance.path, "", ""]);
+                    if (instance.Project == projectOneName) {
+                        rows.push([{rowSpan: rowSpan, content: dependencies[dependency].name}, instanceVersion, instance.path, "", ""]);
                     } else {
-                        rows.push([{rowSpan: rowSpan, content: depName}, "", "", instanceVersion, instance.path]);
+                        rows.push([{rowSpan: rowSpan, content: dependencies[dependency].name}, "", "", instanceVersion, instance.path]);
                     }
                 } else if (i < rowSpan) { //based on the dependency format, this will fill the left most instance
                     //Determines location of instance based on project name
-                    if (instance.Project == pOneName) {
+                    if (instance.Project == projectOneName) {
                         rows.push([instanceVersion, instance.path, "", ""]);
                     } else {
                         rows.push(["", "", instanceVersion, instance.path]);
                     }
                 } else { //fill any missing Project Two instances
-                    if (!pTwoName) { //sets the name of Project 2 if previously undefined
-                        pTwoName = instance.Project;
-                        table.options.head[3] = pTwoName;
-                        table.options.head[4] = pTwoName + " Path";
+                    if (!projectTwoName) { //sets the name of Project 2 if previously undefined
+                        projectTwoName = instance.Project;
+                        table.options.head[3] = projectTwoName;
+                        table.options.head[4] = projectTwoName + " Path";
                     }
-                    rows[i - rowSpan][3] = instanceVersion;
-                    rows[i - rowSpan][4] = instance.path;
+					if (rows[i - rowSpan].length == 5){
+						rows[i - rowSpan][3] = instanceVersion;
+						rows[i - rowSpan][4] = instance.path;
+					} else if (rows[i - rowSpan].length == 4){
+						rows[i - rowSpan][2] = instanceVersion;
+						rows[i - rowSpan][3] = instance.path;
+					}
                 }
             }
             for (r in rows) { //Pushes each row into the table
@@ -188,86 +196,89 @@ function createTable(dependencies) {
  * Compares and matches dependencies from two arrays of dependencies from projects.
  * Must be edited for comparing with depth.
  *
- * @param {JSON} projectOne Dependencies from project 1
- * @param {JSON} projectTwo Dependencies from project 2
+ * @param {Object} projectOne Dependencies from project 1
+ * @param {Object} projectTwo Dependencies from project 2
  */
 function compareAndMatch(projectOne, projectTwo) {
     //Create new object, ordered by dependencies
     var projectOneDep = projectOne.dependencies;
     var projectTwoDep = projectTwo.dependencies;
     var dependencies = [];
+    var unmatchedDependencies = [];
 
-    //Iterate through the first project's dependencies
-    for (var p1dep in projectOneDep) {
-        //The array we will be storing matched dependencies in
-        var matchedDeps = [];
-        //Match dependencies by checking to see if it exists in the second project
-        if (projectTwoDep[p1dep]) {
-            //If they match, add the matched one to the array
-            matchedDeps[0] = {
-                version: projectOneDep[p1dep].version,
-                Project: projectOne.name,
-                path: projectOneDep[p1dep].path,
-                color: "white"
-            };
-            matchedDeps[1] = {
-                version: projectTwoDep[p1dep].version,
-                Project: projectTwo.name,
-                path: projectTwoDep[p1dep].path,
-                color: "white"
-            };
-            projectOneDep[p1dep] = undefined;
-            projectTwoDep[p1dep] = undefined;
-
-        }
-        //Adding the matched dependencies to the dependencies array
-        //Max instances will be implemented properly once we start checking depth
-        //For now, it will be 1
-        dependencies[p1dep] = {
-            maxinstances: 1,
-            instances: matchedDeps
-        };
-    }
-
-    //Iterate through what remains in the first project, adding it to the end.
-    for (var p1dep in projectOneDep) {
-        if (projectOneDep[p1dep]) {
-            //The array we will be storing matched dependencies in
+    // Checks
+    for(var dep in projectOneDep){
+        if(projectTwoDep[dep]){
             var matchedDeps = [];
-
-            matchedDeps[0] = {
-                version: projectOneDep[p1dep].version,
-                Project: projectOne.name,
-                path: projectOneDep[p1dep].path,
-                color: "white"
-            };
-            projectOneDep[p1dep] = undefined;
-
-            dependencies[p1dep] = {
-                maxinstances: 1,
+            for(var instance in projectOneDep[dep]){
+                matchedDeps[matchedDeps.length] = {
+                    version: projectOneDep[dep][instance].version,
+                    Project: projectOne.name,
+                    path: projectOneDep[dep][instance].path,
+                    color: "white"
+                };
+            }
+            for(var instance in projectTwoDep[dep]){
+                matchedDeps[matchedDeps.length] = {
+                    version: projectTwoDep[dep][instance].version,
+                    Project: projectTwo.name,
+                    path: projectTwoDep[dep][instance].path,
+                    color: "white"
+                };
+            }
+            dependencies[dependencies.length] = {
+                name: dep,
+                maxinstances: Math.max(projectOneDep[dep].length, projectTwoDep[dep].length),
                 instances: matchedDeps
             };
-        }
+            projectTwoDep[dep] = undefined;
+            projectOneDep[dep] = undefined;
 
-    }
-
-    //Iterate through what remians in the second project, adding it to the end.
-    for (var p2dep in projectTwoDep) {
-        if (projectTwoDep[p2dep]) {
-            //The array we will be storing matched dependencies in
+        }else{
             var matchedDeps = [];
-
-            matchedDeps[0] = {
-                version: projectTwoDep[p2dep].version,
-                Project: projectTwo.name,
-                path: projectTwoDep[p2dep].path,
-                color: "white"
+            for (var instance in projectOneDep[dep]) {
+                matchedDeps[matchedDeps.length] = {
+                    version: projectOneDep[dep][instance].version,
+                    Project: projectOne.name,
+                    path: projectOneDep[dep][instance].path,
+                    color: "white"
+                };
+            }
+        }
+    }
+    for(var dep in projectOneDep){
+        if(projectOneDep[dep]) {
+            var matchedDeps = [];
+            for (var instance in projectOneDep[dep]) {
+                matchedDeps[matchedDeps.length] = {
+                    version: projectOneDep[dep][instance].version,
+                    Project: projectOne.name,
+                    path: projectOneDep[dep][instance].path,
+                    color: "white"
+                };
+            }
+            dependencies[dependencies.length] = {
+                name: dep,
+                maxinstances: projectOneDep[dep].length,
+                instances: matchedDeps,
             };
-            projectTwoDep[p2dep] = undefined;
-
-            dependencies[p2dep] = {
-                maxinstances: 1,
-                instances: matchedDeps
+        }
+    }
+    for(var dep in projectTwoDep){
+        if(projectTwoDep[dep]) {
+            var matchedDeps = [];
+            for (var instance in projectTwoDep[dep]) {
+                matchedDeps[matchedDeps.length] = {
+                    version: projectTwoDep[dep][instance].version,
+                    Project: projectTwo.name,
+                    path: projectTwoDep[dep][instance].path,
+                    color: "white"
+                };
+            }
+            dependencies[dependencies.length] = {
+                name: dep,
+                maxinstances: projectTwoDep[dep].length,
+                instances: matchedDeps,
             };
         }
     }
@@ -275,17 +286,20 @@ function compareAndMatch(projectOne, projectTwo) {
 }
 
 /**
+ *
+ /**
  * Takes in the location of the root file of the project and outputs an object with the
  * name, path, and dependencies of the project.
  *
  * @param {File} file Location of the root file of the project
- * @returns {JSON} {{name: Project Name, path: Project Path, dependencies: Array of Dependencies}}
+ * @param depth
+ * @returns {Object} {{name: Project Name, path: Project Path, dependencies: Array of Dependencies}}
  */
-function parseDependencies(file) {
+function parseDependencies(file, depth) {
     //Get the package.json for the project
     var filePackage = require(file + "/package.json");
     //Get the dependencies of the project
-    var fileDep = filePackage.dependencies;
+    //var fileDep = filePackage.dependencies;
     //Store the name and path of the project
     var fileParsedDependencies = {
         name: filePackage.name.toString(),
@@ -293,20 +307,47 @@ function parseDependencies(file) {
         dependencies: []
     };
     //Iterate through dependencies and save them in the specified format
-    for (dep in fileDep) {
-        var depenendency = require(file + "\\node_modules\\" + dep + "\\package.json");
-        fileParsedDependencies.dependencies[dep] =
-		{
-    version: depenendency.version,
-    path: ".\\node_modules\\" + dep
-		};
-        if (isNaN(fileDep[dep][0])) {
-            fileParsedDependencies.dependencies[dep].version = fileDep[dep].substring(1,fileDep[dep].length);
-        }
-    }
+    parseDependenciesRecursively(file,depth,fileParsedDependencies.dependencies,".");
+
     //Return the completed and parsed json object with the dependencies
     return fileParsedDependencies;
 	}
+
+function parseDependenciesRecursively(file,depth,dependencies,previousDependencyPath){
+
+    //Get the package.json for the project
+    var filePackage = require(file + "/package.json");
+    //Get the dependencies of the project
+    var fileDep = filePackage.dependencies;
+    if(commander.devDependencies) {
+        for (devDep in filePackage.devDependencies) {
+            if (!fileDep[devDep]) {
+                fileDep[devDep] = devDep.version;
+            }
+        }
+    }
+    //Iterate through dependencies and save them in the specified format
+    for (dep in fileDep) {
+        try {
+            if (!dependencies[dep]) {
+                dependencies[dep] = [];
+            }
+            var dependency = require(file + "\\node_modules\\" + dep + "\\package.json");
+            dependencies[dep][dependencies[dep].length] =
+            {
+                version: dependency.version,
+                path: previousDependencyPath + "\\node_modules\\" + dep
+            };
+
+            if (depth - 1 >= 0) {
+                parseDependenciesRecursively(file + "\\node_modules\\" + dep, depth - 1, dependencies, previousDependencyPath + "\\node_modules\\" + dep);
+            }
+        }catch(err){
+            // No node_modules after a certain depth so module not found and is skipped
+        }
+    }
+
+}
 
 /**
  * Method that runs when the user enters the 'compare' command.
@@ -347,18 +388,24 @@ function compare(projectOne, projectTwo) {
 
     //If the files exist, parse them
     if (filesExist == true) {
-        //Parse project one
-        var fileOneParsedDependencies = parseDependencies(projectOne);
-        //Parse project two
-        var fileTwoParsedDependencies = parseDependencies(projectTwo);
-        //Combine the parsed projects
-        var combined = {
-            project1: fileOneParsedDependencies,
-            project2: fileTwoParsedDependencies
-        };
-        //Here we will compare the dependencies
-        var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
-        createTable(matchedDependencies);
+        //var depth = 0;
+        if(commander.depth>=1) { // for 1 indexed  -  commander.depth>0
+            var depth = commander.depth-1;
+            //Parse project one
+            var fileOneParsedDependencies = parseDependencies(projectOne,depth);
+            //Parse project two
+            var fileTwoParsedDependencies = parseDependencies(projectTwo,depth);
+            //Combine the parsed projects
+            var combined = {
+                project1: fileOneParsedDependencies,
+                project2: fileTwoParsedDependencies
+            };
+            //Here we will compare the dependencies
+            var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
+            createTable(matchedDependencies);
+        }else{
+            console.log("Invalid depth given.");
+        }
     }
 }
 
@@ -372,5 +419,10 @@ commander
 		.description("Compare the dependencies of two projects")
 		.alias("cmp")
 		.action(compare);
-	
+
+commander
+    .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "1")
+    .option("-a, --all", "Includes devDependencies during comparison");
+
+
 commander.parse(process.argv);
