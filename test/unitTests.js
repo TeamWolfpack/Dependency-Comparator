@@ -150,7 +150,7 @@ describe("Highlight Versions", function(){
 		var dependencies = [];
 		dependencies["gulp"] = gulp;
 		bradyTool.createTable(dependencies);
-		
+
 		//Expected table
 		var table = new cliTable({
 			head: ["Module Name", "project1", "project1 Path", "project2", "project2 Path"],
@@ -202,7 +202,7 @@ describe("Highlight Versions", function(){
 		dependencies["mocha"] = mocha;
 		dependencies["chai"] = chai;
 		bradyTool.createTable(dependencies);
-		
+
 		//Expected table
 		var table = new cliTable({
 			head: ["Module Name", "project1", "project1 Path", "project2", "project2 Path"],
