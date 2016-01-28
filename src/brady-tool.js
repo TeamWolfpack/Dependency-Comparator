@@ -205,7 +205,6 @@ function compareAndMatch(projectOne, projectTwo) {
         if(projectTwoDep[dep]){
             var matchedDeps = [];
             for(var instance in projectOneDep[dep]){
-                //console.log("Matched1:    matchedDeps.length: " + matchedDeps.length); //TODO
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
@@ -214,7 +213,6 @@ function compareAndMatch(projectOne, projectTwo) {
                 };
             }
             for(var instance in projectTwoDep[dep]){
-                //console.log("Matched2:    matchedDeps.length: " + matchedDeps.length); //TODO
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
@@ -227,14 +225,12 @@ function compareAndMatch(projectOne, projectTwo) {
                 maxinstances: Math.max(projectOneDep[dep].length, projectTwoDep[dep].length),
                 instances: matchedDeps
             };
-            //console.log("dependencies.length: " + dependencies); //TODO
             projectTwoDep[dep] = undefined;
             projectOneDep[dep] = undefined;
 
         }else{
             var matchedDeps = [];
             for (var instance in projectOneDep[dep]) {
-                //console.log("Unmatched:    matchedDeps.length: " + matchedDeps.length); //TODO
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
@@ -260,7 +256,6 @@ function compareAndMatch(projectOne, projectTwo) {
                 maxinstances: projectOneDep[dep].length,
                 instances: matchedDeps,
             };
-            //console.log("unmatchedDependencies.length: " + unmatchedDependencies.length); //TODO
         }
     }
     for(var dep in projectTwoDep){
@@ -281,46 +276,6 @@ function compareAndMatch(projectOne, projectTwo) {
             };
         }
     }
-    //for(var dep in projectOneDep){
-    //    if(projectOneDep[dep]) {
-    //        var matchedDeps = [];
-    //        for (var instance in projectOneDep[dep]) {
-    //            matchedDeps[matchedDeps.length] = {
-    //                version: projectOneDep[dep][instance].version,
-    //                Project: projectOne.name,
-    //                path: projectOneDep[dep][instance].path,
-    //                color: "white"
-    //            };
-    //        }
-    //        unmatchedDependencies[dep] = {
-    //            maxinstances: projectOneDep[dep].length,
-    //            instances: matchedDeps
-    //        };
-    //    }
-    //}
-    //for(var dep in projectTwoDep){
-    //    if(projectTwoDep[dep]) {
-    //        var matchedDeps = [];
-    //        for (var instance in projectTwoDep[dep]) {
-    //            matchedDeps[matchedDeps.length] = {
-    //                version: projectTwoDep[dep][instance].version,
-    //                Project: projectTwo.name,
-    //                path: projectTwoDep[dep][instance].path,
-    //                color: "white"
-    //            };
-    //        }
-    //        unmatchedDependencies[dep] = {
-    //            maxinstances: projectTwoDep[dep].length,
-    //            instances: matchedDeps
-    //        };
-    //    }
-    //}
-    //for (unmatched in unmatchedDependencies) {
-    //    //console.log("JSON.stringify(unmatched): " + JSON.stringify(unmatched));
-    //    //console.log("JSON.stringify(unmatched.maxinstances): " + JSON.stringify(unmatched.maxinstances)); //TODO
-    //    //console.log("JSON.stringify(unmatched.instances): " + JSON.stringify(unmatched.instances));
-    //    dependencies.push(unmatched);
-    //}
     return dependencies;
 }
 
@@ -428,8 +383,8 @@ function compare(projectOne, projectTwo) {
     //If the files exist, parse them
     if (filesExist == true) {
         //var depth = 0;
-        if(commander.depth>=0) { // for 1 indexed  -  commander.depth>0
-            var depth = commander.depth;
+        if(commander.depth>=1) { // for 1 indexed  -  commander.depth>0
+            var depth = commander.depth-1;
             //Parse project one
             var fileOneParsedDependencies = parseDependencies(projectOne,depth);
             //Parse project two
@@ -460,7 +415,8 @@ commander
 		.action(compare);
 
 commander
-    .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "0") // check if want 1 or 0
+    .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "1")
     .option("-a, --all", "Includes devDependencies during comparison");
+
 
 commander.parse(process.argv);
