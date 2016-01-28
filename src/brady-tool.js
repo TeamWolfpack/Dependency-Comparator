@@ -383,8 +383,8 @@ function compare(projectOne, projectTwo) {
     //If the files exist, parse them
     if (filesExist == true) {
         //var depth = 0;
-        if(commander.depth>=0) { // for 1 indexed  -  commander.depth>0
-            var depth = commander.depth;
+        if(commander.depth>=1) { // for 1 indexed  -  commander.depth>0
+            var depth = commander.depth-1;
             //Parse project one
             var fileOneParsedDependencies = parseDependencies(projectOne,depth);
             //Parse project two
@@ -415,7 +415,7 @@ commander
 		.action(compare);
 
 commander
-    .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "0") // check if want 1 or 0
+    .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "1") // check if want 1 or 0
     .option("-a, --devDependencies", "Includes devDependencies during comparison");
 
 commander.parse(process.argv);
