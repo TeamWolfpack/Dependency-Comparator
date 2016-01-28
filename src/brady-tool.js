@@ -212,7 +212,7 @@ function compareAndMatch(projectOne, projectTwo) {
                     color: "white"
                 };
             }
-            for(var instance in projectTwoDep[dep]) {
+            for(var instance in projectTwoDep[dep]){
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
@@ -415,7 +415,8 @@ commander
 		.action(compare);
 
 commander
-    .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "1") // check if want 1 or 0
-    .option("-a, --devDependencies", "Includes devDependencies during comparison");
+    .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "1")
+    .option("-a, --all", "Includes devDependencies during comparison");
+
 
 commander.parse(process.argv);
