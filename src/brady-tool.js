@@ -461,6 +461,6 @@ commander
 
 commander
     .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "0") // check if want 1 or 0
-    .option("-a, --devDependencies", "Includes devDependencies during comparison");
+    .option("-a, --all", "Includes devDependencies during comparison");
 
 commander.parse(process.argv);
