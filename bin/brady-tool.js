@@ -21,7 +21,7 @@ module.exports = {
  * an object that is the max version that contains the major, minor,
  * and patch components
  */
-function findMaxVersion(instances) {
+function findMaxVersion(instances, callback) {
     //Initialize the max version, default is 0.0.0
     var maxVersion = {
         major: 0,
@@ -54,7 +54,7 @@ function findMaxVersion(instances) {
             maxVersion.patch = version[2];
         }
     }
-    return maxVersion;
+    return callback(maxVersion);
 }
 
 /**
@@ -120,18 +120,18 @@ function createTable(dependencies) {
     //Since this is made internally, it assumes everything else
     //is there and correctly formatted.
     if (dependencies) {
-        for (var dependency in dependencies) { //loops through each dependency
-            //Grab info about the dependency
-			var dependencyName = dependencies[dependency].name;
-            var rowSpan = dependencies[dependency].maxinstances;
-            var instances = dependencies[dependency].instances;
+		dependencies.forEach(function(dependency){
+			var dependencyName = dependency.name;
+            var rowSpan = dependency.maxinstances;
+            var instances = dependency.instances;
             var rows = [];
 
             for (i in instances) { //loops through each instance of the dependency
                 var instance = instances[i];
                 if (instances.length > 1) {
-					var maxVersion = findMaxVersion(instances);
-					assignColor(instances,maxVersion);
+					findMaxVersion(instances, function(maxVersion){
+						return assignColor(instances,maxVersion);
+					});
                     if (instance.color == "green") {
                         var instanceVersion = chalk.green(instance.version);
                     } else if (instance.color == "magenta") {
@@ -186,6 +186,10 @@ function createTable(dependencies) {
             for (r in rows) { //Pushes each row into the table
                 table.push(rows[r]);
             }
+		});
+        for (var dependency in dependencies) { //loops through each dependency
+            //Grab info about the dependency
+			
         }
         console.log(table.toString()); //prints the table
     } else { //prints simple error message is there is no dependency array
