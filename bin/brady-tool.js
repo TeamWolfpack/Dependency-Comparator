@@ -104,7 +104,7 @@ function assignColor(instances, maxVersion) {
 function createTable(dependencies) {
     var projectOneName; //Name of project one
     var projectTwoName; //Name of project two
-	
+		
     //Create the table object
     var table = new cliTable({
         //Project names are originally blank and then found in the dependencies
@@ -122,6 +122,7 @@ function createTable(dependencies) {
     if (dependencies) {
         for (var dependency in dependencies) { //loops through each dependency
             //Grab info about the dependency
+			var dependencyName = dependencies[dependency].name;
             var rowSpan = dependencies[dependency].maxinstances;
             var instances = dependencies[dependency].instances;
             var rows = [];
@@ -156,9 +157,9 @@ function createTable(dependencies) {
                     }
                     //Determines location of instance based on project name
                     if (instance.Project == projectOneName) {
-                        rows.push([{rowSpan: rowSpan, content: dependencies[dependency].name}, instanceVersion, instance.path, "", ""]);
+                        rows.push([{rowSpan: rowSpan, content: dependencyName}, instanceVersion, instance.path, "", ""]);
                     } else {
-                        rows.push([{rowSpan: rowSpan, content: dependencies[dependency].name}, "", "", instanceVersion, instance.path]);
+                        rows.push([{rowSpan: rowSpan, content: dependencyName}, "", "", instanceVersion, instance.path]);
                     }
                 } else if (i < rowSpan) { //based on the dependency format, this will fill the left most instance
                     //Determines location of instance based on project name
@@ -190,6 +191,7 @@ function createTable(dependencies) {
     } else { //prints simple error message is there is no dependency array
         console.log("Undefined dependencies parameter.");
     }
+	return table;
 }
 
 /**
