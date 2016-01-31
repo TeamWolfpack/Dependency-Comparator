@@ -218,3 +218,43 @@ describe("Highlight Versions", function(){
 		expect(console.log.calledWith(table.toString())).to.be.true;
 	});
 });
+
+describe("Compare Dependencies from files", function(){
+	beforeEach(function() {
+		this.sinon.stub(console, 'log');
+		this.sinon.stub(bradyTool, 'createTable');
+	});
+
+	it("Should parse the dependencies and print them as a table", function(){
+		var fileOne = "../";
+		var fileTwo = "../";
+		var depth = 1;
+		bradyTool.compare(fileOne,fileTwo,depth=1);
+
+		//Checks to see if the table was created
+		expect(console.log.called).to.be.true;
+
+	});
+
+	it("Should parse the dependencies with a greater depth and print them as a table", function(){
+		var fileOne = "../";
+		var fileTwo = "../";
+		var depth = 2;
+		bradyTool.compare(fileOne,fileTwo,depth=1);
+
+		//Checks to see if the table was created
+		expect(console.log.called).to.be.true;
+
+	});
+
+	it("Should say that the file is not found, makes sure there is an exception", function(){
+		var fileOne = "../";
+		var fileTwo = "../s";
+		var depth = 1;
+		try {
+			bradyTool.compare(fileOne, fileTwo, depth = 1);
+		}catch(err){
+			expect(err.message).to.equal("Cannot find module '../s/package.json'");
+		}
+	});
+});
