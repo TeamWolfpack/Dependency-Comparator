@@ -10,7 +10,8 @@ var pjson = require("../package.json");
 
 //For Testing
 module.exports = {
-	createTable: createTable
+	createTable: createTable,
+    compare: compare
 }
 
 /**
