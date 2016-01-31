@@ -21,7 +21,7 @@ module.exports = {
  * an object that is the max version that contains the major, minor,
  * and patch components
  */
-function findMaxVersion(instances) {
+function findMaxVersion(instances, callback) {
     //Initialize the max version, default is 0.0.0
     var maxVersion = {
         major: 0,
@@ -54,7 +54,7 @@ function findMaxVersion(instances) {
             maxVersion.patch = version[2];
         }
     }
-    return maxVersion;
+    return callback(maxVersion);
 }
 
 /**
@@ -104,7 +104,7 @@ function assignColor(instances, maxVersion) {
 function createTable(dependencies) {
     var projectOneName; //Name of project one
     var projectTwoName; //Name of project two
-	
+		
     //Create the table object
     var table = new cliTable({
         //Project names are originally blank and then found in the dependencies
@@ -120,17 +120,18 @@ function createTable(dependencies) {
     //Since this is made internally, it assumes everything else
     //is there and correctly formatted.
     if (dependencies) {
-        for (var dependency in dependencies) { //loops through each dependency
-            //Grab info about the dependency
-            var rowSpan = dependencies[dependency].maxinstances;
-            var instances = dependencies[dependency].instances;
+		dependencies.forEach(function(dependency){
+			var dependencyName = dependency.name;
+            var rowSpan = dependency.maxinstances;
+            var instances = dependency.instances;
             var rows = [];
 
             for (i in instances) { //loops through each instance of the dependency
                 var instance = instances[i];
                 if (instances.length > 1) {
-					var maxVersion = findMaxVersion(instances);
-					assignColor(instances,maxVersion);
+					findMaxVersion(instances, function(maxVersion){
+						return assignColor(instances,maxVersion);
+					});
                     if (instance.color == "green") {
                         var instanceVersion = chalk.green(instance.version);
                     } else if (instance.color == "magenta") {
@@ -156,9 +157,9 @@ function createTable(dependencies) {
                     }
                     //Determines location of instance based on project name
                     if (instance.Project == projectOneName) {
-                        rows.push([{rowSpan: rowSpan, content: dependencies[dependency].name}, instanceVersion, instance.path, "", ""]);
+                        rows.push([{rowSpan: rowSpan, content: dependencyName}, instanceVersion, instance.path, "", ""]);
                     } else {
-                        rows.push([{rowSpan: rowSpan, content: dependencies[dependency].name}, "", "", instanceVersion, instance.path]);
+                        rows.push([{rowSpan: rowSpan, content: dependencyName}, "", "", instanceVersion, instance.path]);
                     }
                 } else if (i < rowSpan) { //based on the dependency format, this will fill the left most instance
                     //Determines location of instance based on project name
@@ -185,11 +186,16 @@ function createTable(dependencies) {
             for (r in rows) { //Pushes each row into the table
                 table.push(rows[r]);
             }
+		});
+        for (var dependency in dependencies) { //loops through each dependency
+            //Grab info about the dependency
+			
         }
         console.log(table.toString()); //prints the table
     } else { //prints simple error message is there is no dependency array
         console.log("Undefined dependencies parameter.");
     }
+	return table;
 }
 
 /**
