@@ -7,6 +7,7 @@ var chalk = require("chalk");
 var commander = require("commander");
 var fs = require("fs");
 var pjson = require("../package.json");
+var exec = require("child_process").exec;
 
 //For Testing
 module.exports = {

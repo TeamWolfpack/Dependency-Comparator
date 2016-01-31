@@ -2,6 +2,7 @@ var expect = require("chai").expect;
 var sinon = require('mocha-sinon');
 var cliTable = require("cli-table2");
 var chalk = require("chalk");
+var child_process = require('child_process');
 var bradyTool = require("../bin/brady-tool");
 
 /**
@@ -222,5 +223,97 @@ describe("Highlight Versions", function(){
 		expect(table).to.eql(expectedTable);
 		expect(console.log.calledOnce).to.be.true;
 		expect(console.log.calledWith(expectedTable.toString())).to.be.true;
+	});
+});
+
+describe("Test Commander", function(){
+	describe("No project paths", function(){
+		var captured_stdout;
+		before(function (done) {
+			child_process.exec('node bin/brady-tool compare', function (error, stdout, stderr) {
+				if (error) console.log(error); // Handle errors.
+				captured_stdout = stdout;
+				return done();
+			});
+		});
+		it('should log there are two undefined projects', function() {
+			expect(captured_stdout).to.contain('First project is undefined');
+			expect(captured_stdout).to.contain('Second project is undefined');
+		});
+	});
+	describe("Only one project path entered", function(){
+		var captured_stdout;
+		var bradyPath = __dirname.replace("\\test", "");
+		before(function (done) {
+			child_process.exec("node bin/brady-tool compare " + bradyPath, function (error, stdout, stderr) {
+				if (error) console.log(error); // Handle errors.
+				captured_stdout = stdout;
+				return done();
+			});
+		});
+		it('should log project two as undefined', function() {
+			expect(captured_stdout).to.contain('Second project is undefined');
+		});
+	});
+	describe("devDependenies", function(){
+		var captured_stdout;
+		var bradyPath = __dirname.replace("\\test", "");
+		before(function (done) {
+			child_process.exec("node bin/brady-tool compare " + bradyPath + " " + bradyPath + " -a", function (error, stdout, stderr) {
+				if (error) console.log(error); // Handle errors.
+				captured_stdout = stdout;
+				return done();
+			});
+		});
+		it('should log a table that includes devDependenies', function() {
+			expect(captured_stdout).to.contain('gulp');
+		});
+	});
+	describe("no depth set", function(){
+		var no_depth_stdout;
+		var no_depth_num_stdout;
+		var bradyPath = __dirname.replace("\\test", "");
+		before(function (done) {
+			child_process.exec("node bin/brady-tool compare " + bradyPath + " " + bradyPath, function (error, stdout, stderr) {
+				if (error) console.log(error); // Handle errors.
+				no_depth_stdout = stdout;
+				child_process.exec("node bin/brady-tool compare " + bradyPath + " " + bradyPath + " -d", function (error, stdout, stderr) {
+					if (error) console.log(error); // Handle errors.
+					no_depth_num_stdout = stdout;
+					return done();
+				});
+			});
+		});
+		it('should log a table that includes devDependenies', function() {
+			expect(no_depth_stdout).to.eql(no_depth_num_stdout);
+		});
+	});
+	describe("depth", function(){
+		var captured_stdout;
+		var bradyPath = __dirname.replace("\\test", "");
+		before(function (done) {
+			child_process.exec("node bin/brady-tool compare " + bradyPath + " " + bradyPath + " -d 2", function (error, stdout, stderr) {
+				if (error) console.log(error); // Handle errors.
+				captured_stdout = stdout;
+				return done();
+			});
+		});
+		it('should log a table that is a depth of two', function() {
+			expect(captured_stdout).to.contain('npm\\node_modules\\read');
+		});
+	});
+	describe("depth and devDependencies", function(){
+		var captured_stdout;
+		var bradyPath = __dirname.replace("\\test", "");
+		before(function (done) {
+			child_process.exec("node bin/brady-tool compare " + bradyPath + " " + bradyPath + " -ad 2", function (error, stdout, stderr) {
+				if (error) console.log(error); // Handle errors.
+				captured_stdout = stdout;
+				return done();
+			});
+		});
+		it('should log a table that is a depth of two', function() {
+			expect(captured_stdout).to.contain('mocha\\node_modules\\glob');
+		});
 	});
 });
