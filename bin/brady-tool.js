@@ -11,7 +11,8 @@ var exec = require("child_process").exec;
 
 //For Testing
 module.exports = {
-	createTable: createTable
+	createTable: createTable,
+    compare: compare
 }
 
 /**
