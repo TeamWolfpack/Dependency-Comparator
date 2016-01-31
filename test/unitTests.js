@@ -235,18 +235,7 @@ describe("Compare Dependencies from files", function(){
 		var fileOne = "../";
 		var fileTwo = "../";
 		var depth = 1;
-		bradyTool.compare(fileOne,fileTwo,depth=1);
-
-		//Checks to see if the table was created
-		expect(console.log.called).to.be.true;
-
-	});
-
-	it("Should parse the dependencies with a greater depth and print them as a table", function(){
-		var fileOne = "../";
-		var fileTwo = "../";
-		var depth = 2;
-		bradyTool.compare(fileOne,fileTwo,depth=1);
+		bradyTool.compare(fileOne,fileTwo);
 
 		//Checks to see if the table was created
 		expect(console.log.called).to.be.true;
@@ -258,7 +247,7 @@ describe("Compare Dependencies from files", function(){
 		var fileTwo = "../s";
 		var depth = 1;
 		try {
-			bradyTool.compare(fileOne, fileTwo, depth = 1);
+			bradyTool.compare(fileOne, fileTwo);
 		}catch(err){
 			expect(err.message).to.equal("Cannot find module '../s/package.json'");
 		}
