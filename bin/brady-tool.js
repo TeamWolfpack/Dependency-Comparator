@@ -425,12 +425,21 @@ commander
 commander
 	.command("compare [fileOne] [fileTwo]")
 		.description("Compare the dependencies of two projects")
+        .option("hs, --hideSummary", "Hide the summary from the" +
+            " compare.")
 		.alias("cmp")
 		.action(compare);
+
+
+//
+commander
+    .command("summary [fileOne] [fileTwo]")
+    .description("Compare the dependencies of two projects")
+    .alias("cmp")
+    .action(compare);
 
 commander
     .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "1")
     .option("-a, --all", "Includes devDependencies during comparison");
-
 
 commander.parse(process.argv);
