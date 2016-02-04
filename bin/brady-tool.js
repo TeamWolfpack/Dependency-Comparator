@@ -9,6 +9,14 @@ var fs = require("fs");
 var pjson = require("../package.json");
 var exec = require("child_process").exec;
 
+//TODO
+//convert this into an object so that we can simply call
+//totals.major += 1 or something that like
+var totalMajorModules = 0;
+var totalMinorModules = 0;
+var totalPatchModules = 0;
+var totalUnmatchedModules = 0;
+
 //For Testing
 module.exports = {
 	createTable: createTable,
@@ -293,8 +301,6 @@ function compareAndMatch(projectOne, projectTwo) {
     return dependencies;
 }
 
-/**
- *
  /**
  * Takes in the location of the root file of the project and outputs an object with the
  * name, path, and dependencies of the project.
@@ -319,7 +325,7 @@ function parseDependencies(file, depth) {
 
     //Return the completed and parsed json object with the dependencies
     return fileParsedDependencies;
-	}
+}
 
 function parseDependenciesRecursively(file,depth,dependencies,previousDependencyPath){
 
@@ -415,6 +421,15 @@ function compare(projectOne, projectTwo) {
             console.log("Invalid depth given.");
         }
     }
+}
+
+/**
+ * Prints out a table of the total occurrences of major, minor,
+ * patch, and unmatched modules found.
+ */
+function generateSummaryTable(projectOne, projectTwo){
+    compare(projectOne, projectTwo);
+
 }
 
 //Commander lines go below this comment
