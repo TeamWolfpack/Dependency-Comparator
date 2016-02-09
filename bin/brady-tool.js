@@ -7,7 +7,7 @@ var chalk = require("chalk");
 var commander = require("commander");
 var fs = require("fs");
 var pjson = require("../package.json");
-var exec = require("child_process").exec;
+var child_process = require("child_process");
 
 var totals = {
     major: 0,
