@@ -9,13 +9,12 @@ var fs = require("fs");
 var pjson = require("../package.json");
 var exec = require("child_process").exec;
 
-//TODO
-//convert this into an object so that we can simply call
-//totals.major += 1 or something that like
-var totalMajorModules = 0;
-var totalMinorModules = 0;
-var totalPatchModules = 0;
-var totalUnmatchedModules = 0;
+var totals = {
+    major: 0,
+    minor: 0,
+    patch: 0,
+    unmatched: 0
+}
 
 //For Testing
 module.exports = {
@@ -91,10 +90,13 @@ function assignColor(instances, maxVersion) {
         //Compare the version of this instance with the current max version
         if (version[0] < maxVersion.major) {
             instances[instance].color = "red";
+            totals.major++;
         }else if (version[0] == maxVersion.major && version[1] < maxVersion.minor) {
             instances[instance].color = "magenta";
+            totals.minor++;
         }else if (version[0] == maxVersion.major && version[1] == maxVersion.minor && version[2] < maxVersion.patch) {
             instances[instance].color = "yellow";
+            totals.patch++;
         }else {
             instances[instance].color = "green";
         }
@@ -272,6 +274,7 @@ function compareAndMatch(projectOne, projectTwo) {
                     path: projectOneDep[dep][instance].path,
                     color: "white"
                 };
+                totals.unmatched++;
             }
             dependencies[dependencies.length] = {
                 name: dep,
@@ -290,6 +293,7 @@ function compareAndMatch(projectOne, projectTwo) {
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
+                totals.unmatched++;
             }
             dependencies[dependencies.length] = {
                 name: dep,
@@ -416,7 +420,11 @@ function compare(projectOne, projectTwo) {
             };
             //Here we will compare the dependencies
             var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
-            createTable(matchedDependencies);
+            if(commander.commands[1].showTable &&
+                    (process.argv[2] === "summary"
+                    || process.argv[1] === "summary")) {
+                createTable(matchedDependencies);
+            }
         }else{
             console.log("Invalid depth given.");
         }
@@ -428,33 +436,37 @@ function compare(projectOne, projectTwo) {
  * patch, and unmatched modules found.
  */
 function generateSummaryTable(projectOne, projectTwo){
+    console.log("I am here...");
     compare(projectOne, projectTwo);
-
+    console.log("major: " + totals.major);
+    console.log("minor: " + totals.minor);
+    console.log("patch: " + totals.patch);
+    console.log("unmatched: " + totals.unmatched);
 }
 
 //Commander lines go below this comment
 commander
-	.version(pjson.version);
+	.version(pjson.version)
+    .option("-d, --depth [depth]", "Compare by looking at " +
+        "dependencies' dependencies down to a certain 'depth'", "1")
+    .option("-a, --all", "Includes devDependencies during " +
+        "comparison");
 
 //All commands need a command, description, alias, and action component
 commander
 	.command("compare [fileOne] [fileTwo]")
+        .alias("cmp")
 		.description("Compare the dependencies of two projects")
-        .option("hs, --hideSummary", "Hide the summary from the" +
+        .option("-s, --hideSummary", "Hide the summary from the" +
             " compare.")
-		.alias("cmp")
 		.action(compare);
 
-
-//
 commander
     .command("summary [fileOne] [fileTwo]")
-    .description("Compare the dependencies of two projects")
-    .alias("cmp")
-    .action(compare);
-
-commander
-    .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "1")
-    .option("-a, --all", "Includes devDependencies during comparison");
+        .alias("sum")
+        .description("Display the summary of the dependencies" +
+            " being compared.")
+        .option("-t, --showTable", "Shows the table.")
+        .action(generateSummaryTable);
 
 commander.parse(process.argv);
