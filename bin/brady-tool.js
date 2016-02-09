@@ -64,7 +64,7 @@ function loadConfigColors(typeOfColors){
 function loadStandardConfigColors(){
     if(checkForXterm()) {
         try {
-            var colorConfig = require("colorConfig.json");
+            var colorConfig = require("../colorConfig.json");
             if(colorConfig.standard.major) {
                 colorScheme.major = clc.xterm(colorConfig.Standard.major);
             }
@@ -93,7 +93,7 @@ function loadStandardConfigColors(){
 function loadColorBlindConfigColors(){
     if(checkForXterm()) {
         try {
-            var colorConfig = require("colorConfig.json");
+            var colorConfig = require("../colorConfig.json");
             if(colorConfig.colorBlind.major) {
                 colorScheme.major = clc.xterm(colorConfig.ColorBlind.major);
             }
