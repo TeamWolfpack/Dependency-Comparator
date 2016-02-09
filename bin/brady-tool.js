@@ -22,15 +22,14 @@ var colorScheme = {
     major : clc.redBright,
     upToDate : clc.greenBright,
     unmatched : clc.whiteBright
-}
-
+};
 
 /*End Global Variables*/
 //For Testing
 module.exports = {
 	createTable: createTable,
     compare: compare
-}
+};
 
 function checkForXterm(){
     var orange = clc.xterm(202);
