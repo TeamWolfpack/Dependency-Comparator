@@ -23,47 +23,19 @@ module.exports = {
 }
 
 /**
- * Finds the maximum version of an array of instances of dependencies.
+ * Turns the string representation of a version into a 
+ * JSON object with major, minor, and patch elements
  *
- * @param {Array} instances an array of dependencies
- * @returns  {{major: number, minor: number, patch: number}}
- * an object that is the max version that contains the major, minor,
- * and patch components
+ * @param {string} stringVersion String representation of a version
  */
-function findMaxVersion(instances, callback) {
-    //Initialize the max version, default is 0.0.0
-    var maxVersion = {
-        major: 0,
-        minor: 0,
-        patch: 0
+function parseVersion(stringVersion){
+	var splitVersion = stringVersion.split(".");
+    var version = {
+        major: Number(splitVersion[0]),
+        minor: splitVersion.length > 0 ? Number(splitVersion[1]) : 0,
+        patch: splitVersion.length > 1 ? Number(splitVersion[2]) : 0
     };
-    for (var instance in instances) {
-        //Initialize the version of this instance
-        var splitVersion = instances[instance].version.split(".");
-        var version = [0,0,0];
-
-        //Set the version to the version of this instance
-        version[0] = Number(splitVersion[0]);
-        if (splitVersion.length > 0) {
-            version[1] = Number(splitVersion[1]);
-            if (splitVersion.length > 1) {
-                version[2] = Number(splitVersion[2]);
-            }
-        }
-
-        //Compare the version of this instance with the current max version
-        if (version[0] > maxVersion.major) {
-            maxVersion.major = version[0];
-            maxVersion.minor = version[1];
-            maxVersion.patch = version[2];
-        }else if (version[0] == maxVersion.major && version[1] > maxVersion.minor) {
-            maxVersion.minor = version[1];
-            maxVersion.patch = version[2];
-        }else if (version[0] == maxVersion.major && version[1] == maxVersion.minor && version[2] > maxVersion.patch) {
-            maxVersion.patch = version[2];
-        }
-    }
-    return callback(maxVersion);
+	return version;
 }
 
 /**
@@ -73,34 +45,45 @@ function findMaxVersion(instances, callback) {
  * @param {Array} instances An array of instances of the dependency
  * @param {JSON} maxVersion The most up-to-date instance's version found
  */
-function assignColor(instances, maxVersion) {
+function assignColor(instances, npmVersion, callback) {
+	parsedNPMVersion = parseVersion(npmVersion);
     for (var instance in instances) {
-        //Initialize the version of this instance
-        var splitVersion = instances[instance].version.split(".");
-        var version = [0,0,0];
-
-        //Set the version to the version of this instance
-        version[0] = Number(splitVersion[0]);
-        if (splitVersion.length > 0) {
-            version[1] = Number(splitVersion[1]);
-            if (splitVersion.length > 1) {
-                version[2] = Number(splitVersion[2]);
-            }
-        }
-        //Compare the version of this instance with the current max version
-        if (version[0] < maxVersion.major) {
+        var version = parseVersion(instances[instance].version);
+		var lowestColor = 0; //green
+		
+		//Compare the version of this instance with the npm version
+		if (JSON.stringify(version) === JSON.stringify(parsedNPMVersion)){
+			instances[instance].color = "green";
+		}else if (version.major < parsedNPMVersion.major) {
             instances[instance].color = "red";
-            totals.major++;
-        }else if (version[0] == maxVersion.major && version[1] < maxVersion.minor) {
+			totals.major++;
+			if (lowestColor < 3){
+				lowestColor = 3; //red
+			}
+        }else if (version.minor < parsedNPMVersion.minor) {
             instances[instance].color = "magenta";
-            totals.minor++;
-        }else if (version[0] == maxVersion.major && version[1] == maxVersion.minor && version[2] < maxVersion.patch) {
+			totals.minor++;
+			if (lowestColor < 2){
+				lowestColor = 2; //magenta
+			}
+        }else if (version.patch < parsedNPMVersion.patch) {
             instances[instance].color = "yellow";
-            totals.patch++;
-        }else {
-            instances[instance].color = "green";
+			totals.patch++;
+			if (lowestColor < 1){
+				lowestColor = 1; //yellow
+			}
         }
     }
+	if (lowestColor == 3){
+		npmVersion = chalk.red(npmVersion)
+	} else if (lowestColor == 2) {
+		npmVersion = chalk.magenta(npmVersion)
+	} else if (lowestColor == 1) {
+		npmVersion = chalk.yellow(npmVersion)
+	} else {
+		npmVersion = chalk.green(npmVersion)
+	}
+	return callback(npmVersion);
 }
 
 /**
@@ -121,7 +104,7 @@ function createTable(dependencies) {
     var table = new cliTable({
         //Project names are originally blank and then found in the dependencies
         //NOTE: The method for finding the names can be changed based on other variables
-        head: ["Module Name", "", "", "", ""],
+        head: ["Module Name", "NPM Version", "", "", "", ""],
         style: {
             head: [] //disable colors in header cells
         },
@@ -135,26 +118,20 @@ function createTable(dependencies) {
 		dependencies.forEach(function(dependency){
 			var dependencyName = dependency.name;
             var rowSpan = dependency.maxinstances;
+			var npmVersion = dependency.npmVersion;
             var instances = dependency.instances;
             var rows = [];
-
+			
             for (i in instances) { //loops through each instance of the dependency
                 var instance = instances[i];
-                if (instances.length > 1) {
-					findMaxVersion(instances, function(maxVersion){
-						return assignColor(instances,maxVersion);
-					});
-                    if (instance.color == "green") {
-                        var instanceVersion = chalk.green(instance.version);
-                    } else if (instance.color == "magenta") {
-                        var instanceVersion = chalk.magenta(instance.version);
-                    } else if (instance.color == "yellow") {
-                        var instanceVersion = chalk.yellow(instance.version);
-                    } else if (instance.color == "red") {
-                        var instanceVersion = chalk.red(instance.version);
-                    } else {
-						var instanceVersion = chalk.white(instance.version);
-					}
+                if (instance.color == "green") {
+                    var instanceVersion = chalk.green(instance.version);
+                } else if (instance.color == "magenta") {
+                    var instanceVersion = chalk.magenta(instance.version);
+                } else if (instance.color == "yellow") {
+                    var instanceVersion = chalk.yellow(instance.version);
+                } else if (instance.color == "red") {
+                    var instanceVersion = chalk.red(instance.version);
                 } else {
 					var instanceVersion = chalk.white(instance.version);
 				}
@@ -164,31 +141,31 @@ function createTable(dependencies) {
                     //NOTE: this assumes the very first instanse is part of Project one
                     if (!projectOneName) {
                         projectOneName = instance.Project;
-                        table.options.head[1] = projectOneName;
-                        table.options.head[2] = projectOneName + " Path";
+                        table.options.head[2] = projectOneName;
+                        table.options.head[3] = projectOneName + " Path";
                     }
                     //Determines location of instance based on project name
                     if (instance.Project == projectOneName) {
-                        rows.push([{rowSpan: rowSpan, content: dependencyName}, instanceVersion, instance.path, "", ""]);
+                        rows.push([{rowSpan: rowSpan, content: dependencyName}, npmVersion, instanceVersion, instance.path, "", ""]);
                     } else {
-                        rows.push([{rowSpan: rowSpan, content: dependencyName}, "", "", instanceVersion, instance.path]);
+                        rows.push([{rowSpan: rowSpan, content: dependencyName}, npmVersion, "", "", instanceVersion, instance.path]);
                     }
                 } else if (i < rowSpan) { //based on the dependency format, this will fill the left most instance
                     //Determines location of instance based on project name
                     if (instance.Project == projectOneName) {
-                        rows.push([instanceVersion, instance.path, "", ""]);
+                        rows.push(["", instanceVersion, instance.path, "", ""]);
                     } else {
-                        rows.push(["", "", instanceVersion, instance.path]);
+                        rows.push(["", "", "", instanceVersion, instance.path]);
                     }
                 } else { //fill any missing Project Two instances
                     if (!projectTwoName) { //sets the name of Project 2 if previously undefined
                         projectTwoName = instance.Project;
-                        table.options.head[3] = projectTwoName;
-                        table.options.head[4] = projectTwoName + " Path";
+                        table.options.head[4] = projectTwoName;
+                        table.options.head[5] = projectTwoName + " Path";
                     }
-					if (rows[i - rowSpan].length == 5){
-						rows[i - rowSpan][3] = instanceVersion;
-						rows[i - rowSpan][4] = instance.path;
+					if (rows[i - rowSpan].length == 6){
+						rows[i - rowSpan][4] = instanceVersion;
+						rows[i - rowSpan][5] = instance.path;
 					} else if (rows[i - rowSpan].length == 4){
 						rows[i - rowSpan][2] = instanceVersion;
 						rows[i - rowSpan][3] = instance.path;
@@ -199,10 +176,6 @@ function createTable(dependencies) {
                 table.push(rows[r]);
             }
 		});
-        for (var dependency in dependencies) { //loops through each dependency
-            //Grab info about the dependency
-			
-        }
         console.log(table.toString()); //prints the table
     } else { //prints simple error message is there is no dependency array
         console.log("Undefined dependencies parameter.");
@@ -244,14 +217,15 @@ function compareAndMatch(projectOne, projectTwo) {
                     color: "white"
                 };
             }
-            dependencies[dependencies.length] = {
+			
+			dependencies[dependencies.length] = {
                 name: dep,
                 maxinstances: Math.max(projectOneDep[dep].length, projectTwoDep[dep].length),
                 instances: matchedDeps
             };
+			
             projectTwoDep[dep] = undefined;
             projectOneDep[dep] = undefined;
-
         }else{
             var matchedDeps = [];
             for (var instance in projectOneDep[dep]) {
@@ -276,10 +250,11 @@ function compareAndMatch(projectOne, projectTwo) {
                 };
                 totals.unmatched++;
             }
-            dependencies[dependencies.length] = {
+			
+			dependencies[dependencies.length] = {
                 name: dep,
                 maxinstances: projectOneDep[dep].length,
-                instances: matchedDeps,
+                instances: matchedDeps
             };
         }
     }
@@ -295,13 +270,24 @@ function compareAndMatch(projectOne, projectTwo) {
                 };
                 totals.unmatched++;
             }
-            dependencies[dependencies.length] = {
+			
+			dependencies[dependencies.length] = {
                 name: dep,
                 maxinstances: projectTwoDep[dep].length,
-                instances: matchedDeps,
+                instances: matchedDeps
             };
         }
     }
+	
+	dependencies.forEach(function(dependency){
+		if (dependency.maxinstances > 0){
+			var pulledVersion = child_process.execSync("npm view " + dependency.name + " version", { encoding: 'utf8' }).trim();
+			assignColor(dependency.instances, pulledVersion, function(coloredVersion){
+				dependency.npmVersion = coloredVersion;
+			});
+		}
+	});
+	
     return dependencies;
 }
 
