@@ -406,9 +406,10 @@ function compare(projectOne, projectTwo) {
             };
             //Here we will compare the dependencies
             var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
-            if(commander.commands[1].showTable &&
-                    (process.argv[2] === "summary"
-                    || process.argv[1] === "summary")) {
+            if ((process.argv[2] === "compare" || process.argv[1] === "compare")){
+				createTable(matchedDependencies);
+			}else if(commander.commands[1].showTable &&
+                (process.argv[2] === "summary" || process.argv[1] === "summary")) {
                 createTable(matchedDependencies);
             }
         }else{
