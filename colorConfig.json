@@ -1,7 +1,3 @@
-/*
-  Numbers used are xterm color numbers.
-  They can be found here: https://en.wikipedia.org/wiki/File:Xterm_256color_chart.svg
-*/
 {"Standard":{
   "patch" : 11,
   "minor" : 13,

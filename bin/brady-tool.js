@@ -16,6 +16,11 @@ var clc = require('cli-color');
 /*Begin Global Variables*/
 var customColorsSupported = true;
 
+/*
+ Numbers used are xterm color numbers.
+ They can be found here: https://en.wikipedia.org/wiki/File:Xterm_256color_chart.svg
+*/
+
 var colorScheme = {
     patch : clc.yellowBright,
     minor : clc.magentaBright,
@@ -34,8 +39,10 @@ module.exports = {
 function checkForXterm(){
     var orange = clc.xterm(202);
     var red = clc.redBright;
-    customColorsSupported = !(orange("A")===red("A"))
-    return customColorsSupported;
+    //customColorsSupported = !(orange("A")===red("A"));
+    customColorsSupported = true;
+    //return customColorsSupported;
+    return true;
 }
 
 /**
@@ -81,7 +88,7 @@ function loadStandardConfigColors(){
                 colorScheme.unmatched = clc.xterm(colorConfig.Standard.unmatched);
             }
         } catch (err) {
-            throw Error("colorConfig is missing or syntax is incorrect.");
+            throw Error(err.message);
         }
     }
 
@@ -478,7 +485,7 @@ function compare(projectOne, projectTwo) {
     if(customColorsSupported){
         colorScheme.minor=clc.xterm(202);
         //Load the color config
-        loadConfigColors(commander.colorType);
+        loadConfigColors(commander.colorConfig);
     }
     //Check to see if file one exists
 
@@ -524,6 +531,6 @@ commander
     .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "1")
     .option("-a, --all", "Includes devDependencies during comparison")
     .option("-u, --hide_unmatched","Hides unmatched dependencies")
-    .option("-c, --colorConfig [colorType]","Loads the entered color scheme from the color config.", "'Standard'");
+    .option("-c, --colorConfig [colorConfig]","Loads the entered color scheme from the color config.", "'Standard'");
 
 commander.parse(process.argv);
