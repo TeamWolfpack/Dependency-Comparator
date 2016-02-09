@@ -65,19 +65,19 @@ function loadStandardConfigColors(){
     if(checkForXterm()) {
         try {
             var colorConfig = require("../colorConfig.json");
-            if(colorConfig.standard.major) {
+            if(colorConfig.Standard.major) {
                 colorScheme.major = clc.xterm(colorConfig.Standard.major);
             }
-            if(colorConfig.standard.minor) {
+            if(colorConfig.Standard.minor) {
                 colorScheme.minor = clc.xterm(colorConfig.Standard.minor);
             }
-            if(colorConfig.standard.patch) {
+            if(colorConfig.Standard.patch) {
                 colorScheme.patch = clc.xterm(colorConfig.Standard.patch);
             }
-            if(colorConfig.standard.upToDate) {
+            if(colorConfig.Standard.upToDate) {
                 colorScheme.upToDate = clc.xterm(colorConfig.Standard.upToDate);
             }
-            if(colorConfig.standard.unmatched) {
+            if(colorConfig.Standard.unmatched) {
                 colorScheme.unmatched = clc.xterm(colorConfig.Standard.unmatched);
             }
         } catch (err) {
@@ -94,19 +94,19 @@ function loadColorBlindConfigColors(){
     if(checkForXterm()) {
         try {
             var colorConfig = require("../colorConfig.json");
-            if(colorConfig.colorBlind.major) {
+            if(colorConfig.ColorBlind.major) {
                 colorScheme.major = clc.xterm(colorConfig.ColorBlind.major);
             }
-            if(colorConfig.colorBlind.minor) {
+            if(colorConfig.ColorBlind.minor) {
                 colorScheme.minor = clc.xterm(colorConfig.ColorBlind.minor);
             }
-            if(colorConfig.colorBlind.patch) {
+            if(colorConfig.ColorBlind.patch) {
                 colorScheme.patch = clc.xterm(colorConfig.ColorBlind.patch);
             }
-            if(colorConfig.colorBlind.upToDate) {
+            if(colorConfig.ColorBlind.upToDate) {
                 colorScheme.upToDate = clc.xterm(colorConfig.ColorBlind.upToDate);
             }
-            if(colorConfig.colorBlind.unmatched) {
+            if(colorConfig.ColorBlind.unmatched) {
                 colorScheme.unmatched = clc.xterm(colorConfig.ColorBlind.unmatched);
             }
         } catch (err) {
