@@ -20,7 +20,6 @@ var customColorsSupported = true;
  Numbers used are xterm color numbers.
  They can be found here: https://en.wikipedia.org/wiki/File:Xterm_256color_chart.svg
 */
-
 var colorScheme = {
     patch : clc.yellowBright,
     minor : clc.magentaBright,
@@ -467,8 +466,15 @@ function parseDependenciesRecursively(file,depth,dependencies,previousDependency
 
 }
 
+/**
+ * Displays a legend that shows what each of the colors mean
+ */
 function displayColorLegend(){
+    var colorLegendTable = new cliTable();
+    colorLegendTable.push([colorScheme.major("Major Difference"),colorScheme.minor("Minor Difference"),colorScheme.patch("Patch Difference")]);
+    colorLegendTable.push([colorScheme.upToDate("Up to Date"),colorScheme.unmatched("Unmatched")]);
 
+    console.log(colorLegendTable.toString());
 }
 
 /**
@@ -506,6 +512,9 @@ function compare(projectOne, projectTwo) {
             //Here we will compare the dependencies
             var matchedDependencies = compareAndMatch(combined.project1, combined.project2);
             createTable(matchedDependencies);
+            if(commander.colorLegend){
+                displayColorLegend();
+            }
         } else {
             console.log("Invalid depth given.");
             return 1;
@@ -531,6 +540,7 @@ commander
     .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "1")
     .option("-a, --all", "Includes devDependencies during comparison")
     .option("-u, --hide_unmatched","Hides unmatched dependencies")
-    .option("-c, --colorConfig [colorConfig]","Loads the entered color scheme from the color config.", "'Standard'");
+    .option("-c, --colorConfig [colorConfig]","Loads the entered color scheme from the color config.", "'Standard'")
+    .option("-l, --colorLegend [colorLegend]","Display a table that shows what each of the colors mean.");
 
 commander.parse(process.argv);
