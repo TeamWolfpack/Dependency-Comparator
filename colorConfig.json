@@ -1,0 +1,19 @@
+/*
+  Numbers used are xterm color numbers.
+  They can be found here: https://en.wikipedia.org/wiki/File:Xterm_256color_chart.svg
+*/
+{"Standard":{
+  "patch" : 11,
+  "minor" : 13,
+  "major" : 9,
+  "upToDate" : 10,
+  "unmatched" : 15
+},
+  "ColorBlind":{
+    "patch" : 11,
+    "minor" : 13,
+    "major" : 9,
+    "upToDate" : 14,
+    "unmatched" : 15
+  }
+}

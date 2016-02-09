@@ -34,7 +34,86 @@ module.exports = {
 function checkForXterm(){
     var orange = clc.xterm(202);
     var red = clc.redBright;
-    return !(orange("A")===red("A"));
+    customColorsSupported = !(orange("A")===red("A"))
+    return customColorsSupported;
+}
+
+/**
+ * Selects which colors to load from the config
+ * @param typeOfColors {String} A string that is the name of the area of the config that should be loaded
+ */
+function loadConfigColors(typeOfColors){
+    if(checkForXterm()) {
+        switch (typeOfColors) {
+            case "Standard":
+                loadStandardConfigColors();
+                break;
+            case "ColorBlind":
+                loadColorBlindConfigColors();
+                break;
+            default:
+                loadStandardConfigColors();
+                break;
+        }
+    }
+}
+
+/**
+ * Sets the colors in the standard section of the color config as the current color scheme
+ */
+function loadStandardConfigColors(){
+    if(checkForXterm()) {
+        try {
+            var colorConfig = require("colorConfig.json");
+            if(colorConfig.standard.major) {
+                colorScheme.major = clc.xterm(colorConfig.Standard.major);
+            }
+            if(colorConfig.standard.minor) {
+                colorScheme.minor = clc.xterm(colorConfig.Standard.minor);
+            }
+            if(colorConfig.standard.patch) {
+                colorScheme.patch = clc.xterm(colorConfig.Standard.patch);
+            }
+            if(colorConfig.standard.upToDate) {
+                colorScheme.upToDate = clc.xterm(colorConfig.Standard.upToDate);
+            }
+            if(colorConfig.standard.unmatched) {
+                colorScheme.unmatched = clc.xterm(colorConfig.Standard.unmatched);
+            }
+        } catch (err) {
+            throw Error("colorConfig is missing or syntax is incorrect.");
+        }
+    }
+
+}
+
+/**
+ * Sets the colors in the color blind section of the color config as the current color scheme
+ */
+function loadColorBlindConfigColors(){
+    if(checkForXterm()) {
+        try {
+            var colorConfig = require("colorConfig.json");
+            if(colorConfig.colorBlind.major) {
+                colorScheme.major = clc.xterm(colorConfig.ColorBlind.major);
+            }
+            if(colorConfig.colorBlind.minor) {
+                colorScheme.minor = clc.xterm(colorConfig.ColorBlind.minor);
+            }
+            if(colorConfig.colorBlind.patch) {
+                colorScheme.patch = clc.xterm(colorConfig.ColorBlind.patch);
+            }
+            if(colorConfig.colorBlind.upToDate) {
+                colorScheme.upToDate = clc.xterm(colorConfig.ColorBlind.upToDate);
+            }
+            if(colorConfig.colorBlind.unmatched) {
+                colorScheme.unmatched = clc.xterm(colorConfig.ColorBlind.unmatched);
+            }
+        } catch (err) {
+            throw Error("colorConfig is missing or syntax is incorrect.");
+        }
+    }
+
 }
 
 /**
@@ -381,6 +460,10 @@ function parseDependenciesRecursively(file,depth,dependencies,previousDependency
 
 }
 
+function displayColorLegend(){
+
+}
+
 /**
  * Method that runs when the user enters the 'compare' command.
  * Will compare the versions of the dependencies of two projects
@@ -391,57 +474,38 @@ function parseDependenciesRecursively(file,depth,dependencies,previousDependency
  * @param {File} projectTwo The second project that will be compared
  */
 function compare(projectOne, projectTwo) {
-    customColorsSupported = checkForXterm();
+    checkForXterm();
     if(customColorsSupported){
         colorScheme.minor=clc.xterm(202);
+        //Load the color config
+        loadConfigColors(commander.colorType);
     }
-    var filesExist = true;
     //Check to see if file one exists
-    if (projectOne) {
-        fs.access(projectOne + "/package.json", fs.F_OK, function(err) {
-            if (err) {
-                filesExist = false;
-                console.log("Can't find file one: " + projectOne + "/package.json");
-            }
-        });
-    } else {
-        console.log("First project is undefined.");
-        filesExist = false;
-    }
-    
-    //Check to see if file two exists
-    if (projectTwo) {
-        fs.access(projectTwo + "/package.json", fs.F_OK, function(err) {
-            if (err) {
-                filesExist = false;
-                console.log("Can't find file two: " + projectTwo + "/package.json");
-            }
-        });
-    } else {
-        console.log("Second project is undefined.");
-        filesExist = false;
-    }
 
     //If the files exist, parse them
-    if (filesExist == true) {
+    try {
         //var depth = 0;
-        if(commander.depth>=1) { // for 1 indexed  -  commander.depth>0
-            var depth = commander.depth-1;
+        if (commander.depth >= 1) { // for 1 indexed  -  commander.depth>0
+            var depth = commander.depth - 1;
             //Parse project one
-            var fileOneParsedDependencies = parseDependencies(projectOne,depth);
+            var fileOneParsedDependencies = parseDependencies(projectOne, depth);
             //Parse project two
-            var fileTwoParsedDependencies = parseDependencies(projectTwo,depth);
+            var fileTwoParsedDependencies = parseDependencies(projectTwo, depth);
             //Combine the parsed projects
             var combined = {
                 project1: fileOneParsedDependencies,
                 project2: fileTwoParsedDependencies
             };
             //Here we will compare the dependencies
-            var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
+            var matchedDependencies = compareAndMatch(combined.project1, combined.project2);
             createTable(matchedDependencies);
-        }else{
+        } else {
             console.log("Invalid depth given.");
+            return 1;
         }
+    }catch(err){
+        console.log("File not found");
+        return 1;
     }
 }
 
@@ -459,6 +523,7 @@ commander
 commander
     .option("-d, --depth [depth]", "Compare by looking at dependencies' dependencies down to a certain 'depth'", "1")
     .option("-a, --all", "Includes devDependencies during comparison")
-    .option("-u, --hide_unmatched","Hides unmatched dependencies");
+    .option("-u, --hide_unmatched","Hides unmatched dependencies")
+    .option("-c, --colorConfig [colorType]","Loads the entered color scheme from the color config.", "'Standard'");
 
 commander.parse(process.argv);
