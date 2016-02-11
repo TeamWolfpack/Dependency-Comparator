@@ -35,3 +35,6 @@ Since Node dependencies have dependencies of their own, if you want to include t
 OR
 
 <code>brady-tool compare "&lt;project1_path>" "&lt;project2_path>" --depth 2</code></pre>
+
+##Color Configuration
+In order to color code the version number of each dependency to show any differences, the program looks at the colorConfig.json file. The program uses the [cli-color](https://www.npmjs.com/package/cli-color) node module in order to color the text in the terminal. If the terminal being used supports [xTerm colors](https://gist.github.com/jasonm23/2868981), then the colorConfig.json file can be 
