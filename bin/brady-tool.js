@@ -57,6 +57,10 @@ function assignColor(instances, npmVersion, callback) {
 		//Compare the version of this instance with the npm version
 		if (JSON.stringify(version) === JSON.stringify(parsedNPMVersion)){
 			instances[instance].color = "green";
+		} else if (version.major > parsedNPMVersion.major 
+					|| (version.major == parsedNPMVersion.major && version.minor > parsedNPMVersion.minor)
+					|| (version.major == parsedNPMVersion.major && version.minor == parsedNPMVersion.minor && version.patch > parsedNPMVersion.patch)) {
+			instances[instance].color = "green";
 		}else if (version.major < parsedNPMVersion.major) {
             instances[instance].color = "red";
 			totals.major++;
