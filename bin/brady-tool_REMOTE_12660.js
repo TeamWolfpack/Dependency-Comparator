@@ -500,9 +500,6 @@ function compare(projectOne, projectTwo) {
             compareAndMatch(combined.project1,combined.project2, function(matchedDependencies){
                 if ((process.argv[2] === "compare" || process.argv[1] === "compare")){
                     createTable(matchedDependencies);
-                    if(!commander.commands[0].hideSummary){
-                        printSummaryTable();
-                    }
                 }else if(commander.commands[1].showTable &&
                     (process.argv[2] === "summary" || process.argv[1] === "summary")) {
                     createTable(matchedDependencies);
@@ -521,14 +518,6 @@ function compare(projectOne, projectTwo) {
     }
 }
 
-function printSummaryTable(){
-    console.log("major: " + totals.major);
-    console.log("minor: " + totals.minor);
-    console.log("patch: " + totals.patch);
-    console.log("unmatched: " + totals.projectOneUnmatched);
-    console.log("unmatched: " + totals.projectTwoUnmatched);
-}
-
 /**
  * Prints out a table of the total occurrences of major, minor,
  * patch, and unmatched modules found.
@@ -536,7 +525,11 @@ function printSummaryTable(){
 function generateSummaryTable(projectOne, projectTwo){
     console.log("I am here...");
     compare(projectOne, projectTwo);
-    printSummaryTable();
+    console.log("major: " + totals.major);
+    console.log("minor: " + totals.minor);
+    console.log("patch: " + totals.patch);
+    console.log("unmatched: " + totals.projectOneUnmatched);
+    console.log("unmatched: " + totals.projectTwoUnmatched);
 }
 
 //Commander lines go below this comment

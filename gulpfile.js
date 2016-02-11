@@ -61,7 +61,7 @@ gulp.task("format", function(){
 });
 
 //Run eslint through gulp.
-//@command: Allows for linting with gulp..
+//@command: Allows for linting with gulp.
 gulp.task("lint", function(){
     return gulp.src(allJSFiles)
         .pipe(eslint({useEslintrc:true}))
