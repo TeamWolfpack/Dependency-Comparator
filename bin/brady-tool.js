@@ -16,7 +16,8 @@ var totals = {
     major: 0,
     minor: 0,
     patch: 0,
-    unmatched: 0
+    projectOneUnmatched: 0,
+    projectTwoUnmatched: 0
 }
 
 //For Testing
@@ -243,7 +244,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 path: projectOneDep[dep][instance].path,
                 color: "white"
             };
-            totals.unmatched++;
+            totals.projectOneUnmatched++;
         }
 			
 		dependencies[dependencies.length] = {
@@ -261,7 +262,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 path: projectTwoDep[dep][instance].path,
                 color: "white"
             };
-            totals.unmatched++;
+            totals.projectTwoUnmatched++;
         }
 			
 		dependencies[dependencies.length] = {
@@ -432,7 +433,8 @@ function generateSummaryTable(projectOne, projectTwo){
     console.log("major: " + totals.major);
     console.log("minor: " + totals.minor);
     console.log("patch: " + totals.patch);
-    console.log("unmatched: " + totals.unmatched);
+    console.log("unmatched: " + totals.projectOneUnmatched);
+    console.log("unmatched: " + totals.projectTwoUnmatched);
 }
 
 //Commander lines go below this comment
