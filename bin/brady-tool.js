@@ -39,10 +39,7 @@ function checkForXterm(){
     var orange = clc.xterm(202);
     var red = clc.redBright;
     customColorsSupported = !(orange("A")===red("A"));
-    //customColorsSupported = true;
-    //console.log("CheckForXterm is: " + customColorsSupported);
     return customColorsSupported;
-    //return true;
 }
 
 /**
