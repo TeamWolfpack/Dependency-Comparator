@@ -8,6 +8,9 @@ var commander = require("commander");
 var fs = require("fs");
 var pjson = require("../package.json");
 var child_process = require("child_process");
+var async = require("async");
+var ProgressBar = require('progress');
+var os = require('os');
 
 var totals = {
     major: 0,
@@ -190,13 +193,12 @@ function createTable(dependencies) {
  * @param {Object} projectOne Dependencies from project 1
  * @param {Object} projectTwo Dependencies from project 2
  */
-function compareAndMatch(projectOne, projectTwo) {
+function compareAndMatch(projectOne, projectTwo, done) {
     //Create new object, ordered by dependencies
     var projectOneDep = projectOne.dependencies;
     var projectTwoDep = projectTwo.dependencies;
     var dependencies = [];
-    var unmatchedDependencies = [];
-
+	
     // Checks
     for(var dep in projectOneDep){
         if(projectTwoDep[dep]){
@@ -224,71 +226,67 @@ function compareAndMatch(projectOne, projectTwo) {
                 instances: matchedDeps
             };
 			
-            projectTwoDep[dep] = undefined;
-            projectOneDep[dep] = undefined;
-        }else{
-            var matchedDeps = [];
-            for (var instance in projectOneDep[dep]) {
-                matchedDeps[matchedDeps.length] = {
-                    version: projectOneDep[dep][instance].version,
-                    Project: projectOne.name,
-                    path: projectOneDep[dep][instance].path,
-                    color: "white"
-                };
-            }
+			delete projectTwoDep[dep];
+			delete projectOneDep[dep];
         }
     }
     for(var dep in projectOneDep){
-        if(projectOneDep[dep]) {
-            var matchedDeps = [];
-            for (var instance in projectOneDep[dep]) {
-                matchedDeps[matchedDeps.length] = {
-                    version: projectOneDep[dep][instance].version,
-                    Project: projectOne.name,
-                    path: projectOneDep[dep][instance].path,
-                    color: "white"
-                };
-                totals.unmatched++;
-            }
-			
-			dependencies[dependencies.length] = {
-                name: dep,
-                maxinstances: projectOneDep[dep].length,
-                instances: matchedDeps
+		var matchedDeps = [];
+        for (var instance in projectOneDep[dep]) {
+            matchedDeps[matchedDeps.length] = {
+                version: projectOneDep[dep][instance].version,
+                Project: projectOne.name,
+                path: projectOneDep[dep][instance].path,
+                color: "white"
             };
+            totals.unmatched++;
         }
+			
+		dependencies[dependencies.length] = {
+            name: dep,
+            maxinstances: projectOneDep[dep].length,
+            instances: matchedDeps
+        };
     }
     for(var dep in projectTwoDep){
-        if(projectTwoDep[dep]) {
-            var matchedDeps = [];
-            for (var instance in projectTwoDep[dep]) {
-                matchedDeps[matchedDeps.length] = {
-                    version: projectTwoDep[dep][instance].version,
-                    Project: projectTwo.name,
-                    path: projectTwoDep[dep][instance].path,
-                    color: "white"
-                };
-                totals.unmatched++;
-            }
-			
-			dependencies[dependencies.length] = {
-                name: dep,
-                maxinstances: projectTwoDep[dep].length,
-                instances: matchedDeps
+        var matchedDeps = [];
+        for (var instance in projectTwoDep[dep]) {
+            matchedDeps[matchedDeps.length] = {
+                version: projectTwoDep[dep][instance].version,
+                Project: projectTwo.name,
+                path: projectTwoDep[dep][instance].path,
+                color: "white"
             };
+            totals.unmatched++;
         }
+			
+		dependencies[dependencies.length] = {
+            name: dep,
+            maxinstances: projectTwoDep[dep].length,
+            instances: matchedDeps
+        };
     }
-	
-	dependencies.forEach(function(dependency){
-		if (dependency.maxinstances > 0){
-			var pulledVersion = child_process.execSync("npm view " + dependency.name + " version", { encoding: 'utf8' }).trim();
-			assignColor(dependency.instances, pulledVersion, function(coloredVersion){
+	var bar = new ProgressBar('pulling npm versions [:bar] :percent', {
+			complete: '=',
+			incomplete: ' ',
+			width: 40,
+			total: dependencies.length,
+			clear: true
+		});
+	bar.tick();	
+	async.each(dependencies, function(dependency, callback){
+		var name = dependency.name;
+		child_process.exec("npm view " + name + " version", function(error, stdout, stderr){
+			assignColor(dependency.instances, stdout.trim(), function(coloredVersion){
 				dependency.npmVersion = coloredVersion;
+				bar.tick();
+				return callback();
 			});
-		}
+		});
+	}, function(err){
+		return done(dependencies);
 	});
-	
-    return dependencies;
+	return;
 }
 
  /**
@@ -350,7 +348,7 @@ function parseDependenciesRecursively(file,depth,dependencies,previousDependency
             // No node_modules after a certain depth so module not found and is skipped
         }
     }
-
+	return;
 }
 
 /**
@@ -405,13 +403,15 @@ function compare(projectOne, projectTwo) {
                 project2: fileTwoParsedDependencies
             };
             //Here we will compare the dependencies
-            var matchedDependencies = compareAndMatch(combined.project1,combined.project2);
-            if ((process.argv[2] === "compare" || process.argv[1] === "compare")){
-				createTable(matchedDependencies);
-			}else if(commander.commands[1].showTable &&
-                (process.argv[2] === "summary" || process.argv[1] === "summary")) {
-                createTable(matchedDependencies);
-            }
+			compareAndMatch(combined.project1,combined.project2, function(matchedDependencies){
+				if ((process.argv[2] === "compare" || process.argv[1] === "compare")){
+					createTable(matchedDependencies);
+				}else if(commander.commands[1].showTable &&
+					(process.argv[2] === "summary" || process.argv[1] === "summary")) {
+					createTable(matchedDependencies);
+				}
+				return;
+			});
         }else{
             console.log("Invalid depth given.");
         }
