@@ -335,7 +335,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
             delete projectOneDep[dep];
         }
     }
-    if (!commander.hide_unmatched) {
+    if (!commander.commands[0].hide_unmatched) {
         for (var dep in projectOneDep) {
             var matchedDeps = [];
             for (var instance in projectOneDep[dep]) {
@@ -371,27 +371,27 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 instances: matchedDeps
             };
         }
-        var bar = new ProgressBar('pulling npm versions [:bar] :percent', {
-            complete: '=',
-            incomplete: ' ',
-            width: 40,
-            total: dependencies.length,
-            clear: true
-        });
-        bar.tick();
-        async.each(dependencies, function (dependency, callback) {
-            var name = dependency.name;
-            child_process.exec("npm view " + name + " version", function (error, stdout, stderr) {
-                assignColor(dependency.instances, stdout.trim(), function (coloredVersion) {
-                    dependency.npmVersion = coloredVersion;
-                    bar.tick();
-                    return callback();
-                });
-            });
-        }, function (err) {
-            return done(dependencies);
-        });
     }
+	var bar = new ProgressBar('pulling npm versions [:bar] :percent', {
+		complete: '=',
+		incomplete: ' ',
+		width: 40,
+		total: dependencies.length,
+		clear: true
+	});
+	bar.tick();
+	async.each(dependencies, function (dependency, callback) {
+		var name = dependency.name;
+		child_process.exec("npm view " + name + " version", function (error, stdout, stderr) {
+			assignColor(dependency.instances, stdout.trim(), function (coloredVersion) {
+				dependency.npmVersion = coloredVersion;
+				bar.tick();
+				return callback();
+			});
+		});
+	}, function (err) {
+		return done(dependencies);
+	});
 }
 
 /**
