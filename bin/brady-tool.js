@@ -155,7 +155,7 @@ function parseVersion(stringVersion){
  * @param {JSON} maxVersion The most up-to-date instance's version found
  */
 function assignColor(instances, npmVersion, callback) {
-    parsedNPMVersion = parseVersion(npmVersion);
+	parsedNPMVersion = parseVersion(npmVersion);
     for (var instance in instances) {
         var version = parseVersion(instances[instance].version);
         var lowestColor = 0; //green
@@ -425,7 +425,6 @@ function parseDependenciesRecursively(file, depth, dependencies,
 		previousDependencyPath){
     //Get the package.json for the project
     var filePackage = require(path.normalize(file + "/package.json"));
-	console.log(filePackage);
     //Get the dependencies of the project
     var fileDep = filePackage.dependencies;
     if(commander.all) {
@@ -441,15 +440,15 @@ function parseDependenciesRecursively(file, depth, dependencies,
             if (!dependencies[dep]) {
                 dependencies[dep] = [];
             }
-            var dependency = require(path.normalize(file + "\\node_modules\\" + dep + "\\package.json"));
+            var dependency = require(path.normalize(file + "/node_modules/" + dep + "/package.json"));
             dependencies[dep][dependencies[dep].length] =
             {
                 version: dependency.version,
-                path: path.normalize(previousDependencyPath + "\\node_modules\\" + dep)
+                path: path.normalize(previousDependencyPath + "/node_modules/" + dep)
             };
 
             if (depth - 1 >= 0) {
-                parseDependenciesRecursively(path.normalize(file + "\\node_modules\\" + dep, depth - 1, dependencies, previousDependencyPath + "\\node_modules\\" + dep));
+                parseDependenciesRecursively(path.normalize(file + "/node_modules/" + dep, depth - 1, dependencies, previousDependencyPath + "/node_modules/" + dep));
             }
         }catch(err){
             // No node_modules after a certain depth so module not found and is skipped
