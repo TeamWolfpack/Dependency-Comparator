@@ -8,11 +8,12 @@ var cliTable = require("cli-table2");
 var chalk = require("chalk");
 var commander = require("commander");
 var fs = require("fs");
-var pjson = require("../package.json");
 var child_process = require("child_process");
 var async = require("async");
 var ProgressBar = require('progress');
 var clc = require('cli-color');
+var path = require('path');
+var pjson = require(path.normalize("../package.json"));
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -78,7 +79,7 @@ function loadConfigColors(typeOfColors){
 function loadStandardConfigColors(){
     if(checkForXterm()) {
         try {
-            var colorConfig = require("../colorConfig.json");
+            var colorConfig = require(path.normalize("../colorConfig.json"));
             if(colorConfig.Standard.major) {
                 colorScheme.major = clc.xterm(colorConfig.Standard.major);
             }
@@ -107,7 +108,7 @@ function loadStandardConfigColors(){
 function loadColorBlindConfigColors(){
     if(checkForXterm()) {
         try {
-            var colorConfig = require("../colorConfig.json");
+            var colorConfig = require(path.normalize("../colorConfig.json"));
             if(colorConfig.ColorBlind.major) {
                 colorScheme.major = clc.xterm(colorConfig.ColorBlind.major);
             }
@@ -411,8 +412,8 @@ function compareAndMatch(projectOne, projectTwo, done) {
  * @returns {Object} {{name: Project Name, path: Project Path, dependencies: Array of Dependencies}}
  */
 function parseDependencies(file, depth) {
-    //Get the package.json for the project
-    var filePackage = require(file + "/package.json");
+	//Get the package.json for the project
+    var filePackage = require(path.normalize(file + "/package.json"));
     //Get the dependencies of the project
     //var fileDep = filePackage.dependencies;
     //Store the name and path of the project
@@ -428,10 +429,11 @@ function parseDependencies(file, depth) {
     return fileParsedDependencies;
 }
 
-function parseDependenciesRecursively(file,depth,dependencies,previousDependencyPath){
-
+function parseDependenciesRecursively(file, depth, dependencies, 
+		previousDependencyPath){
     //Get the package.json for the project
-    var filePackage = require(file + "/package.json");
+    var filePackage = require(path.normalize(file + "/package.json"));
+	console.log(filePackage);
     //Get the dependencies of the project
     var fileDep = filePackage.dependencies;
     if(commander.all) {
@@ -447,15 +449,15 @@ function parseDependenciesRecursively(file,depth,dependencies,previousDependency
             if (!dependencies[dep]) {
                 dependencies[dep] = [];
             }
-            var dependency = require(file + "\\node_modules\\" + dep + "\\package.json");
+            var dependency = require(path.normalize(file + "\\node_modules\\" + dep + "\\package.json"));
             dependencies[dep][dependencies[dep].length] =
             {
                 version: dependency.version,
-                path: previousDependencyPath + "\\node_modules\\" + dep
+                path: path.normalize(previousDependencyPath + "\\node_modules\\" + dep)
             };
 
             if (depth - 1 >= 0) {
-                parseDependenciesRecursively(file + "\\node_modules\\" + dep, depth - 1, dependencies, previousDependencyPath + "\\node_modules\\" + dep);
+                parseDependenciesRecursively(path.normalize(file + "\\node_modules\\" + dep, depth - 1, dependencies, previousDependencyPath + "\\node_modules\\" + dep));
             }
         }catch(err){
             // No node_modules after a certain depth so module not found and is skipped
@@ -484,6 +486,8 @@ function displayColorLegend(){
  */
 function compare(projectOne, projectTwo) {
     checkForXterm();
+	projectOne = path.normalize(projectOne);
+	projectTwo = path.normalize(projectTwo);
     if(customColorsSupported){
         colorScheme.minor=clc.xterm(202);
         //Load the color config
