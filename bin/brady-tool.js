@@ -372,28 +372,20 @@ function compareAndMatch(projectOne, projectTwo, done) {
             };
         }
     }
-	var bar;
-	try {
-		var bar = new ProgressBar('pulling npm versions [:bar] :percent', {
-			complete: '=',
-			incomplete: ' ',
-			width: 40,
-			total: dependencies.length,
-			clear: true
-		});
-		bar.tick();
-	} catch (err) {
-		console.log("Progress bar not supported.");
-	}
-	
+	bar = new ProgressBar('pulling npm versions [:bar] :percent', {
+		complete: '=',
+		incomplete: ' ',
+		width: 40,
+		total: dependencies.length,
+		clear: true
+	});
+	bar.tick();
 	async.each(dependencies, function (dependency, callback) {
 		var name = dependency.name;
 		child_process.exec("npm view " + name + " version", function (error, stdout, stderr) {
 			assignColor(dependency.instances, stdout.trim(), function (coloredVersion) {
 				dependency.npmVersion = coloredVersion;
-				if (bar) {
-					bar.tick();
-				}
+				bar.tick();
 				return callback();
 			});
 		});
@@ -506,12 +498,14 @@ function compare(projectOne, projectTwo) {
             };
             //Here we will compare the dependencies
             compareAndMatch(combined.project1,combined.project2, function(matchedDependencies){
-                if ((process.argv[2] === "compare" || process.argv[1] === "compare")){
+                if (process.argv[2] === "compare" || process.argv[1] === "compare"
+						|| process.argv[2] === "cmp" || process.argv[1] === "cmp"){
                     createTable(matchedDependencies);
                     if(!commander.commands[0].hideSummary){
                         printSummaryTable();
                     }
-                }else if (process.argv[2] === "summary" || process.argv[1] === "summary") {
+                }else if (process.argv[2] === "summary" || process.argv[1] === "summary"
+						|| process.argv[2] === "sum" || process.argv[1] === "sum") {
                     if (commander.commands[1].showTable){
 						createTable(matchedDependencies);
 					}
