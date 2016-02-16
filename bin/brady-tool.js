@@ -10,9 +10,11 @@ var commander = require("commander");
 var fs = require("fs");
 var child_process = require("child_process");
 var async = require("async");
+var deasync = require('deasync');
 var ProgressBar = require('progress');
 var clc = require('cli-color');
 var path = require('path');
+var osUtils = require("os-utils");
 var pjson = require(path.normalize("../package.json"));
 /*End 'require' Import Statements*/
 
@@ -381,14 +383,20 @@ function compareAndMatch(projectOne, projectTwo, done) {
 		clear: true
 	});
 	bar.tick();
+	var processCount = 0;
 	async.each(dependencies, function (dependency, callback) {
 		var name = dependency.name;
+		processCount++
 		child_process.exec("npm view " + name + " version", function (error, stdout, stderr) {
+			processCount--;
 			assignColor(dependency.instances, stdout.trim(), function (coloredVersion) {
 				dependency.npmVersion = coloredVersion;
 				bar.tick();
 				return callback();
 			});
+		});
+		deasync.loopWhile(function(){
+			return (processCount > 30 || osUtils.freememPercentage() < 0.35);
 		});
 	}, function (err) {
 		return done(dependencies);
