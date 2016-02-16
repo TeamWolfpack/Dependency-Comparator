@@ -372,20 +372,28 @@ function compareAndMatch(projectOne, projectTwo, done) {
             };
         }
     }
-	var bar = new ProgressBar('pulling npm versions [:bar] :percent', {
-		complete: '=',
-		incomplete: ' ',
-		width: 40,
-		total: dependencies.length,
-		clear: true
-	});
-	bar.tick();
+	var bar;
+	try {
+		var bar = new ProgressBar('pulling npm versions [:bar] :percent', {
+			complete: '=',
+			incomplete: ' ',
+			width: 40,
+			total: dependencies.length,
+			clear: true
+		});
+		bar.tick();
+	} catch (err) {
+		console.log("Progress bar not supported.");
+	}
+	
 	async.each(dependencies, function (dependency, callback) {
 		var name = dependency.name;
 		child_process.exec("npm view " + name + " version", function (error, stdout, stderr) {
 			assignColor(dependency.instances, stdout.trim(), function (coloredVersion) {
 				dependency.npmVersion = coloredVersion;
-				bar.tick();
+				if (bar) {
+					bar.tick();
+				}
 				return callback();
 			});
 		});
@@ -503,9 +511,11 @@ function compare(projectOne, projectTwo) {
                     if(!commander.commands[0].hideSummary){
                         printSummaryTable();
                     }
-                }else if(commander.commands[1].showTable &&
-                    (process.argv[2] === "summary" || process.argv[1] === "summary")) {
-                    createTable(matchedDependencies);
+                }else if (process.argv[2] === "summary" || process.argv[1] === "summary") {
+                    if (commander.commands[1].showTable){
+						createTable(matchedDependencies);
+					}
+					printSummaryTable();
                 }
                 if(commander.colorLegend){
                     displayColorLegend();
@@ -534,9 +544,7 @@ function printSummaryTable(){
  * patch, and unmatched modules found.
  */
 function generateSummaryTable(projectOne, projectTwo){
-    console.log("I am here...");
     compare(projectOne, projectTwo);
-    printSummaryTable();
 }
 
 //Commander lines go below this comment
