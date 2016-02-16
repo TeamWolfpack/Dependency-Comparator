@@ -504,15 +504,19 @@ function compare(projectOne, projectTwo) {
                     if(!commander.commands[0].hideSummary){
                         printSummaryTable();
                     }
+<<<<<<< HEAD
                 }else if (process.argv[2] === "summary" || process.argv[1] === "summary"
 						|| process.argv[2] === "sum" || process.argv[1] === "sum") {
+=======
+                    if(commander.commands[0].colorLegend){
+                        displayColorLegend();
+                    }
+                }else if (process.argv[2] === "summary" || process.argv[1] === "summary") {
+>>>>>>> 9d9198c2fe63e8eaed47d677ab7a39124fc4f10f
                     if (commander.commands[1].showTable){
 						createTable(matchedDependencies);
 					}
 					printSummaryTable();
-                }
-                if(commander.colorLegend){
-                    displayColorLegend();
                 }
             });
         }else{
@@ -556,7 +560,7 @@ commander
     .alias("cmp")
     .description("Compare the dependencies of two projects")
     .option("-c, --colorConfig [colorConfig]","Loads the entered color scheme from the color config.", "'Standard'")
-    .option("-l, --colorLegend [colorLegend]","Display a table that shows what each of the colors mean.")
+    .option("-l, --colorLegend","Display a table that shows what each of the colors mean.")
     .option("-s, --hideSummary", "Hide the summary from the" +
         " compare.")
     .option("-u, --hide_unmatched","Hides unmatched dependencies")
