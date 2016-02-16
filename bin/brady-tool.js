@@ -504,15 +504,11 @@ function compare(projectOne, projectTwo) {
                     if(!commander.commands[0].hideSummary){
                         printSummaryTable();
                     }
-<<<<<<< HEAD
-                }else if (process.argv[2] === "summary" || process.argv[1] === "summary"
-						|| process.argv[2] === "sum" || process.argv[1] === "sum") {
-=======
-                    if(commander.commands[0].colorLegend){
+					if(commander.commands[0].colorLegend){
                         displayColorLegend();
                     }
-                }else if (process.argv[2] === "summary" || process.argv[1] === "summary") {
->>>>>>> 9d9198c2fe63e8eaed47d677ab7a39124fc4f10f
+                }else if (process.argv[2] === "summary" || process.argv[1] === "summary"
+						|| process.argv[2] === "sum" || process.argv[1] === "sum") {
                     if (commander.commands[1].showTable){
 						createTable(matchedDependencies);
 					}
