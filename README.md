@@ -19,7 +19,7 @@ If you want to compare the dependencies between two different Node projects, you
 
 <pre><code>brady-tool compare "&lt;project1_path>" "&lt;project2_path>"</code></pre>
 
-The command above will look through the package.json file to find the list of dependencies before going through the node_modules package to get the current versions of each deendency. However, you may want to have both the list of dependencies and devDependencies being compared. In order to compare both, all you need to do is add the option "-a" or "--all".
+The command above will look through the package.json file to find the list of dependencies before going through the node_modules package to get the current versions of each dendency. However, you may want to have both the list of dependencies and devDependencies being compared. In order to compare both, all you need to do is add the option "-a" or "--all".
 
 <pre><code>brady-tool compare "&lt;project1_path>" "&lt;project2_path>" -a</code>
 
@@ -36,8 +36,17 @@ OR
 
 <code>brady-tool compare "&lt;project1_path>" "&lt;project2_path>" --depth 2</code></pre>
 
-###Compare with a Color Legend
+###Compare Color Configuration
+Since the default color scheme for identifying how out-of-date a dependency is consists of red and green, a common colorblind color pair, we added a Color Blind color configuration to help solve that.
 
+<pre><code>brady-tool compare "&lt;project1_path>" "&lt;project2_path>" -c "ColorBlind"</code>
+
+OR
+
+<code>brady-tool compare "&lt;project1_path>" "&lt;project2_path>" --colorConfig "ColorBlind"</code></pre>
+
+###Compare with a Color Legend
+When running the compare method, the dependencies in the table are colored depending on how out-of-date they are.
 
 ###Compare with a Summary Table
 
