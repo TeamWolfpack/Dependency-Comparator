@@ -34,11 +34,14 @@
     "sinon": "^1.17.2"
   },
   "dependencies": {
+    "async": "^1.5.2",
     "chalk": "^1.1.1",
-    "cli-table2": "^0.1.9",
+    "cli-color": "^1.1.0",
+    "cli-table2": "^0.2.0",
     "commander": "^2.9.0",
     "fs": "0.0.2",
     "jenkins": "^0.13.0",
-    "npm": "^3.5.3"
+    "npm": "^3.5.3",
+    "progress": "^1.1.8"
   }
 }

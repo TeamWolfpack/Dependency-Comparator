@@ -1,0 +1,15 @@
+{"Standard":{
+  "patch" : 11,
+  "minor" : 202,
+  "major" : 9,
+  "upToDate" : 10,
+  "unmatched" : 15
+},
+  "ColorBlind":{
+    "patch" : 11,
+    "minor" : 202,
+    "major" : 9,
+    "upToDate" : 14,
+    "unmatched" : 15
+  }
+}
