@@ -155,7 +155,7 @@ function parseVersion(stringVersion){
  * @param {JSON} maxVersion The most up-to-date instance's version found
  */
 function assignColor(instances, npmVersion, callback) {
-    parsedNPMVersion = parseVersion(npmVersion);
+	parsedNPMVersion = parseVersion(npmVersion);
     for (var instance in instances) {
         var version = parseVersion(instances[instance].version);
         var lowestColor = 0; //green
@@ -449,6 +449,7 @@ function parseDependenciesRecursively(file, depth, dependencies,
 
             if (depth - 1 >= 0) {
                 parseDependenciesRecursively(path.normalize(file + "/node_modules/" + dep), depth - 1, dependencies,path.normalize(previousDependencyPath + "/node_modules/" + dep));
+
             }
         }catch(err){
             // No node_modules after a certain depth so module not found and is skipped
