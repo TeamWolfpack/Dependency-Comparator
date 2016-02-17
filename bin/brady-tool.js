@@ -370,18 +370,18 @@ function compareAndMatch(projectOne, projectTwo, done) {
             };
         }
     }
-	var bar = new ProgressBar("pulling npm versions [:bar] :percent", {
-		complete: "=",
-		incomplete: " ",
-		width: 40,
-		total: dependencies.length,
-		clear: true
-	});
-	try {
-		bar.tick();
-	} catch(err) {
-		//progress bar not supported
-	}
+    var bar = new ProgressBar("pulling npm versions [:bar] :percent", {
+        complete: "=",
+        incomplete: " ",
+        width: 40,
+        total: dependencies.length,
+        clear: true
+    });
+    try {
+        bar.tick();
+    } catch (err) {
+        //progress bar not supported
+    }
     var processCount = 0;
     async.each(dependencies, function(dependency, callback) {
         var name = dependency.name;
@@ -390,11 +390,11 @@ function compareAndMatch(projectOne, projectTwo, done) {
             processCount--;
             assignColor(dependency.instances, stdout.trim(), function(coloredVersion) {
                 dependency.npmVersion = coloredVersion;
-				try {
-					bar.tick();
-				} catch(err) {
-					//progress bar not supported
-				}
+                try {
+                    bar.tick();
+                } catch (err) {
+                    //progress bar not supported
+                }
                 return callback();
             });
         });
@@ -497,8 +497,8 @@ function compare(projectOne, projectTwo) {
 
     //If the files exist, parse them
     try {
-		projectOne = path.normalize(projectOne); //Throws an error if undefined
-		projectTwo = path.normalize(projectTwo);
+        projectOne = path.normalize(projectOne); //Throws an error if undefined
+        projectTwo = path.normalize(projectTwo);
 		
         //var depth = 0;
         if (commander.depth >= 1) { // for 1 indexed  -  commander.depth>0
