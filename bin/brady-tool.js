@@ -7,6 +7,7 @@
 
 /*Begin 'require' Import Statements*/
 var cliTable = require("cli-table2");
+var textTable = require("text-table");
 var chalk = require("chalk");
 var commander = require("commander");
 var fs = require("fs");
@@ -23,6 +24,9 @@ var pjson = require(path.normalize("../package.json"));
 /*Begin Global Variables*/
 var customColorsSupported = true;
 
+var globalProjectOne;
+var globalProjectTwo;
+
 /*
  Numbers used are xterm color numbers.
  They can be found here:
@@ -37,11 +41,18 @@ var colorScheme = {
 };
 
 var totals = {
-    major: 0,
-    minor: 0,
-    patch: 0,
-    projectOneUnmatched: 0,
-    projectTwoUnmatched: 0
+    projectOne: {
+        major: 0,
+        minor: 0,
+        patch: 0,
+        unmatched: 0
+    },
+    projectTwo: {
+        major: 0,
+        minor: 0,
+        patch: 0,
+        unmatched: 0
+    }
 };
 /*End Global Variables*/
 
@@ -178,36 +189,49 @@ function parseVersion(stringVersion) {
  */
 function assignColor(instances, npmVersion, callback) {
     parsedNPMVersion = parseVersion(npmVersion);
-    for (var instance in instances) {
-        var version = parseVersion(instances[instance].version);
+    for (var i in instances) {
+        var instance = instances[i];
+        var version = parseVersion(instance.version);
         var lowestColor = 0; //green
 
         //Compare the version of this instance with the npm version
-        if (JSON.stringify(version) ===
-            JSON.stringify(parsedNPMVersion)) {
-            instances[instance].color = "upToDate";
+        if (JSON.stringify(version) === JSON.stringify(parsedNPMVersion)) {
+            instance.color = "upToDate";
         } else if (version.major > parsedNPMVersion.major ||
             (version.major == parsedNPMVersion.major &&
             version.minor > parsedNPMVersion.minor) ||
             (version.major == parsedNPMVersion.major &&
             version.minor == parsedNPMVersion.minor &&
             version.patch > parsedNPMVersion.patch)) {
-            instances[instance].color = "upToDate";
+            instance.color = "upToDate";
         }else if (version.major < parsedNPMVersion.major) {
-            instances[instance].color = "major";
+            instance.color = "major";
+            if (instance.Project == globalProjectOne) {
+                totals.projectOne.major++;
+            } else if (instance.Project == globalProjectTwo) {
+                totals.projectTwo.major++;
+            }
             totals.major++;
             if (lowestColor < 3) {
                 lowestColor = 3; //red
             }
         }else if (version.minor < parsedNPMVersion.minor) {
-            instances[instance].color = "minor";
-            totals.minor++;
+            instance.color = "minor";
+            if (instance.Project == globalProjectOne) {
+                totals.projectOne.minor++;
+            } else if (instance.Project == globalProjectTwo) {
+                totals.projectTwo.minor++;
+            }
             if (lowestColor < 2) {
                 lowestColor = 2; //magenta
             }
         }else if (version.patch < parsedNPMVersion.patch) {
-            instances[instance].color = "patch";
-            totals.patch++;
+            instance.color = "patch";
+            if (instance.Project == globalProjectOne) {
+                totals.projectOne.patch++;
+            } else if (instance.Project == globalProjectTwo) {
+                totals.projectTwo.patch++;
+            }
             if (lowestColor < 1) {
                 lowestColor = 1; //yellow
             }
@@ -335,6 +359,9 @@ function createTable(dependencies) {
  * @param {Object} projectTwo Dependencies from project 2
  */
 function compareAndMatch(projectOne, projectTwo, done) {
+    globalProjectOne = projectOne.name; //needed to seperate totals
+    globalProjectTwo = projectTwo.name;
+	
     //Create new object, ordered by dependencies
     var projectOneDep = projectOne.dependencies;
     var projectTwoDep = projectTwo.dependencies;
@@ -379,7 +406,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                     path: projectOneDep[dep][instance].path,
                     color: "white"
                 };
-                totals.projectOneUnmatched++;
+                totals.projectOne.unmatched++;
             }
             dependencies[dependencies.length] = {
                 name: dep,
@@ -396,7 +423,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
-                totals.projectTwoUnmatched++;
+                totals.projectTwo.unmatched++;
             }
 
             dependencies[dependencies.length] = {
@@ -437,8 +464,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
             });
         });
         deasync.loopWhile(function() {
-            return (processCount > 30 ||
-                osUtils.freememPercentage() < 0.35);
+            return (processCount > 30 || osUtils.freememPercentage() < 0.35);
         });
     }, function(err) {
         return done(dependencies);
@@ -605,11 +631,14 @@ function compare(projectOne, projectTwo) {
  * Prints the summary table.
  */
 function printSummaryTable() {
-    console.log("major: " + totals.major);
-    console.log("minor: " + totals.minor);
-    console.log("patch: " + totals.patch);
-    console.log("unmatched: " + totals.projectOneUnmatched);
-    console.log("unmatched: " + totals.projectTwoUnmatched);
+    var summaryTable = textTable([
+    ["", "Project One", "Project Two"],
+    ["major", totals.projectOne.major, totals.projectTwo.major],
+    ["minor", totals.projectOne.minor, totals.projectTwo.minor],
+    ["patch", totals.projectOne.patch, totals.projectTwo.patch],
+    ["unmatched", totals.projectOne.unmatched, totals.projectTwo.unmatched]
+    ], {align: ["l", "l", "l"]});
+    console.log(summaryTable);
 }
 
 /**
