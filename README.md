@@ -22,7 +22,7 @@ OR
 brady-tool cmp "&lt;project1_path>" "&lt;project2_path>"</code></pre>
 
 <h3 id="devDependencies">Compare with devDependencies</h3>
-The command above will look through the package.json file to find the list of dependencies before going through the node_modules package to get the current versions of each dendency. However, you may want to have both the list of dependencies and devDependencies being compared. In order to compare both, all you need to do is add the option "-a" or "--all".
+The command above will look through the package.json file to find the list of dependencies before going through the node_modules package to get the current versions of each dependency. However, you may want to have both the list of dependencies and devDependencies being compared. In order to compare both, all you need to do is add the option "-a" or "--all".
 
 <pre><code>brady-tool compare "&lt;project1_path>" "&lt;project2_path>" -a</code>
 
