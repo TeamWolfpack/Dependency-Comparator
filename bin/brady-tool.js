@@ -7,9 +7,7 @@
 
 /*Begin 'require' Import Statements*/
 var cliTable = require("cli-table2");
-var chalk = require("chalk");
 var commander = require("commander");
-var fs = require("fs");
 var exec = require("child_process").exec;
 var async = require("async");
 var deasync = require("deasync");
@@ -18,6 +16,7 @@ var clc = require("cli-color");
 var path = require("path");
 var osUtils = require("os-utils");
 var pjson = require(path.normalize("../package.json"));
+var logger = require(path.normalize("../logger/depLogger"));
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -42,6 +41,12 @@ var totals = {
     patch: 0,
     projectOneUnmatched: 0,
     projectTwoUnmatched: 0
+};
+
+//For Testing
+module.exports = {
+    createTable: createTable,
+    compare: compare
 };
 /*End Global Variables*/
 
@@ -581,6 +586,8 @@ function compare(projectOne, projectTwo) {
                     if (commander.commands[0].colorLegend) {
                         displayColorLegend();
                     }
+                    logger.logDependencies(matchedDependencies,
+                        commander.commands[0].output);
                 }else if (process.argv[2] === "summary" ||
                         process.argv[1] === "summary" ||
                         process.argv[2] === "sum" ||
