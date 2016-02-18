@@ -647,7 +647,10 @@ commander
     .option("-d, --depth [depth]", "Compare by looking at " +
         "dependencies' dependencies down to a certain 'depth'", "1")
     .option("-a, --all", "Includes devDependencies during " +
-        "comparison");
+        "comparison")
+    .option("-c, --colorConfig [colorConfig]",
+        "Loads the entered color scheme from the color config.",
+        "'Standard'");
 
 //All commands need a command, description, alias, and
 // action component
@@ -655,9 +658,6 @@ commander
     .command("compare [fileOne] [fileTwo]")
     .alias("cmp")
     .description("Compare the dependencies of two projects")
-    .option("-c, --colorConfig [colorConfig]",
-        "Loads the entered color scheme from the color config.",
-        "'Standard'")
     .option("-l, --colorLegend",
         "Display a table that shows what each of the colors mean.")
     .option("-s, --hideSummary", "Hide the summary from the" +
