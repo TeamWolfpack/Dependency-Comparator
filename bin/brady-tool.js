@@ -174,8 +174,7 @@ function parseVersion(stringVersion) {
  * max version found.
  *
  * @param {Array} instances An array of instances of the dependency
- * @param {JSON} npmVersion The most up-to-date instance's version
- *      found
+ * @param {JSON} npmVersion The instance's version on npm
  */
 function assignColor(instances, npmVersion, callback) {
     parsedNPMVersion = parseVersion(npmVersion);
@@ -237,15 +236,10 @@ function assignColor(instances, npmVersion, callback) {
  * @author Josh Leonard
  */
 function createTable(dependencies) {
-    var projectOneName; //Name of project one
-    var projectTwoName; //Name of project two
+    var projectOneName;
+    var projectTwoName;
 
-    //Create the table object
     var table = new cliTable({
-        //Project names are originally blank and then found in the
-        // dependencies
-        //NOTE: The method for finding the names can be changed based
-        // on other variables
         head: ["Module Name", "NPM Version", "", "", "", ""],
         style: {
             head: [] //disable colors in header cells
@@ -253,9 +247,6 @@ function createTable(dependencies) {
         wordWrap: true
     });
 
-    //Check that the param exists.
-    //Since this is made internally, it assumes everything else
-    //is there and correctly formatted.
     if (dependencies) {
         dependencies.forEach(function(dependency) {
             var dependencyName = dependency.name;
@@ -264,8 +255,7 @@ function createTable(dependencies) {
             var instances = dependency.instances;
             var rows = [];
 
-            for (i in instances) { //loops through each instance
-                // of the dependency
+            for (i in instances) {
                 var instance = instances[i];
                 if (instance.color == "upToDate") {
                     var instanceVersion
@@ -283,20 +273,14 @@ function createTable(dependencies) {
                     var instanceVersion
                         = colorScheme.unmatched(instance.version);
                 }
-                if (i == 0) { //the first instance fills in the Module
-                    // column of the table
-                    //the very first instance will set the Project One
-                    // name
-                    //NOTE: this assumes the very first instanse is
-                    // part of Project one
+                if (i == 0) { //first instance fills in Module name
                     if (!projectOneName) {
                         projectOneName = instance.Project;
                         table.options.head[2] = projectOneName;
                         table.options.head[3] = projectOneName +
                             " Path";
                     }
-                    //Determines location of instance based on
-                    // project name
+                    //Determines location based on project name
                     if (instance.Project == projectOneName) {
                         rows.push([{rowSpan: rowSpan,
                             content: dependencyName}, npmVersion,
@@ -306,10 +290,7 @@ function createTable(dependencies) {
                             content: dependencyName}, npmVersion, "",
                             "", instanceVersion, instance.path]);
                     }
-                } else if (i < rowSpan) { //based on the dependency
-                    // format, this will fill the left most instance
-                    //Determines location of instance based on project
-                    // name
+                } else if (i < rowSpan) { //fills left most instances
                     if (instance.Project == projectOneName) {
                         rows.push(["", instanceVersion, instance.path
                             , "", ""]);
@@ -334,13 +315,12 @@ function createTable(dependencies) {
                     }
                 }
             }
-            for (r in rows) { //Pushes each row into the table
+            for (r in rows) {
                 table.push(rows[r]);
             }
         });
-        console.log(table.toString()); //prints the table
-    } else { //prints simple error message is there is no
-        // dependency array
+        console.log(table.toString());
+    } else {
         console.log("Undefined dependencies parameter.");
     }
     return table;
@@ -564,14 +544,13 @@ function compare(projectOne, projectTwo) {
     checkForXterm();
     if (customColorsSupported) {
         colorScheme.minor = clc.xterm(202);
-        //Load the color config
         loadConfigColors(commander.colorConfig);
     }
 
     //If the files exist, parse them
     try {
-        projectOne = path.normalize(projectOne); //Throws an error
-        // if undefined
+        //Throws an error if undefined
+        projectOne = path.normalize(projectOne);
         projectTwo = path.normalize(projectTwo);
 		
         //var depth = 0;
@@ -652,8 +631,7 @@ commander
         "Loads the entered color scheme from the color config.",
         "'Standard'");
 
-//All commands need a command, description, alias, and
-// action component
+//All commands need a command, description, alias, and action
 commander
     .command("compare [fileOne] [fileTwo]")
     .alias("cmp")
