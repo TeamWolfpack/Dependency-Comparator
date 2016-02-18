@@ -14,3 +14,6 @@ dist/*
 
 #ignore npm debug logs
 npm-debug.log*
+
+#ignore and dependency log files
+logfiles/*

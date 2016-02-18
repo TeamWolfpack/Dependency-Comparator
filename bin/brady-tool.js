@@ -7,10 +7,7 @@
 
 /*Begin 'require' Import Statements*/
 var cliTable = require("cli-table2");
-var textTable = require("text-table");
-var chalk = require("chalk");
 var commander = require("commander");
-var fs = require("fs");
 var exec = require("child_process").exec;
 var async = require("async");
 var deasync = require("deasync");
@@ -19,6 +16,7 @@ var clc = require("cli-color");
 var path = require("path");
 var osUtils = require("os-utils");
 var pjson = require(path.normalize("../package.json"));
+var logger = require(path.normalize("../logger/depLogger"));
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -189,9 +187,8 @@ function parseVersion(stringVersion) {
  */
 function assignColor(instances, npmVersion, callback) {
     parsedNPMVersion = parseVersion(npmVersion);
-    for (var i in instances) {
-        var instance = instances[i];
-        var version = parseVersion(instance.version);
+    for (var instance in instances) {
+        var version = parseVersion(instances[instance].version);
         var lowestColor = 0; //green
 
         //Compare the version of this instance with the npm version
@@ -583,11 +580,20 @@ function compare(projectOne, projectTwo) {
         if (commander.depth >= 1) { //for 1 indexed-commander.depth>0
             var depth = commander.depth - 1;
             //Parse project one
-            var fileOneParsedDependencies
-                = parseDependencies(projectOne, depth);
+            try {
+                var fileOneParsedDependencies
+                    = parseDependencies(projectOne, depth);
+            }catch(err){
+                throw Error("File One missing");
+            }
+
             //Parse project two
-            var fileTwoParsedDependencies
-                = parseDependencies(projectTwo, depth);
+            try {
+                var fileTwoParsedDependencies
+                    = parseDependencies(projectTwo, depth);
+            }catch(err){
+                throw Error("File Two missing");
+            }
             //Combine the parsed projects
             var combined = {
                 project1: fileOneParsedDependencies,
@@ -607,6 +613,8 @@ function compare(projectOne, projectTwo) {
                     if (commander.commands[0].colorLegend) {
                         displayColorLegend();
                     }
+                    logger.logDependencies(matchedDependencies,
+                        commander.commands[0].output);
                 }else if (process.argv[2] === "summary" ||
                         process.argv[1] === "summary" ||
                         process.argv[2] === "sum" ||
@@ -622,7 +630,14 @@ function compare(projectOne, projectTwo) {
             return 1;
         }
     }catch (err) {
-        console.log("File not found");
+        if(err.message==="File One missing"){
+            console.log(err.message+": "+projectOne);
+        }
+        else if(err.message==="File Two missing"){
+            console.log(err.message+": "+projectTwo);
+        }else {
+            console.log("Something has gone wrong.");
+        }
         return 1;
     }
 }
