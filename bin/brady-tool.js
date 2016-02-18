@@ -7,6 +7,7 @@
 
 /*Begin 'require' Import Statements*/
 var cliTable = require("cli-table2");
+var textTable = require("text-table");
 var commander = require("commander");
 var exec = require("child_process").exec;
 var async = require("async");
