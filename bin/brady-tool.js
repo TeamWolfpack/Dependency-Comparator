@@ -47,7 +47,8 @@ var totals = {
 
 /**
  * Checks for xterm compatibility.
- * @returns true if console supports xterm colors
+ *
+ * @returns {boolean} true if console supports xterm colors
  */
 function checkForXterm() {
     var orange = clc.xterm(202);
@@ -187,11 +188,11 @@ function assignColor(instances, npmVersion, callback) {
             JSON.stringify(parsedNPMVersion)) {
             instances[instance].color = "upToDate";
         } else if (version.major > parsedNPMVersion.major ||
-            (version.major == parsedNPMVersion.major
-            && version.minor > parsedNPMVersion.minor) ||
-            (version.major == parsedNPMVersion.major
-            && version.minor == parsedNPMVersion.minor
-            && version.patch > parsedNPMVersion.patch)) {
+            (version.major == parsedNPMVersion.major &&
+            version.minor > parsedNPMVersion.minor) ||
+            (version.major == parsedNPMVersion.major &&
+            version.minor == parsedNPMVersion.minor &&
+            version.patch > parsedNPMVersion.patch)) {
             instances[instance].color = "upToDate";
         }else if (version.major < parsedNPMVersion.major) {
             instances[instance].color = "major";
@@ -264,7 +265,7 @@ function createTable(dependencies) {
             var rows = [];
 
             for (i in instances) { //loops through each instance
-                    // of the dependency
+                // of the dependency
                 var instance = instances[i];
                 if (instance.color == "upToDate") {
                     var instanceVersion
@@ -291,8 +292,8 @@ function createTable(dependencies) {
                     if (!projectOneName) {
                         projectOneName = instance.Project;
                         table.options.head[2] = projectOneName;
-                        table.options.head[3] = projectOneName
-                            + " Path";
+                        table.options.head[3] = projectOneName +
+                            " Path";
                     }
                     //Determines location of instance based on
                     // project name
@@ -318,11 +319,11 @@ function createTable(dependencies) {
                     }
                 } else { //fill any missing Project Two instances
                     if (!projectTwoName) { //sets the name of
-                            // Project 2 if previously undefined
+                        // Project 2 if previously undefined
                         projectTwoName = instance.Project;
                         table.options.head[4] = projectTwoName;
-                        table.options.head[5] = projectTwoName
-                            + " Path";
+                        table.options.head[5] = projectTwoName +
+                            " Path";
                     }
                     if (rows[i - rowSpan].length == 6) {
                         rows[i - rowSpan][4] = instanceVersion;
@@ -339,7 +340,7 @@ function createTable(dependencies) {
         });
         console.log(table.toString()); //prints the table
     } else { //prints simple error message is there is no
-            // dependency array
+        // dependency array
         console.log("Undefined dependencies parameter.");
     }
     return table;
@@ -456,8 +457,8 @@ function compareAndMatch(projectOne, projectTwo, done) {
             });
         });
         deasync.loopWhile(function() {
-            return (processCount > 30
-                || osUtils.freememPercentage() < 0.35);
+            return (processCount > 30 ||
+                osUtils.freememPercentage() < 0.35);
         });
     }, function(err) {
         return done(dependencies);
@@ -514,20 +515,20 @@ function parseDependenciesRecursively(file, depth, dependencies,
             if (!dependencies[dep]) {
                 dependencies[dep] = [];
             }
-            var dependency = require(path.normalize(file
-                + "/node_modules/" + dep + "/package.json"));
+            var dependency = require(path.normalize(file +
+                "/node_modules/" + dep + "/package.json"));
             dependencies[dep][dependencies[dep].length] =
             {
                 version: dependency.version,
-                path: path.normalize(previousDependencyPath
-                    + "/node_modules/" + dep)
+                path: path.normalize(previousDependencyPath +
+                    "/node_modules/" + dep)
             };
 
             if (depth - 1 >= 0) {
-                parseDependenciesRecursively(path.normalize(file
-                    + "/node_modules/" + dep), depth-1, dependencies,
-                    path.normalize(previousDependencyPath
-                        + "/node_modules/" + dep));
+                parseDependenciesRecursively(path.normalize(file +
+                    "/node_modules/" + dep), depth - 1, dependencies,
+                    path.normalize(previousDependencyPath +
+                        "/node_modules/" + dep));
 
             }
         } catch (err) {
@@ -570,7 +571,7 @@ function compare(projectOne, projectTwo) {
     //If the files exist, parse them
     try {
         projectOne = path.normalize(projectOne); //Throws an error
-            // if undefined
+        // if undefined
         projectTwo = path.normalize(projectTwo);
 		
         //var depth = 0;
@@ -590,10 +591,10 @@ function compare(projectOne, projectTwo) {
             //Here we will compare the dependencies
             compareAndMatch(combined.project1,combined.project2,
                     function(matchedDependencies) {
-                if (process.argv[2] === "compare"
-                        || process.argv[1] === "compare"
-                        || process.argv[2] === "cmp"
-                        || process.argv[1] === "cmp") {
+                if (process.argv[2] === "compare" ||
+                        process.argv[1] === "compare" ||
+                        process.argv[2] === "cmp" ||
+                        process.argv[1] === "cmp") {
                     createTable(matchedDependencies);
                     if (!commander.commands[0].hideSummary) {
                         printSummaryTable();
@@ -601,10 +602,10 @@ function compare(projectOne, projectTwo) {
                     if (commander.commands[0].colorLegend) {
                         displayColorLegend();
                     }
-                }else if (process.argv[2] === "summary"
-                            || process.argv[1] === "summary" ||
-						process.argv[2] === "sum"
-                            || process.argv[1] === "sum") {
+                }else if (process.argv[2] === "summary" ||
+                        process.argv[1] === "summary" ||
+                        process.argv[2] === "sum" ||
+                        process.argv[1] === "sum") {
                     if (commander.commands[1].showTable) {
                         createTable(matchedDependencies);
                     }
