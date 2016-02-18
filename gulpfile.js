@@ -10,9 +10,9 @@ var util = require('util');
 var gulpprompt = require('gulp-prompt');
 
 //directories containing javascript files
-var allJSFiles = ["./test/unit/**/*.js", "./src/**/*.js",
-    "./test/integration/**/*-test.js", "!./src/**/*.min.js",
-    "!./src/public/**/*.js"];
+var allJSFiles = ["./test/unit/**/*.js", "./bin/**/*.js",
+    "./test/integration/**/*-test.js", "!./bin/**/*.min.js",
+    "!./bin/public/**/*.js"];
 //directories containing unit tests javascript files
 var unitTestFiles = ["./test/unitTests.js"];
 //directories containing integration tests javascript files
@@ -24,7 +24,7 @@ var integrationTestFiles = ["./test/integration/**/*-test.js"];
 //@command: default
 gulp.task('default', function() {
     //may use this to perform code compilation
-    gulp.src('src/**/*.js')
+    gulp.src('bin/**/*.js')
         .pipe(gulp.dest('dist'));
 });
 
