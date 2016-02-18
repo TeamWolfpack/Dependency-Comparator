@@ -26,7 +26,20 @@ describe("Test Summary", function(){
 			});
 		});
 		it('should log file was not found', function() {
-			expect(captured_stdout).to.contain('File not found');
+			expect(captured_stdout).to.contain('First project path is invalid');
+		});
+	});
+	describe("Only one project path entered", function(){
+		var captured_stdout;
+		before(function (done) {
+			child_process.exec("node bin/brady-tool summary ..", function (error, stdout, stderr) {
+				if (error) console.log(error); // Handle errors.
+				captured_stdout = stdout;
+				return done();
+			});
+		});
+		it('should log file was not found', function() {
+			expect(captured_stdout).to.contain('Second project path is invalid');
 		});
 	});
 });
@@ -43,7 +56,7 @@ describe("Test Compare", function(){
 			});
 		});
 		it('should log file was not found', function() {
-			expect(captured_stdout).to.contain('File not found');
+			expect(captured_stdout).to.contain('First project path is invalid');
 		});
 	});
 	describe("Only one project path entered", function(){
@@ -56,39 +69,43 @@ describe("Test Compare", function(){
 			});
 		});
 		it('should log file was not found', function() {
-			expect(captured_stdout).to.contain('File not found');
+			expect(captured_stdout).to.contain('Second project path is invalid');
 		});
 	});
-	describe("legend and hide summary", function(){
+	describe("devDependencies", function(){
 		var captured_stdout;
 		before(function (done) {
-			child_process.exec("node bin/brady-tool compare .. .. -ls", function (error, stdout, stderr) {
+			child_process.exec("node bin/brady-tool compare .. .. -as", function (error, stdout, stderr) {
 				if (error) console.log(error); // Handle errors.
 				captured_stdout = stdout;
 				return done();
 			});
 		});
-		it('should log a table that includes devDependenies', function() {
-			expect(captured_stdout).to.contain("commander");
-			expect(captured_stdout).to.contain("Major Difference");
-			expect(captured_stdout).to.not.contain("major:");
-		});
-	});
-	describe("depth and devDependencies", function(){
-		var captured_stdout;
-		before(function (done) {
-			child_process.exec("node bin/brady-tool compare .. .. -ad 2", function (error, stdout, stderr) {
-				if (error) console.log(error); // Handle errors.
-				captured_stdout = stdout;
-				return done();
-			});
-		});
-		it('should log a table that is a depth of two and includes devDeps', function() {
-			expect(captured_stdout).to.contain('mocha\\node_modules\\glob');
-			expect(captured_stdout).to.contain('major: ');
-			expect(captured_stdout).to.contain('minor: ');
-			expect(captured_stdout).to.contain('patch: ');
+		it('should log a table that includes devDeps and no summary', function() {
+			expect(captured_stdout).to.contain('mocha');
+			expect(captured_stdout).to.not.contain('major');
+			expect(captured_stdout).to.not.contain('minor');
+			expect(captured_stdout).to.not.contain('patch');
+			expect(captured_stdout).to.not.contain('unmatched');
 			expect(captured_stdout).to.not.contain("Major Difference");
+		});
+	});
+	describe("depth", function(){
+		var captured_stdout;
+		before(function (done) {
+			child_process.exec("node bin/brady-tool compare .. .. -ld 2", function (error, stdout, stderr) {
+				if (error) console.log(error); // Handle errors.
+				captured_stdout = stdout;
+				return done();
+			});
+		});
+		it('should log a table that is a depth of two and shows color legend', function() {
+			expect(captured_stdout).to.contain('\\node_modules\\strip-ansi');
+			expect(captured_stdout).to.contain('major');
+			expect(captured_stdout).to.contain('minor');
+			expect(captured_stdout).to.contain('patch');
+			expect(captured_stdout).to.contain('unmatched');
+			expect(captured_stdout).to.contain("Major Difference");
 		});
 	});
 });

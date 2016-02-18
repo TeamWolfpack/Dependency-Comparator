@@ -574,28 +574,36 @@ function compare(projectOne, projectTwo) {
 
     //If the files exist, parse them
     try {
-        //Throws an error if undefined
-        projectOne = path.normalize(projectOne);
-        projectTwo = path.normalize(projectTwo);
+		try {
+			projectOne = path.normalize(projectOne);
+		} catch (err) {
+			throw Error("First project path is invalid: " + projectOne);
+		}
+		try {
+			projectTwo = path.normalize(projectTwo);
+		} catch (err) {
+			throw Error("Second project path is invalid: " + projectTwo);
+		}
 		
         //var depth = 0;
         if (commander.depth >= 1) { //for 1 indexed-commander.depth>0
             var depth = commander.depth - 1;
             //Parse project one
-            try {
-                var fileOneParsedDependencies
+			try {
+				var fileOneParsedDependencies
                     = parseDependencies(projectOne, depth);
-            }catch (err) {
-                throw Error("File One missing");
-            }
-
+			} catch(err) {
+				throw Error(err.message + " in " + projectOne);
+			}
+            
             //Parse project two
-            try {
-                var fileTwoParsedDependencies
+			try {
+				var fileTwoParsedDependencies
                     = parseDependencies(projectTwo, depth);
-            }catch (err) {
-                throw Error("File Two missing");
-            }
+			} catch(err) {
+				throw Error(err.message + " in " + projectTwo);
+			}
+
             //Combine the parsed projects
             var combined = {
                 project1: fileOneParsedDependencies,
@@ -632,13 +640,7 @@ function compare(projectOne, projectTwo) {
             return 1;
         }
     }catch (err) {
-        if (err.message === "File One missing") {
-            console.log(err.message + ": " + projectOne);
-        } else if (err.message === "File Two missing") {
-            console.log(err.message + ": " + projectTwo);
-        }else {
-            console.log("Something has gone wrong.");
-        }
+        console.log(err);
         return 1;
     }
 }
