@@ -189,7 +189,7 @@ function parseVersion(stringVersion) {
 function assignColor(instances, npmVersion, callback) {
     parsedNPMVersion = parseVersion(npmVersion);
     for (var i in instances) {
-		var instance = instances[i];
+        var instance = instances[i];
         var version = parseVersion(instance.version);
         var lowestColor = 0; //green
 
@@ -585,7 +585,7 @@ function compare(projectOne, projectTwo) {
             try {
                 var fileOneParsedDependencies
                     = parseDependencies(projectOne, depth);
-            }catch(err){
+            }catch (err) {
                 throw Error("File One missing");
             }
 
@@ -593,7 +593,7 @@ function compare(projectOne, projectTwo) {
             try {
                 var fileTwoParsedDependencies
                     = parseDependencies(projectTwo, depth);
-            }catch(err){
+            }catch (err) {
                 throw Error("File Two missing");
             }
             //Combine the parsed projects
@@ -632,11 +632,10 @@ function compare(projectOne, projectTwo) {
             return 1;
         }
     }catch (err) {
-        if(err.message==="File One missing"){
-            console.log(err.message+": "+projectOne);
-        }
-        else if(err.message==="File Two missing"){
-            console.log(err.message+": "+projectTwo);
+        if (err.message === "File One missing") {
+            console.log(err.message + ": " + projectOne);
+        } else if (err.message === "File Two missing") {
+            console.log(err.message + ": " + projectTwo);
         }else {
             console.log("Something has gone wrong.");
         }
@@ -648,6 +647,12 @@ function compare(projectOne, projectTwo) {
  * Prints the summary table.
  */
 function printSummaryTable() {
+    if (globalProjectOne == globalProjectTwo) {
+        totals.projectOne.major /= 2;
+        totals.projectOne.minor /= 2;
+        totals.projectOne.patch /= 2;
+        totals.projectTwo = totals.projectOne;
+    }
     var summaryTable = textTable([
     ["", "Project One", "Project Two"],
     ["major", totals.projectOne.major, totals.projectTwo.major],
