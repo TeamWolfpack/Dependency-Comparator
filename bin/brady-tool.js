@@ -562,11 +562,20 @@ function compare(projectOne, projectTwo) {
         if (commander.depth >= 1) { //for 1 indexed-commander.depth>0
             var depth = commander.depth - 1;
             //Parse project one
-            var fileOneParsedDependencies
-                = parseDependencies(projectOne, depth);
+            try {
+                var fileOneParsedDependencies
+                    = parseDependencies(projectOne, depth);
+            }catch(err){
+                throw Error("File One missing");
+            }
+
             //Parse project two
-            var fileTwoParsedDependencies
-                = parseDependencies(projectTwo, depth);
+            try {
+                var fileTwoParsedDependencies
+                    = parseDependencies(projectTwo, depth);
+            }catch(err){
+                throw Error("File Two missing");
+            }
             //Combine the parsed projects
             var combined = {
                 project1: fileOneParsedDependencies,
@@ -603,7 +612,14 @@ function compare(projectOne, projectTwo) {
             return 1;
         }
     }catch (err) {
-        console.log("File not found");
+        if(err.message==="File One missing"){
+            console.log(err.message+": "+projectOne);
+        }
+        else if(err.message==="File Two missing"){
+            console.log(err.message+": "+projectTwo);
+        }else {
+            console.log("Something has gone wrong.");
+        }
         return 1;
     }
 }
