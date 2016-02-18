@@ -49,7 +49,7 @@ OR
 <code>brady-tool compare "&lt;project1_path>" "&lt;project2_path>" --hideUnmatched</code></pre>
 
 <h3 id="CompareColorConfig">Compare Color Configuration</h3>
-Since the default color scheme for identifying how out-of-date a dependency is consists of red and green, a common colorblind color pair, we added a Color Blind color configuration to help solve that. These color schemes can be changed and this is explain more in the <a href="#ColorConfig">Color Configuration</a> section.
+Since the default color scheme for identifying how out-of-date a dependency is consists of red and green, a common colorblind color pair, we added a Color Blind color configuration to help solve that. These color schemes can be changed and this is explain more in the <a href="#ColorConfig">Color Configuration</a> section. <b>NOTE:</b> In order to use this option, xTerm needs to be supported in your OS.
 
 <pre><code>brady-tool compare "&lt;project1_path>" "&lt;project2_path>" -c "ColorBlind"</code>
 
@@ -94,4 +94,4 @@ OR
 <code>brady-tool summary "&lt;project1_path>" "&lt;project2_path>" --showTable</code></pre>
 
 <h2 id="ColorConfig">Color Configuration</h2>
-In order to color code the version number of each dependency to show any differences, the program looks at the colorConfig.json file. The program uses the [cli-color](https://www.npmjs.com/package/cli-color) node module in order to color the text in the terminal. If the terminal being used supports [xTerm colors](https://gist.github.com/jasonm23/2868981), then the colorConfig.json file can be 
+In order to color code the version number of each dependency to show any differences, the program looks at the colorConfig.json file. The program uses the [cli-color](https://www.npmjs.com/package/cli-color) node module in order to color the text in the terminal. If the terminal being used supports [xTerm colors](https://gist.github.com/jasonm23/2868981), then the colorConfig.json file can be modified to the users preference. <b>NOTE:</b> When updating to a newer version of the tool, the colorConfig.json file may be reset to the default values.
