@@ -188,8 +188,9 @@ function parseVersion(stringVersion) {
  */
 function assignColor(instances, npmVersion, callback) {
     parsedNPMVersion = parseVersion(npmVersion);
-    for (var instance in instances) {
-        var version = parseVersion(instances[instance].version);
+    for (var i in instances) {
+		var instance = instances[i];
+        var version = parseVersion(instance.version);
         var lowestColor = 0; //green
 
         //Compare the version of this instance with the npm version
