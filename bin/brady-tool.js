@@ -13,6 +13,7 @@ var child_process = require("child_process");
 var async = require("async");
 var ProgressBar = require('progress');
 var clc = require('cli-color');
+var logger = require(path.normalize("../logger/depLogger"));
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -36,7 +37,7 @@ var totals = {
     patch: 0,
     projectOneUnmatched: 0,
     projectTwoUnmatched: 0
-}
+};
 /*End Global Variables*/
 
 //For Testing
@@ -511,6 +512,7 @@ function compare(projectOne, projectTwo) {
                     if(!commander.commands[0].hideSummary){
                         printSummaryTable();
                     }
+                    logger.logDependencies(matchedDependencies);
                 }else if (process.argv[2] === "summary" || process.argv[1] === "summary") {
                     if (commander.commands[1].showTable){
 						createTable(matchedDependencies);
