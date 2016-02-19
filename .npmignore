@@ -6,3 +6,6 @@
 # ignore test folder and dist folder
 dist/*
 test/*
+
+# ignore log files
+logfiles/*
