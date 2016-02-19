@@ -1,3 +1,19 @@
 # ignoring the node_modules folder
-/node_modules
-# npm install to install all packages
+# "npm install" to install all packages
+node_modules/*
+
+*.bak
+*.orig
+*.tgz
+
+# ignoring the idea folder from jetbrains
+.idea/*
+
+#ignore files made by gulp
+dist/*
+
+#ignore npm debug logs
+npm-debug.log*
+
+#ignore and dependency log files
+logfiles/*
