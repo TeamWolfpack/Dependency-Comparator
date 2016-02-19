@@ -395,7 +395,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
             delete projectOneDep[dep];
         }
     }
-    if (!commander.commands[0].hideUnmatched) {
+    if (!commander.hideUnmatched) {
         for (var dep in projectOneDep) {
             var matchedDeps = [];
             for (var instance in projectOneDep[dep]) {
@@ -682,7 +682,8 @@ commander
         "comparison")
     .option("-c, --colorConfig [colorConfig]",
         "Loads the entered color scheme from the color config.",
-        "'Standard'");
+        "'Standard'")
+    .option("-u, --hideUnmatched","Hides unmatched dependencies");
 
 //All commands need a command, description, alias, and action
 commander
@@ -693,7 +694,6 @@ commander
         "Display a table that shows what each of the colors mean.")
     .option("-s, --hideSummary", "Hide the summary from the" +
         " compare.")
-    .option("-u, --hideUnmatched","Hides unmatched dependencies")
     .action(compare);
 
 commander
