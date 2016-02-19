@@ -76,7 +76,7 @@ OR
 <code>brady-tool compare "&lt;project1_path>" "&lt;project2_path>" --hideSummary</code></pre>
 
 <h3 id="Summary">Summary</h3>
-<p>By default, a summary of the results will be displayed below the comparison table. If you want to hide the summary from being displayed, you can add the following flag to your command. The <a href="#CompareDepth">depth</a> and <a href="#devDependencies">all</a> flags can also be used with the summary command.</p>
+<p>By default, a summary of the results will be displayed below the comparison table. If you want to hide the summary from being displayed, you can add the following flag to your command. The <a href="#CompareDepth">depth</a>, <a href="#devDependencies">all</a>, and <a href="HideUnmatched">hideUnmatched</a> flags can also be used with the summary command.</p>
 
 <pre><code>brady-tool summary "&lt;project1_path>" "&lt;project2_path>"</code>
 
