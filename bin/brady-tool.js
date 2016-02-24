@@ -574,35 +574,35 @@ function compare(projectOne, projectTwo) {
 
     //If the files exist, parse them
     try {
-		try {
-			projectOne = path.normalize(projectOne);
-		} catch (err) {
-			throw Error("First project path is invalid: " + projectOne);
-		}
-		try {
-			projectTwo = path.normalize(projectTwo);
-		} catch (err) {
-			throw Error("Second project path is invalid: " + projectTwo);
-		}
+        try {
+            projectOne = path.normalize(projectOne);
+        } catch (err) {
+            throw Error("First project path is invalid: " + projectOne);
+        }
+        try {
+            projectTwo = path.normalize(projectTwo);
+        } catch (err) {
+            throw Error("Second project path is invalid: " + projectTwo);
+        }
 		
         //var depth = 0;
         if (commander.depth >= 1) { //for 1 indexed-commander.depth>0
             var depth = commander.depth - 1;
             //Parse project one
-			try {
-				var fileOneParsedDependencies
-                    = parseDependencies(projectOne, depth);
-			} catch(err) {
-				throw Error(err.message + " in " + projectOne);
-			}
+            try {
+                var fileOneParsedDependencies
+                                    = parseDependencies(projectOne, depth);
+            } catch (err) {
+                throw Error(err.message + " in " + projectOne);
+            }
             
             //Parse project two
-			try {
-				var fileTwoParsedDependencies
-                    = parseDependencies(projectTwo, depth);
-			} catch(err) {
-				throw Error(err.message + " in " + projectTwo);
-			}
+            try {
+                var fileTwoParsedDependencies
+                                    = parseDependencies(projectTwo, depth);
+            } catch (err) {
+                throw Error(err.message + " in " + projectTwo);
+            }
 
             //Combine the parsed projects
             var combined = {
