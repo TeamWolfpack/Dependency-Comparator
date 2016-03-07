@@ -18,6 +18,9 @@ var path = require("path");
 var osUtils = require("os-utils");
 var pjson = require(path.normalize("../package.json"));
 var logger = require(path.normalize("../modules/logger"));
+var color = require(path.normalize("../modules/color"));
+var parser = require(path.normalize("../modules/parser"));
+var summarizer = require(path.normalize("../modules/summary"));
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
