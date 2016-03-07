@@ -17,7 +17,7 @@ var clc = require("cli-color");
 var path = require("path");
 var osUtils = require("os-utils");
 var pjson = require(path.normalize("../package.json"));
-var logger = require(path.normalize("../logger/depLogger"));
+var logger = require(path.normalize("../modules/logger"));
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
