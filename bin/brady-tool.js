@@ -19,8 +19,8 @@ var osUtils = require("os-utils");
 var pjson = require(path.normalize("../package.json"));
 var logger = require(path.normalize("../modules/logger"));
 var color = require(path.normalize("../modules/colors"));
-var parser = require(path.normalize("../modules/parse"));
 var summarizer = require(path.normalize("../modules/summary"));
+var parse = require(path.normalize("../modules/parse"));
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -152,22 +152,6 @@ function loadColorBlindConfigColors() {
 }
 
 /**
- * Turns the string representation of a version into a
- * JSON object with major, minor, and patch elements
- *
- * @param {string} stringVersion String representation of a version
- */
-function parseVersion(stringVersion) {
-    var splitVersion = stringVersion.split(".");
-    var version = {
-        major: Number(splitVersion[0]),
-        minor: splitVersion.length > 0 ? Number(splitVersion[1]) : 0,
-        patch: splitVersion.length > 1 ? Number(splitVersion[2]) : 0
-    };
-    return version;
-}
-
-/**
  * Assigns colors to instances in an array of instances of a
  * dependency based off of the version of that instance and the
  * max version found.
@@ -176,10 +160,10 @@ function parseVersion(stringVersion) {
  * @param {JSON} npmVersion The instance's version on npm
  */
 function assignColor(instances, npmVersion, callback) {
-    parsedNPMVersion = parseVersion(npmVersion);
+    parsedNPMVersion = parse.parseVersion(npmVersion);
     for (var i in instances) {
         var instance = instances[i];
-        var version = parseVersion(instance.version);
+        var version = parse.parseVersion(instance.version);
         var lowestColor = 0; //green
 
         //Compare the version of this instance with the npm version
