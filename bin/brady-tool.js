@@ -456,78 +456,6 @@ function compareAndMatch(projectOne, projectTwo, done) {
 }
 
 /**
- * Takes in the location of the root file of the project and outputs
- * an object with the name, path, and dependencies of the project.
- *
- * @param {File} file Location of the root file of the project
- * @param {int} depth Layers of dependencies to look at
- * @returns {Object} {{name: Project Name, path: Project Path,
- * dependencies: Array of Dependencies}}
- */
-function parseDependencies(file, depth) {
-    //Get the package.json for the project
-    var filePackage = require(path.normalize(file + "/package.json"));
-    //Get the dependencies of the project
-    //var fileDep = filePackage.dependencies;
-    //Store the name and path of the project
-    var fileParsedDependencies = {
-        name: filePackage.name.toString(),
-        path: file.toString(),
-        dependencies: []
-    };
-    //Iterate through dependencies and save them in the
-    // specified format
-    parseDependenciesRecursively(file,depth,
-        fileParsedDependencies.dependencies,".");
-
-    //Return the completed and parsed json object with the
-    // dependencies
-    return fileParsedDependencies;
-}
-
-function parseDependenciesRecursively(file, depth, dependencies,
-		previousDependencyPath) {
-    //Get the package.json for the project
-    var filePackage = require(path.normalize(file + "/package.json"));
-    //Get the dependencies of the project
-    var fileDep = filePackage.dependencies;
-    if (commander.all) {
-        for (devDep in filePackage.devDependencies) {
-            if (!fileDep[devDep]) {
-                fileDep[devDep] = devDep.version;
-            }
-        }
-    }
-    //Iterate through dependencies and save them in the specified
-    // format
-    for (dep in fileDep) {
-        try {
-            if (!dependencies[dep]) {
-                dependencies[dep] = [];
-            }
-            var dependency = require(path.normalize(file +
-                "/node_modules/" + dep + "/package.json"));
-            dependencies[dep][dependencies[dep].length] =
-            {
-                version: dependency.version,
-                path: path.normalize(previousDependencyPath +
-                    "/node_modules/" + dep)
-            };
-
-            if (depth - 1 >= 0) {
-                parseDependenciesRecursively(path.normalize(file +
-                    "/node_modules/" + dep), depth - 1, dependencies,
-                    path.normalize(previousDependencyPath +
-                        "/node_modules/" + dep));
-
-            }
-        } catch (err) {
-            // No node_modules after a certain depth so module not
-            // found and is skipped
-        }
-    }
-}
-/**
  * Displays a legend that shows what each of the colors mean.
  */
 function displayColorLegend() {
@@ -573,18 +501,20 @@ function compare(projectOne, projectTwo) {
         //var depth = 0;
         if (commander.depth >= 1) { //for 1 indexed-commander.depth>0
             var depth = commander.depth - 1;
-            //Parse project one
+            var includeDev = commander.all;
+            var fileOneParsedDependencies;
+            var fileTwoParsedDependencies;
+
             try {
-                var fileOneParsedDependencies
-                                    = parseDependencies(projectOne, depth);
+                fileOneParsedDependencies
+                                    = parse.parseDependencies(projectOne, depth, includeDev);
             } catch (err) {
                 throw Error(err.message + " in " + projectOne);
             }
-            
-            //Parse project two
+
             try {
-                var fileTwoParsedDependencies
-                                    = parseDependencies(projectTwo, depth);
+                fileTwoParsedDependencies
+                                    = parse.parseDependencies(projectTwo, depth, includeDev);
             } catch (err) {
                 throw Error(err.message + " in " + projectTwo);
             }

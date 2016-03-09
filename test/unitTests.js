@@ -5,7 +5,7 @@ var assert = chai.assert;
 var parse = require("../modules/parse");
 
 describe("Parse Tests", function(){
-	describe("Version parsing", function(){
+	describe("Parse Version", function(){
 		it("parseVersion should be a function", function(){
 			assert.isFunction(parse.parseVersion, "true")
 		});
@@ -42,6 +42,30 @@ describe("Parse Tests", function(){
 			expect(parsedVersion.major).to.equal(1);
 			expect(parsedVersion.minor).to.equal(1);
 			expect(parsedVersion.patch).to.equal(1);
+		});
+	});
+	describe("Parse Dependencies", function(){
+		it("parseVersion should be a function", function(){
+			assert.isFunction(parse.parseDependencies, "true")
+		});
+		it("should parse dependencies", function(){
+			var project = parse.parseDependencies("..", 1, false);
+			assert.isArray(project.dependencies, "Array of dependencies is made");
+			assert.isDefined(project.dependencies['async'], "Async is in the list");
+			assert.isUndefined(project.dependencies['mocha'], "Mocha is a devDep");
+		});
+		it("should parse all dependencies including dev", function(){
+			var project = parse.parseDependencies("..", 1, true);
+			assert.isArray(project.dependencies, "Array of dependencies is made");
+			assert.isDefined(project.dependencies['async'], "Async is in the list");
+			assert.isDefined(project.dependencies['mocha'], "Mocha is included");
+		});
+		it("should parse all dependencies depth 2", function(){
+			var project = parse.parseDependencies("..", 2, true);
+			assert.isArray(project.dependencies, "Array of dependencies is made");
+			assert.isDefined(project.dependencies['async'], "Async is in the list");
+			assert.isDefined(project.dependencies['mocha'], "Mocha is included");
+			assert.isDefined(project.dependencies['glob'], "Glob is a dep of npm");
 		});
 	});
 });
