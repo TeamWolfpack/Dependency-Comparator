@@ -21,6 +21,9 @@ var logger = require(path.normalize("../modules/logger"));
 var color = require(path.normalize("../modules/colors"));
 var summarizer = require(path.normalize("../modules/summary"));
 var parse = require(path.normalize("../modules/parse"));
+
+var latestVersion = require("latest-version");
+
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -224,27 +227,20 @@ function compareAndMatch(projectOne, projectTwo, done) {
     } catch (err) {
         //progress bar not supported
     }
-    var processCount = 0;
     async.each(dependencies, function(dependency, callback) {
         var name = dependency.name;
-        processCount++;
-        exec("npm view " + name + " version",
-                function(error, stdout, stderr) {
-            processCount--;
-            color.assignColor(dependency.instances, stdout.trim(),
+        latestVersion(name).then(function(version) {
+            color.assignColor(dependency.instances, version.trim(),
                 globalProjectOne, globalProjectTwo, summarizer,
-                    function(coloredVersion) {
-                dependency.npmVersion = coloredVersion;
-                try {
-                    bar.tick();
-                } catch (err) {
-                    //progress bar not supported
-                }
-                return callback();
-            });
-        });
-        deasync.loopWhile(function() {
-            return (processCount > 30 || osUtils.freememPercentage() < 0.35);
+                function(coloredVersion) {
+                    dependency.npmVersion = coloredVersion;
+                    try {
+                        bar.tick();
+                    } catch (err) {
+                        //progress bar not supported
+                    }
+                    return callback();
+                });
         });
     }, function(err) {
         return done(dependencies);

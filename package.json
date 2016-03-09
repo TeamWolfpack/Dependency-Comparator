@@ -4,8 +4,8 @@
   "description": "Node.js dependency comparison tool.",
   "bin": {
     "brady-tool": "bin/brady-tool.js",
-	"dependency-tool": "bin/brady-tool.js",
-	"dep-tool": "bin/brady-tool.js"
+    "dependency-tool": "bin/brady-tool.js",
+    "dep-tool": "bin/brady-tool.js"
   },
   "main": "./bin/brady-tool.js",
   "scripts": {
@@ -45,6 +45,7 @@
     "fs": "0.0.2",
     "jenkins": "^0.13.0",
     "jsonfile": "^2.2.3",
+    "latest-version": "^2.0.0",
     "mkdirp": "^0.5.1",
     "npm": "^3.7.2",
     "os-utils": "0.0.14",
