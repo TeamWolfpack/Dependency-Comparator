@@ -19,4 +19,4 @@ npm-debug.log*
 logfiles/*
 
 #ignore the .travis.yml file because they are specific to branch
-.travis.yml
+#.travis.yml
