@@ -261,7 +261,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
  * @param {File} projectTwo The second project that will be compared
  */
 function compare(projectOne, projectTwo) {
-    color.initializeColors(commander.colorConfig)
+    color.initializeColors(commander.colorConfig);
     //If the files exist, parse them
     try {
         try {
@@ -283,15 +283,15 @@ function compare(projectOne, projectTwo) {
             var fileTwoParsedDependencies;
 
             try {
-                fileOneParsedDependencies
-                                    = parse.parseDependencies(projectOne, depth, includeDev);
+                fileOneParsedDependencies =
+                                    parse.parseDependencies(projectOne, depth, includeDev);
             } catch (err) {
                 throw Error(err.message + " in " + projectOne);
             }
 
             try {
-                fileTwoParsedDependencies
-                                    = parse.parseDependencies(projectTwo, depth, includeDev);
+                fileTwoParsedDependencies =
+                                    parse.parseDependencies(projectTwo, depth, includeDev);
             } catch (err) {
                 throw Error(err.message + " in " + projectTwo);
             }
