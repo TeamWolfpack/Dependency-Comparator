@@ -8,7 +8,6 @@ node_js:
 notifications:
   email:
     on_success: change
-  email:
     on_failure: change
 
 branches:
