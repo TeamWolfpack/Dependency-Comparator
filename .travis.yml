@@ -19,9 +19,19 @@ script:
   - gulp
   - gulp jscs
   - gulp lint
-  - gulp unitTests
+#  - gulp unitTests
   - gulp integrationTests
-after_success: 
+after_success:
+  on:
+    branch: dev
+  script:
+    -gulp bumpPatchBeta
+
+  on:
+    branch: master
+  script:
+    - gulp bumpMinor
+
 after_failure: 
 
 before_deploy: 

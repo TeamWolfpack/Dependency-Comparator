@@ -119,6 +119,14 @@ gulp.task('bumpPatch', function () {
     .pipe(gulp.dest('./'));
 });
 
+//Increments the patch beta version of node module: 0.0.x-beta.0
+//@url - https://github.com/stevelacy/gulp-bump
+gulp.task('bumpPatchBeta', function () {
+  return gulp.src(['./package.json'])
+    .pipe(bump({type:'prerelease', preid : 'beta'}))
+    .pipe(gulp.dest('./'));
+});
+
 //Run git push to the dev branch.
 gulp.task('pushDev', function(){
   return git.push('origin', 'dev', function (err) {
