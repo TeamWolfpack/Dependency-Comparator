@@ -24,202 +24,11 @@ var parse = require(path.normalize("../modules/parse"));
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
-var customColorsSupported = true;
-
 var globalProjectOne;
 var globalProjectTwo;
-
-/*
- Numbers used are xterm color numbers.
- They can be found here:
- https://en.wikipedia.org/wiki/File:Xterm_256color_chart.svg
- */
-var colorScheme = {
-    patch: clc.yellowBright,
-    minor: clc.magentaBright,
-    major: clc.redBright,
-    upToDate: clc.greenBright,
-    unmatched: clc.whiteBright
-};
-
 /*End Global Variables*/
 
-/**
- * Checks for xterm compatibility.
- *
- * @returns {boolean} true if console supports xterm colors
- */
-function checkForXterm() {
-    var orange = clc.xterm(202);
-    var red = clc.redBright;
-    customColorsSupported = !(orange("A") === red("A"));
-    return customColorsSupported;
-}
 
-/**
- * Selects which colors to load from the config.
- *
- * @param {String} typeOfColors A string that is the name of the area
- * of the config that should be loaded
- */
-function loadConfigColors(typeOfColors) {
-    if (checkForXterm()) {
-        switch (typeOfColors) {
-            case "Standard":
-                loadStandardConfigColors();
-                break;
-            case "ColorBlind":
-                loadColorBlindConfigColors();
-                break;
-            default:
-                loadStandardConfigColors();
-                break;
-        }
-    }
-}
-
-/**
- * Sets the colors in the standard section of the color config as the
- * current color scheme.
- */
-function loadStandardConfigColors() {
-    if (checkForXterm()) {
-        try {
-            var colorConfig = require(
-                path.normalize("../colorConfig.json"));
-            if (colorConfig.Standard.major) {
-                colorScheme.major = clc.xterm(
-                    colorConfig.Standard.major);
-            }
-            if (colorConfig.Standard.minor) {
-                colorScheme.minor = clc.xterm(
-                    colorConfig.Standard.minor);
-            }
-            if (colorConfig.Standard.patch) {
-                colorScheme.patch = clc.xterm(
-                    colorConfig.Standard.patch);
-            }
-            if (colorConfig.Standard.upToDate) {
-                colorScheme.upToDate = clc.xterm(
-                    colorConfig.Standard.upToDate);
-            }
-            if (colorConfig.Standard.unmatched) {
-                colorScheme.unmatched = clc.xterm(
-                    colorConfig.Standard.unmatched);
-            }
-        } catch (err) {
-            throw Error(err.message);
-        }
-    }
-
-}
-
-/**
- * Sets the colors in the color blind section of the color config as
- * the current color scheme.
- */
-function loadColorBlindConfigColors() {
-    if (checkForXterm()) {
-        try {
-            var colorConfig = require(
-                path.normalize("../colorConfig.json"));
-            if (colorConfig.ColorBlind.major) {
-                colorScheme.major = clc.xterm(
-                    colorConfig.ColorBlind.major);
-            }
-            if (colorConfig.ColorBlind.minor) {
-                colorScheme.minor = clc.xterm(
-                    colorConfig.ColorBlind.minor);
-            }
-            if (colorConfig.ColorBlind.patch) {
-                colorScheme.patch = clc.xterm(
-                    colorConfig.ColorBlind.patch);
-            }
-            if (colorConfig.ColorBlind.upToDate) {
-                colorScheme.upToDate = clc.xterm(
-                    colorConfig.ColorBlind.upToDate);
-            }
-            if (colorConfig.ColorBlind.unmatched) {
-                colorScheme.unmatched = clc.xterm(
-                    colorConfig.ColorBlind.unmatched);
-            }
-        } catch (err) {
-            throw Error("colorConfig is missing or syntax is" +
-                " incorrect.");
-        }
-    }
-
-}
-
-/**
- * Assigns colors to instances in an array of instances of a
- * dependency based off of the version of that instance and the
- * max version found.
- *
- * @param {Array} instances An array of instances of the dependency
- * @param {JSON} npmVersion The instance's version on npm
- */
-function assignColor(instances, npmVersion, callback) {
-    parsedNPMVersion = parse.parseVersion(npmVersion);
-    for (var i in instances) {
-        var instance = instances[i];
-        var version = parse.parseVersion(instance.version);
-        var lowestColor = 0; //green
-
-        //Compare the version of this instance with the npm version
-        if (JSON.stringify(version) === JSON.stringify(parsedNPMVersion)) {
-            instance.color = "upToDate";
-        } else if (version.major > parsedNPMVersion.major ||
-            (version.major == parsedNPMVersion.major &&
-            version.minor > parsedNPMVersion.minor) ||
-            (version.major == parsedNPMVersion.major &&
-            version.minor == parsedNPMVersion.minor &&
-            version.patch > parsedNPMVersion.patch)) {
-            instance.color = "upToDate";
-        }else if (version.major < parsedNPMVersion.major) {
-            instance.color = "major";
-            if (instance.Project == globalProjectOne) {
-                summarizer.totals.projectOne.major++;
-            } else if (instance.Project == globalProjectTwo) {
-                summarizer.totals.projectTwo.major++;
-            }
-            summarizer.totals.major++;
-            if (lowestColor < 3) {
-                lowestColor = 3; //red
-            }
-        }else if (version.minor < parsedNPMVersion.minor) {
-            instance.color = "minor";
-            if (instance.Project == globalProjectOne) {
-                summarizer.totals.projectOne.minor++;
-            } else if (instance.Project == globalProjectTwo) {
-                summarizer.totals.projectTwo.minor++;
-            }
-            if (lowestColor < 2) {
-                lowestColor = 2; //magenta
-            }
-        }else if (version.patch < parsedNPMVersion.patch) {
-            instance.color = "patch";
-            if (instance.Project == globalProjectOne) {
-                summarizer.totals.projectOne.patch++;
-            } else if (instance.Project == globalProjectTwo) {
-                summarizer.totals.projectTwo.patch++;
-            }
-            if (lowestColor < 1) {
-                lowestColor = 1; //yellow
-            }
-        }
-    }
-    if (lowestColor == 3) {
-        npmVersion = colorScheme.major(npmVersion);
-    } else if (lowestColor == 2) {
-        npmVersion = colorScheme.minor(npmVersion);
-    } else if (lowestColor == 1) {
-        npmVersion = colorScheme.patch(npmVersion);
-    } else {
-        npmVersion = colorScheme.upToDate(npmVersion);
-    }
-    return callback(npmVersion);
-}
 
 /**
  * Creates, fills, and prints the table based on a list of
@@ -255,19 +64,19 @@ function createTable(dependencies) {
                 var instance = instances[i];
                 if (instance.color == "upToDate") {
                     var instanceVersion
-                        = colorScheme.upToDate(instance.version);
+                        = color.colorScheme.upToDate(instance.version);
                 } else if (instance.color == "minor") {
                     var instanceVersion
-                        = colorScheme.minor(instance.version);
+                        = color.colorScheme.minor(instance.version);
                 } else if (instance.color == "patch") {
                     var instanceVersion
-                        = colorScheme.patch(instance.version);
+                        = color.colorScheme.patch(instance.version);
                 } else if (instance.color == "major") {
                     var instanceVersion
-                        = colorScheme.major(instance.version);
+                        = color.colorScheme.major(instance.version);
                 } else {
                     var instanceVersion
-                        = colorScheme.unmatched(instance.version);
+                        = color.colorScheme.unmatched(instance.version);
                 }
                 if (i == 0) { //first instance fills in Module name
                     if (!projectOneName) {
@@ -424,8 +233,9 @@ function compareAndMatch(projectOne, projectTwo, done) {
         exec("npm view " + name + " version",
                 function(error, stdout, stderr) {
             processCount--;
-            assignColor(dependency.instances, stdout.trim(),
-                    function(coloredVersion) {
+            color.assignColor(dependency.instances, stdout.trim(),
+                    function(coloredVersion, globalProjectOne,
+                    globalProjectTwo) {
                 dependency.npmVersion = coloredVersion;
                 try {
                     bar.tick();
@@ -443,19 +253,6 @@ function compareAndMatch(projectOne, projectTwo, done) {
     });
 }
 
-/**
- * Displays a legend that shows what each of the colors mean.
- */
-function displayColorLegend() {
-    var colorLegendTable = new cliTable();
-    colorLegendTable.push([colorScheme.major("Major Difference"),
-        colorScheme.minor("Minor Difference"),
-        colorScheme.patch("Patch Difference")]);
-    colorLegendTable.push([colorScheme.upToDate("Up to Date"),
-        colorScheme.unmatched("Unmatched")]);
-
-    console.log(colorLegendTable.toString());
-}
 
 /**
  * Method that runs when the user enters the 'compare' command.
@@ -467,10 +264,9 @@ function displayColorLegend() {
  * @param {File} projectTwo The second project that will be compared
  */
 function compare(projectOne, projectTwo) {
-    checkForXterm();
-    if (customColorsSupported) {
-        colorScheme.minor = clc.xterm(202);
-        loadConfigColors(commander.colorConfig);
+    if (true) {
+        color.colorScheme.minor = clc.xterm(202);
+        color.loadConfigColors(commander.colorConfig);
     }
 
     //If the files exist, parse them
@@ -524,7 +320,7 @@ function compare(projectOne, projectTwo) {
                         summarizer.printSummaryTable(globalProjectOne,globalProjectTwo);
                     }
                     if (commander.commands[0].colorLegend) {
-                        displayColorLegend();
+                        color.displayColorLegend();
                     }
                     logger.logDependencies(matchedDependencies,
                         commander.commands[0].output);

@@ -1,5 +1,5 @@
 /**
- * Created by farrowc on 2/18/2016.
+ * Created by farrowc on 3/7/2016.
  */
 
 var textTable = require("text-table");
@@ -37,8 +37,9 @@ function printSummaryTable(globalProjectOne,globalProjectTwo) {
         ["patch", totals.projectOne.patch, totals.projectTwo.patch],
         ["unmatched", totals.projectOne.unmatched, totals.projectTwo.unmatched]
     ], {align: ["l", "l", "l"]});
+    console.log(totals);
     console.log(summaryTable);
 }
 
-exports.printSummaryTable = printSummaryTable;
-exports.totals = totals;
+module.exports = {printSummaryTable: printSummaryTable,
+    totals: totals}
