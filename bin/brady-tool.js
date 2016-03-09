@@ -219,14 +219,10 @@ function compareAndMatch(projectOne, projectTwo, done) {
         complete: "=",
         incomplete: " ",
         width: 40,
-        total: dependencies.length,
+        total: dependencies.length + 1,
         clear: true
     });
-    try {
-        bar.tick();
-    } catch (err) {
-        //progress bar not supported
-    }
+    tick(bar);
     async.each(dependencies, function(dependency, callback) {
         var name = dependency.name;
         latestVersion(name).then(function(version) {
@@ -234,17 +230,28 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 globalProjectOne, globalProjectTwo, summarizer,
                 function(coloredVersion) {
                     dependency.npmVersion = coloredVersion;
-                    try {
-                        bar.tick();
-                    } catch (err) {
-                        //progress bar not supported
-                    }
+                    tick(bar);
                     return callback();
                 });
         });
     }, function(err) {
+        tick(bar);
         return done(dependencies);
     });
+}
+
+/**
+ * Tries to tick the progress bar
+ * NOTE: Progress is not supported on some terminals
+ *
+ * @param {Object} bar progress bar
+ */
+function tick(bar) {
+    try {
+        bar.tick();
+    } catch (err) {
+        //progress bar not supported
+    }
 }
 
 /**
