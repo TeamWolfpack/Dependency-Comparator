@@ -28,8 +28,6 @@ var globalProjectOne;
 var globalProjectTwo;
 /*End Global Variables*/
 
-
-
 /**
  * Creates, fills, and prints the table based on a list of
  * dependencies. Since this function comes at the end
@@ -134,10 +132,10 @@ function createTable(dependencies) {
 /**
  * Compares and matches dependencies from two arrays of dependencies
  * from projects.
- * **Must be edited for comparing with depth.
  *
  * @param {Object} projectOne Dependencies from project 1
  * @param {Object} projectTwo Dependencies from project 2
+ * @param {function} done callback
  */
 function compareAndMatch(projectOne, projectTwo, done) {
     globalProjectOne = projectOne.name; //needed to seperate totals
@@ -253,7 +251,6 @@ function compareAndMatch(projectOne, projectTwo, done) {
     });
 }
 
-
 /**
  * Method that runs when the user enters the 'compare' command.
  * Will compare the versions of the dependencies of two projects
@@ -318,8 +315,7 @@ function compare(projectOne, projectTwo) {
                     if (commander.commands[0].colorLegend) {
                         color.displayColorLegend();
                     }
-                    logger.logDependencies(matchedDependencies,
-                        commander.commands[0].output);
+                    logger.logDependencies(matchedDependencies);
                 }else if (process.argv[2] === "summary" ||
                         process.argv[1] === "summary" ||
                         process.argv[2] === "sum" ||
