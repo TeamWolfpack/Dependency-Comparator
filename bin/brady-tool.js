@@ -234,8 +234,8 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 function(error, stdout, stderr) {
             processCount--;
             color.assignColor(dependency.instances, stdout.trim(),
-                    function(coloredVersion, globalProjectOne,
-                    globalProjectTwo) {
+                globalProjectOne, globalProjectTwo, summarizer,
+                    function(coloredVersion) {
                 dependency.npmVersion = coloredVersion;
                 try {
                     bar.tick();
@@ -264,11 +264,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
  * @param {File} projectTwo The second project that will be compared
  */
 function compare(projectOne, projectTwo) {
-    if (true) {
-        color.colorScheme.minor = clc.xterm(202);
-        color.loadConfigColors(commander.colorConfig);
-    }
-
+    color.initializeColors(commander.colorConfig)
     //If the files exist, parse them
     try {
         try {

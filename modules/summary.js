@@ -37,7 +37,6 @@ function printSummaryTable(globalProjectOne,globalProjectTwo) {
         ["patch", totals.projectOne.patch, totals.projectTwo.patch],
         ["unmatched", totals.projectOne.unmatched, totals.projectTwo.unmatched]
     ], {align: ["l", "l", "l"]});
-    console.log(totals);
     console.log(summaryTable);
 }
 

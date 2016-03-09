@@ -46,45 +46,45 @@ function loadConfigColors(typeOfColors) {
         if(colorConfig[typeOfColors]!=undefined) {
             if (colorConfig[typeOfColors].major) {
                 colorScheme.major = clc.xterm(
-                    colorConfig.Standard.major);
+                    colorConfig[typeOfColors].major);
             }
             if (colorConfig[typeOfColors].minor) {
                 colorScheme.minor = clc.xterm(
-                    colorConfig.Standard.minor);
+                    colorConfig[typeOfColors].minor);
             }
             if (colorConfig[typeOfColors].patch) {
                 colorScheme.patch = clc.xterm(
-                    colorConfig.Standard.patch);
+                    colorConfig[typeOfColors].patch);
             }
             if (colorConfig[typeOfColors].upToDate) {
                 colorScheme.upToDate = clc.xterm(
-                    colorConfig.Standard.upToDate);
+                    colorConfig[typeOfColors].upToDate);
             }
             if (colorConfig[typeOfColors].unmatched) {
                 colorScheme.unmatched = clc.xterm(
-                    colorConfig.Standard.unmatched);
+                    colorConfig[typeOfColors].unmatched);
             }
         }
         else{
             if (colorConfig["Standard"].major) {
                 colorScheme.major = clc.xterm(
-                    colorConfig.Standard.major);
+                    colorConfig["Standard"].major);
             }
             if (colorConfig["Standard"].minor) {
                 colorScheme.minor = clc.xterm(
-                    colorConfig.Standard.minor);
+                    colorConfig["Standard"].minor);
             }
             if (colorConfig["Standard"].patch) {
                 colorScheme.patch = clc.xterm(
-                    colorConfig.Standard.patch);
+                    colorConfig["Standard"].patch);
             }
             if (colorConfig["Standard"].upToDate) {
                 colorScheme.upToDate = clc.xterm(
-                    colorConfig.Standard.upToDate);
+                    colorConfig["Standard"].upToDate);
             }
             if (colorConfig["Standard"].unmatched) {
                 colorScheme.unmatched = clc.xterm(
-                    colorConfig.Standard.unmatched);
+                    colorConfig["Standard"].unmatched);
             }
         }
     }
@@ -98,8 +98,8 @@ function loadConfigColors(typeOfColors) {
  * @param {Array} instances An array of instances of the dependency
  * @param {JSON} npmVersion The instance's version on npm
  */
-function assignColor(instances, npmVersion, callback, globalProjectOne,
-                     globalProjectTwo) {
+function assignColor(instances, npmVersion, globalProjectOne,
+                     globalProjectTwo, summarizer, callback) {
     parsedNPMVersion = parse.parseVersion(npmVersion);
     for (var i in instances) {
         var instance = instances[i];
@@ -175,8 +175,21 @@ function displayColorLegend() {
     console.log(colorLegendTable.toString());
 }
 
+/**
+ * Initializes the colors with orange and the given colorscheme if
+ * xterm colors are supported.
+ * @param typeOfColor
+ */
+function initializeColors(typeOfColor){
+    if (checkForXterm()) {
+        colorScheme.minor = clc.xterm(202);
+        loadConfigColors(typeOfColor);
+    }
+}
+
 module.exports = {colorScheme: colorScheme,
     checkForXterm: checkForXterm,
     loadConfigColors: loadConfigColors,
     assignColor: assignColor,
-    displayColorLegend: displayColorLegend};
+    displayColorLegend: displayColorLegend,
+    initializeColors: initializeColors};
