@@ -1,20 +1,31 @@
 language: node_js
 node_js:
-- '4.2'
-- '4.1'
-- '4.0'
-- '3'
+  - '4.2'
+  - '4.1'
+  - '4.0'
+  - '3'
+  
+notifications:
+  email:
+    on_success: change
+	on_failure: change
+	
+branches:
+  only:
+    - dev
+	
 before_script:
-- npm install -g gulp
-- npm install
+  - npm install -g gulp
+  - npm install
 script:
-- gulp
-- gulp jscs
-- gulp lint
-- gulp unitTests
-- gulp integrationTests
+  - gulp
+  - gulp jscs
+  - gulp lint
+  - gulp unitTests
+  - gulp integrationTests
 after_success: 
 after_failure: 
+
 before_deploy: 
 deploy:
   provider: npm
@@ -23,3 +34,4 @@ deploy:
   on:
     branch: master
 after_deploy: 
+after_script:
