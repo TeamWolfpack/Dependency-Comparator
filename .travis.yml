@@ -10,7 +10,7 @@ notifications:
     on_success: change
   email:
     on_failure: change
-	
+
 branches:
   only:
     - dev
