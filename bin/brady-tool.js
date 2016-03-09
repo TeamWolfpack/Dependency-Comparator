@@ -18,6 +18,8 @@ var path = require("path");
 var osUtils = require("os-utils");
 var pjson = require(path.normalize("../package.json"));
 var logger = require(path.normalize("../modules/logger"));
+var color = require(path.normalize("../modules/colors"));
+var summarizer = require(path.normalize("../modules/summary"));
 var parse = require(path.normalize("../modules/parse"));
 /*End 'require' Import Statements*/
 
@@ -40,20 +42,6 @@ var colorScheme = {
     unmatched: clc.whiteBright
 };
 
-var totals = {
-    projectOne: {
-        major: 0,
-        minor: 0,
-        patch: 0,
-        unmatched: 0
-    },
-    projectTwo: {
-        major: 0,
-        minor: 0,
-        patch: 0,
-        unmatched: 0
-    }
-};
 /*End Global Variables*/
 
 /**
@@ -191,20 +179,20 @@ function assignColor(instances, npmVersion, callback) {
         }else if (version.major < parsedNPMVersion.major) {
             instance.color = "major";
             if (instance.Project == globalProjectOne) {
-                totals.projectOne.major++;
+                summarizer.totals.projectOne.major++;
             } else if (instance.Project == globalProjectTwo) {
-                totals.projectTwo.major++;
+                summarizer.totals.projectTwo.major++;
             }
-            totals.major++;
+            summarizer.totals.major++;
             if (lowestColor < 3) {
                 lowestColor = 3; //red
             }
         }else if (version.minor < parsedNPMVersion.minor) {
             instance.color = "minor";
             if (instance.Project == globalProjectOne) {
-                totals.projectOne.minor++;
+                summarizer.totals.projectOne.minor++;
             } else if (instance.Project == globalProjectTwo) {
-                totals.projectTwo.minor++;
+                summarizer.totals.projectTwo.minor++;
             }
             if (lowestColor < 2) {
                 lowestColor = 2; //magenta
@@ -212,9 +200,9 @@ function assignColor(instances, npmVersion, callback) {
         }else if (version.patch < parsedNPMVersion.patch) {
             instance.color = "patch";
             if (instance.Project == globalProjectOne) {
-                totals.projectOne.patch++;
+                summarizer.totals.projectOne.patch++;
             } else if (instance.Project == globalProjectTwo) {
-                totals.projectTwo.patch++;
+                summarizer.totals.projectTwo.patch++;
             }
             if (lowestColor < 1) {
                 lowestColor = 1; //yellow
@@ -390,7 +378,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                     path: projectOneDep[dep][instance].path,
                     color: "white"
                 };
-                totals.projectOne.unmatched++;
+                summarizer.totals.projectOne.unmatched++;
             }
             dependencies[dependencies.length] = {
                 name: dep,
@@ -407,7 +395,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
-                totals.projectTwo.unmatched++;
+                summarizer.totals.projectTwo.unmatched++;
             }
 
             dependencies[dependencies.length] = {
@@ -533,7 +521,7 @@ function compare(projectOne, projectTwo) {
                         process.argv[1] === "cmp") {
                     createTable(matchedDependencies);
                     if (!commander.commands[0].hideSummary) {
-                        printSummaryTable();
+                        summarizer.printSummaryTable(globalProjectOne,globalProjectTwo);
                     }
                     if (commander.commands[0].colorLegend) {
                         displayColorLegend();
@@ -547,7 +535,7 @@ function compare(projectOne, projectTwo) {
                     if (commander.commands[1].showTable) {
                         createTable(matchedDependencies);
                     }
-                    printSummaryTable();
+                    summarizer.printSummaryTable(globalProjectOne,globalProjectTwo);
                 }
             });
         }else {
@@ -558,26 +546,6 @@ function compare(projectOne, projectTwo) {
         console.log(err);
         return 1;
     }
-}
-
-/**
- * Prints the summary table.
- */
-function printSummaryTable() {
-    if (globalProjectOne == globalProjectTwo) {
-        totals.projectOne.major /= 2;
-        totals.projectOne.minor /= 2;
-        totals.projectOne.patch /= 2;
-        totals.projectTwo = totals.projectOne;
-    }
-    var summaryTable = textTable([
-    ["", "Project One", "Project Two"],
-    ["major", totals.projectOne.major, totals.projectTwo.major],
-    ["minor", totals.projectOne.minor, totals.projectTwo.minor],
-    ["patch", totals.projectOne.patch, totals.projectTwo.patch],
-    ["unmatched", totals.projectOne.unmatched, totals.projectTwo.unmatched]
-    ], {align: ["l", "l", "l"]});
-    console.log(summaryTable);
 }
 
 /**
