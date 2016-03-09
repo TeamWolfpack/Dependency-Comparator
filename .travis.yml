@@ -1,9 +1,6 @@
 language: node_js
 node_js:
-  - '4.2'
-  - '4.1'
-  - '4.0'
-  - '3'
+  - '4'
   
 notifications:
   email:
@@ -15,6 +12,7 @@ notifications:
 #    dev
 
 before_script:
+  - npm install -g npm3
   - npm install -g gulp
   - npm install
 script:
