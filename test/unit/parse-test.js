@@ -4,6 +4,8 @@ var assert = chai.assert;
 
 var parse = require("../../modules/parse");
 
+// look into sinon mocking
+// look into proxyquire
 describe("Parse Tests", function() {
     describe("Parse Version", function() {
         it("parseVersion should be a function", function() {
@@ -47,7 +49,7 @@ describe("Parse Tests", function() {
     describe("Parse Dependencies", function() {
         it("parseVersion should be a function", function() {
             assert.isFunction(parse.parseDependencies, "true");
-        });
+        }); // might not be needed
         it("should parse dependencies", function() {
             var project = parse.parseDependencies("..", 1, false);
             assert.isArray(project.dependencies, "Array of dependencies is made");
