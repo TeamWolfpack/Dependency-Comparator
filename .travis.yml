@@ -22,15 +22,7 @@ script:
 #  - gulp unitTests
   - gulp integrationTests
 after_success:
-  on:
-    branch: dev
-  script:
-    -gulp bumpPatchBeta
-
-  on:
-    branch: master
-  script:
-    - gulp bumpMinor
+  - ./afterSuccess.sh
 
 after_failure: 
 
