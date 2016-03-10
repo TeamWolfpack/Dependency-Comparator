@@ -21,6 +21,9 @@ var logger = require(path.normalize("../modules/logger"));
 var color = require(path.normalize("../modules/colors"));
 var summarizer = require(path.normalize("../modules/summary"));
 var parse = require(path.normalize("../modules/parse"));
+
+var latestVersion = require("latest-version");
+
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -216,39 +219,39 @@ function compareAndMatch(projectOne, projectTwo, done) {
         complete: "=",
         incomplete: " ",
         width: 40,
-        total: dependencies.length,
+        total: dependencies.length + 1,
         clear: true
     });
+    tick(bar);
+    async.each(dependencies, function(dependency, callback) {
+        var name = dependency.name;
+        latestVersion(name).then(function(version) {
+            color.assignColor(dependency.instances, version.trim(),
+                globalProjectOne, globalProjectTwo, summarizer,
+                function(coloredVersion) {
+                    dependency.npmVersion = coloredVersion;
+                    tick(bar);
+                    return callback();
+                });
+        });
+    }, function(err) {
+        tick(bar);
+        return done(dependencies);
+    });
+}
+
+/**
+ * Tries to tick the progress bar
+ * NOTE: Progress is not supported on some terminals
+ *
+ * @param {Object} bar progress bar
+ */
+function tick(bar) {
     try {
         bar.tick();
     } catch (err) {
         //progress bar not supported
     }
-    var processCount = 0;
-    async.each(dependencies, function(dependency, callback) {
-        var name = dependency.name;
-        processCount++;
-        exec("npm view " + name + " version",
-                function(error, stdout, stderr) {
-            processCount--;
-            color.assignColor(dependency.instances, stdout.trim(),
-                globalProjectOne, globalProjectTwo, summarizer,
-                    function(coloredVersion) {
-                dependency.npmVersion = coloredVersion;
-                try {
-                    bar.tick();
-                } catch (err) {
-                    //progress bar not supported
-                }
-                return callback();
-            });
-        });
-        deasync.loopWhile(function() {
-            return (processCount > 30 || osUtils.freememPercentage() < 0.35);
-        });
-    }, function(err) {
-        return done(dependencies);
-    });
 }
 
 /**
