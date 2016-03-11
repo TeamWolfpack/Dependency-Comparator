@@ -1,27 +1,32 @@
 language: node_js
 node_js:
-- '4.0'
-- '4.1'
-- '4.2'
-- '4.3'
-- '4.4'
-- '5.0'
+  - '4.0'
+#  - '4.1'
+#  - '4.2'
+#  - '4.3'
+#  - '4.4'
+#  - '5.0'
+
 notifications:
   email:
     on_success: change
     on_failure: change
+
 before_script:
-- npm install -g npm3
-- npm install -g gulp
-- chmod +x afterSuccess.sh
+  - npm install -g npm3
+  - npm install -g gulp
+  - chmod +x afterSuccess.sh
 script:
-- gulp
-- gulp jscs
-- gulp lint
-- gulp integrationTests
+  - gulp
+  - gulp jscs
+  - gulp lint
+#  - gulp unitTests
+  - gulp integrationTests
 after_success:
-- "./afterSuccess.sh"
+  - ./afterSuccess.sh
+
 after_failure: 
+
 before_deploy: 
 deploy:
   provider: npm
