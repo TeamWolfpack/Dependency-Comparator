@@ -4,7 +4,7 @@
   "description": "Node.js dependency comparison tool.",
   "bin": {
     "dependency-comparator": "bin/brady-tool.js",
-	"dep-tool": "bin/brady-tool.js"
+    "dep-tool": "bin/brady-tool.js"
   },
   "main": "./bin/brady-tool.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/aaronchun7/sdl-brady-dependency-tool.git"
+    "url": "git+ssh://git@bitbucket.org:BradyDependencyAnalyzer/sdl-brady-dependency-tool.git"
   },
   "keywords": [
     "dependency",
@@ -20,7 +20,7 @@
   ],
   "author": "team-wolfpack",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/aaronchun7/sdl-brady-dependency-tool#readme",
+  "homepage": "https://www.npmjs.com/package/sdl-brady-dependency-tool",
   "devDependencies": {
     "chai": "^3.4.1",
     "gulp": "^3.9.0",
@@ -44,6 +44,7 @@
     "fs": "0.0.2",
     "jenkins": "^0.13.0",
     "jsonfile": "^2.2.3",
+    "latest-version": "^2.0.0",
     "mkdirp": "^0.5.1",
     "npm": "^3.7.2",
     "os-utils": "0.0.14",
