@@ -9,21 +9,18 @@
 var cliTable = require("cli-table2");
 var textTable = require("text-table");
 var commander = require("commander");
-var exec = require("child_process").exec;
 var async = require("async");
 var deasync = require("deasync");
 var ProgressBar = require("progress");
 var clc = require("cli-color");
 var path = require("path");
 var osUtils = require("os-utils");
+var latestVersion = require("latest-version");
 var pjson = require(path.normalize("../package.json"));
 var logger = require(path.normalize("../modules/logger"));
 var color = require(path.normalize("../modules/colors"));
 var summarizer = require(path.normalize("../modules/summary"));
 var parse = require(path.normalize("../modules/parse"));
-
-var latestVersion = require("latest-version");
-
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -244,7 +241,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
  * Tries to tick the progress bar
  * NOTE: Progress is not supported on some terminals
  *
- * @param {Object} bar progress bar
+ * @param {Object} bar progress bar for pulling version
  */
 function tick(bar) {
     try {
