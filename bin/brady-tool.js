@@ -216,7 +216,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
         complete: "=",
         incomplete: " ",
         width: 40,
-        total: dependencies.length + 1,
+        total: dependencies.length,
         clear: true
     });
     tick(bar);

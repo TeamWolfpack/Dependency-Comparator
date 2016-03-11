@@ -12,11 +12,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org:BradyDependencyAnalyzer/sdl-brady-dependency-tool.git"
+    "url": "git+ssh://git@github.com:TeamWolfpack/Dependency-Comparator.git"
   },
   "keywords": [
     "dependency",
-    "comparison"
+    "comparison",
+	"outdated"
   ],
   "author": "team-wolfpack",
   "license": "ISC",
