@@ -249,10 +249,7 @@ function tick(bar) {
 }
 
 function supportRelativePath(projectOne, projectTwo){
-    if(path.isAbsolute(projectOne) && path.isAbsolute(projectOne)){
-        //both are absolute
-
-    }else if(path.isAbsolute(projectOne) || path.isAbsolute(projectOne)){
+    if(path.isAbsolute(projectOne) || path.isAbsolute(projectOne)){
         if(path.isAbsolute(projectOne)){
 
         }else{
