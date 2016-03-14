@@ -12,7 +12,7 @@ var async = require("async");
 var deasync = require("deasync");
 var ProgressBar = require("progress");
 var path = require("path");
-var fs = require('fs');
+var fs = require("fs");
 var latestVersion = require("latest-version");
 var pjson = require(path.normalize("../package.json"));
 var logger = require(path.normalize("../modules/logger"));
@@ -252,10 +252,11 @@ function tick(bar) {
 /**
  * Ensures file path support to relative file paths and cross-platform
  * support.
- * @param project path to project directory
- * @returns valid path to directory
+ *
+ * @param {string} project path to project directory
+ * @returns {string} path valid path to directory
  */
-function validatePath(project){
+function validatePath(project) {
     try {
         project = path.normalize(project);
         fs.accessSync(project, fs.F_OK);
