@@ -7,14 +7,11 @@
 
 /*Begin 'require' Import Statements*/
 var cliTable = require("cli-table2");
-var textTable = require("text-table");
 var commander = require("commander");
 var async = require("async");
 var deasync = require("deasync");
 var ProgressBar = require("progress");
-var clc = require("cli-color");
 var path = require("path");
-var osUtils = require("os-utils");
 var latestVersion = require("latest-version");
 var pjson = require(path.normalize("../package.json"));
 var logger = require(path.normalize("../modules/logger"));
@@ -251,6 +248,32 @@ function tick(bar) {
     }
 }
 
+function supportRelativePath(projectOne, projectTwo){
+    if(path.isAbsolute(projectOne) && path.isAbsolute(projectOne)){
+        //both are absolute
+
+    }else if(path.isAbsolute(projectOne) || path.isAbsolute(projectOne)){
+        if(path.isAbsolute(projectOne)){
+
+        }else{
+
+        }
+    }else{
+        //throw error
+        throw Error("No project paths found.");
+    }
+    try {
+        projectOne = path.normalize(projectOne);
+    } catch (err) {
+        throw Error("First project path is invalid: " + projectOne);
+    }
+    try {
+        projectTwo = path.normalize(projectTwo);
+    } catch (err) {
+        throw Error("Second project path is invalid: " + projectTwo);
+    }
+}
+
 /**
  * Method that runs when the user enters the 'compare' command.
  * Will compare the versions of the dependencies of two projects
@@ -264,16 +287,16 @@ function compare(projectOne, projectTwo) {
     color.initializeColors(commander.colorConfig);
     //If the files exist, parse them
     try {
-        try {
-            projectOne = path.normalize(projectOne);
-        } catch (err) {
-            throw Error("First project path is invalid: " + projectOne);
-        }
-        try {
-            projectTwo = path.normalize(projectTwo);
-        } catch (err) {
-            throw Error("Second project path is invalid: " + projectTwo);
-        }
+        //try {
+        //    projectOne = path.normalize(projectOne);
+        //} catch (err) {
+        //    throw Error("First project path is invalid: " + projectOne);
+        //}
+        //try {
+        //    projectTwo = path.normalize(projectTwo);
+        //} catch (err) {
+        //    throw Error("Second project path is invalid: " + projectTwo);
+        //}
 		
         //var depth = 0;
         if (commander.depth >= 1) { //for 1 indexed-commander.depth>0
