@@ -45,6 +45,18 @@ describe("Parse Tests", function() {
             expect(parsedVersion.minor).to.equal(1);
             expect(parsedVersion.patch).to.equal(1);
         });
+        it("should parse beta and alpha versions", function() {
+            var parsedVersion = parse.parseVersion("1.1.1-beta2");
+            expect(Object.keys(parsedVersion).length).to.equal(4);
+            assert.isDefined(parsedVersion.major, "major is defined");
+            assert.isDefined(parsedVersion.minor, "minor is defined");
+            assert.isDefined(parsedVersion.patch, "patch is defined");
+            assert.isDefined(parsedVersion.stage, "stage is defined");
+            expect(parsedVersion.major).to.equal(1);
+            expect(parsedVersion.minor).to.equal(1);
+            expect(parsedVersion.patch).to.equal(1);
+            expect(parsedVersion.stage).to.contain("beta");
+        });
     });
     describe("Parse Dependencies", function() {
         it("parseVersion should be a function", function() {
