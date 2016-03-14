@@ -256,6 +256,7 @@ function validatePath(project){
     } catch (err) {
         throw Error("Project path is invalid: " + project);
     }
+    return path.resolve(project);
 }
 
 /**
@@ -271,8 +272,8 @@ function compare(projectOne, projectTwo) {
     color.initializeColors(commander.colorConfig);
     //If the files exist, parse them
     try {
-        validatePath(projectOne);
-        validatePath(projectTwo);
+        projectOne = validatePath(projectOne);
+        projectTwo = validatePath(projectTwo);
 		
         //var depth = 0;
         if (commander.depth >= 1) { //for 1 indexed-commander.depth>0
