@@ -252,7 +252,9 @@ function tick(bar) {
 function validatePath(project){
     try {
         project = path.normalize(project);
-        fs.accessSync(project, fs.F_OK);
+        fs.access(project, fs.F_OK, function (error){
+            //console.log("error: " + project);
+        });
     } catch (err) {
         throw Error("Project path is invalid: " + project);
     }
