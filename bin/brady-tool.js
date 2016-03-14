@@ -7,14 +7,12 @@
 
 /*Begin 'require' Import Statements*/
 var cliTable = require("cli-table2");
-var textTable = require("text-table");
 var commander = require("commander");
 var async = require("async");
 var deasync = require("deasync");
 var ProgressBar = require("progress");
-var clc = require("cli-color");
 var path = require("path");
-var osUtils = require("os-utils");
+var fs = require('fs');
 var latestVersion = require("latest-version");
 var pjson = require(path.normalize("../package.json"));
 var logger = require(path.normalize("../modules/logger"));
@@ -252,6 +250,22 @@ function tick(bar) {
 }
 
 /**
+ * Ensures file path support to relative file paths and cross-platform
+ * support.
+ * @param project path to project directory
+ * @returns valid path to directory
+ */
+function validatePath(project){
+    try {
+        project = path.normalize(project);
+        fs.accessSync(project, fs.F_OK);
+    } catch (err) {
+        throw Error("Project path is invalid: " + project);
+    }
+    return path.resolve(project);
+}
+
+/**
  * Method that runs when the user enters the 'compare' command.
  * Will compare the versions of the dependencies of two projects
  * and print out the differences.
@@ -264,16 +278,8 @@ function compare(projectOne, projectTwo) {
     color.initializeColors(commander.colorConfig);
     //If the files exist, parse them
     try {
-        try {
-            projectOne = path.normalize(projectOne);
-        } catch (err) {
-            throw Error("First project path is invalid: " + projectOne);
-        }
-        try {
-            projectTwo = path.normalize(projectTwo);
-        } catch (err) {
-            throw Error("Second project path is invalid: " + projectTwo);
-        }
+        projectOne = validatePath(projectOne);
+        projectTwo = validatePath(projectTwo);
 		
         //var depth = 0;
         if (commander.depth >= 1) { //for 1 indexed-commander.depth>0
@@ -284,14 +290,16 @@ function compare(projectOne, projectTwo) {
 
             try {
                 fileOneParsedDependencies =
-                                    parse.parseDependencies(projectOne, depth, includeDev);
+                                    parse.parseDependencies(projectOne,
+                                        depth, includeDev);
             } catch (err) {
                 throw Error(err.message + " in " + projectOne);
             }
 
             try {
                 fileTwoParsedDependencies =
-                                    parse.parseDependencies(projectTwo, depth, includeDev);
+                                    parse.parseDependencies(projectTwo,
+                                        depth, includeDev);
             } catch (err) {
                 throw Error(err.message + " in " + projectTwo);
             }
@@ -310,7 +318,8 @@ function compare(projectOne, projectTwo) {
                         process.argv[1] === "cmp") {
                     createTable(matchedDependencies);
                     if (!commander.commands[0].hideSummary) {
-                        summarizer.printSummaryTable(globalProjectOne,globalProjectTwo);
+                        summarizer.printSummaryTable(globalProjectOne,
+                            globalProjectTwo);
                     }
                     if (commander.commands[0].colorLegend) {
                         color.displayColorLegend();
@@ -323,7 +332,8 @@ function compare(projectOne, projectTwo) {
                     if (commander.commands[1].showTable) {
                         createTable(matchedDependencies);
                     }
-                    summarizer.printSummaryTable(globalProjectOne,globalProjectTwo);
+                    summarizer.printSummaryTable(globalProjectOne,
+                        globalProjectTwo);
                 }
             });
         }else {
