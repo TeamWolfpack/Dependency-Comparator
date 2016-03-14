@@ -13,8 +13,11 @@ function parseVersion(stringVersion) {
         var version = {
             major: Number(splitVersion[0]),
             minor: splitVersion.length > 1 ? Number(splitVersion[1]) : 0,
-            patch: splitVersion.length > 2 ? Number(splitVersion[2]) : 0
+            patch: splitVersion.length > 2 ? Number(splitVersion[2].charAt(0)) : 0
         };
+        if (splitVersion[2] && splitVersion[2].length > 1){
+            version.stage = splitVersion[2].substr(2);
+        }
         return version;
     }
 }
