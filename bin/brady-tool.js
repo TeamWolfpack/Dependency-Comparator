@@ -249,12 +249,16 @@ function tick(bar) {
     }
 }
 
+/**
+ * Ensures file path support to relative file paths and cross-platform
+ * support.
+ * @param project path to project directory
+ * @returns valid path to directory
+ */
 function validatePath(project){
     try {
         project = path.normalize(project);
-        fs.access(project, fs.F_OK, function (error){
-            //console.log("error: " + project);
-        });
+        fs.accessSync(project, fs.F_OK);
     } catch (err) {
         throw Error("Project path is invalid: " + project);
     }
@@ -286,14 +290,16 @@ function compare(projectOne, projectTwo) {
 
             try {
                 fileOneParsedDependencies =
-                                    parse.parseDependencies(projectOne, depth, includeDev);
+                                    parse.parseDependencies(projectOne,
+                                        depth, includeDev);
             } catch (err) {
                 throw Error(err.message + " in " + projectOne);
             }
 
             try {
                 fileTwoParsedDependencies =
-                                    parse.parseDependencies(projectTwo, depth, includeDev);
+                                    parse.parseDependencies(projectTwo,
+                                        depth, includeDev);
             } catch (err) {
                 throw Error(err.message + " in " + projectTwo);
             }
@@ -312,7 +318,8 @@ function compare(projectOne, projectTwo) {
                         process.argv[1] === "cmp") {
                     createTable(matchedDependencies);
                     if (!commander.commands[0].hideSummary) {
-                        summarizer.printSummaryTable(globalProjectOne,globalProjectTwo);
+                        summarizer.printSummaryTable(globalProjectOne,
+                            globalProjectTwo);
                     }
                     if (commander.commands[0].colorLegend) {
                         color.displayColorLegend();
@@ -325,7 +332,8 @@ function compare(projectOne, projectTwo) {
                     if (commander.commands[1].showTable) {
                         createTable(matchedDependencies);
                     }
-                    summarizer.printSummaryTable(globalProjectOne,globalProjectTwo);
+                    summarizer.printSummaryTable(globalProjectOne,
+                        globalProjectTwo);
                 }
             });
         }else {
