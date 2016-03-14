@@ -1,3 +1,6 @@
+![Build Status](https://travis-ci.org/TeamWolfpack/Dependency-Comparator.svg)
+![Build Status](https://travis-ci.org/TeamWolfpack/Dependency-Comparator.svg?branch=dev)
+
 ##Synopsis
 <p>The dependency-comparator is designed by developers for developers. Maintaining node dependencies can be a pain, so we have made this to help analyze out-dated dependencies.</p>
 
