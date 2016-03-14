@@ -1,7 +1,7 @@
 var expect = require("chai").expect;
 var sinon = require("mocha-sinon");
 var childProcess = require("child_process");
-var bradyTool = require("../../bin/brady-tool");
+var path = require("path");
 
 /**
  Simple unit test fr testing in the CI
@@ -111,7 +111,7 @@ describe("Test Compare", function() {
             expect(capturedStdout).to.contain("Patch Difference");
         });
     });
-    describe("depth", function() {
+    describe("Depth", function() {
         var capturedStdout;
         before(function(done) {
             childProcess.exec("node bin/brady-tool compare . . -d 2", function(error, stdout, stderr) {
@@ -121,7 +121,7 @@ describe("Test Compare", function() {
             });
         });
         it("should log a table that is a depth of two", function() {
-            expect(capturedStdout).to.contain("\\node_modules\\strip-ansi");
+            expect(capturedStdout).to.contain(path.normalize("/node_modules/strip-ansi"));
             expect(capturedStdout).to.contain("major");
             expect(capturedStdout).to.contain("minor");
             expect(capturedStdout).to.contain("patch");
