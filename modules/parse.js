@@ -26,8 +26,9 @@ function parseVersion(stringVersion) {
  * Takes in the location of the root file of the project and outputs
  * an object with the name, path, and dependencies of the project.
  *
- * @param {File} file Location of the root file of the project
+ * @param {string} project Location of the root file of the project
  * @param {int} depth Layers of dependencies to look at
+ * @param {bool} includeDev Includes devDependencies
  * @returns {Object} {{name: Project Name, path: Project Path,
  * dependencies: Array of Dependencies}}
  */

@@ -1,5 +1,9 @@
 # npmignore file so that we don't use the gitignore file when doing an npm publish
 
+*.bak
+*.orig
+*.tgz
+
 # ignoring the idea folder from jetbrains
 .idea/*
 
