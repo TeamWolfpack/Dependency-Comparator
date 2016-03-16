@@ -20,3 +20,6 @@ logfiles/*
 
 #ignore the .travis.yml file because they are specific to branch
 #.travis.yml
+
+#ignore .DS_Store file that appears with Mac
+.DS_Store

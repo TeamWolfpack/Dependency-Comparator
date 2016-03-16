@@ -13,8 +13,11 @@ function parseVersion(stringVersion) {
         var version = {
             major: Number(splitVersion[0]),
             minor: splitVersion.length > 1 ? Number(splitVersion[1]) : 0,
-            patch: splitVersion.length > 2 ? Number(splitVersion[2]) : 0
+            patch: splitVersion.length > 2 ? Number(splitVersion[2].charAt(0)) : 0
         };
+        if (splitVersion[2] && splitVersion[2].length > 1){
+            version.stage = splitVersion[2].substr(2);
+        }
         return version;
     }
 }
@@ -23,8 +26,9 @@ function parseVersion(stringVersion) {
  * Takes in the location of the root file of the project and outputs
  * an object with the name, path, and dependencies of the project.
  *
- * @param {File} file Location of the root file of the project
+ * @param {string} project Location of the root file of the project
  * @param {int} depth Layers of dependencies to look at
+ * @param {bool} includeDev Includes devDependencies
  * @returns {Object} {{name: Project Name, path: Project Path,
  * dependencies: Array of Dependencies}}
  */
