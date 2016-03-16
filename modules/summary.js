@@ -23,22 +23,69 @@ var totals = {
 /**
  * Prints the summary table.
  */
-function printSummaryTable(globalProjectOne,globalProjectTwo) {
-    if (globalProjectOne == globalProjectTwo) {
-        totals.projectOne.major /= 2;
-        totals.projectOne.minor /= 2;
-        totals.projectOne.patch /= 2;
-        totals.projectTwo = totals.projectOne;
-    }
-    var summaryTable = textTable([
-        ["", "Project One", "Project Two"],
-        ["major", totals.projectOne.major, totals.projectTwo.major],
-        ["minor", totals.projectOne.minor, totals.projectTwo.minor],
-        ["patch", totals.projectOne.patch, totals.projectTwo.patch],
-        ["unmatched", totals.projectOne.unmatched, totals.projectTwo.unmatched]
-    ], {align: ["l", "l", "l"]});
+function printSummaryTable() {
+    var summaryTable = createSummaryTable(totals);
     console.log(summaryTable);
 }
 
+/**
+ *  Creates a table of the totals
+ * @param dependencyTotals the totals of the dependency attributesg
+ * @returns {*}
+ */
+function createSummaryTable(dependencyTotals){
+    checkTotals(dependencyTotals);
+    var summaryTable = textTable([
+        ["", "Project One", "Project Two"],
+        ["major", dependencyTotals.projectOne.major,
+            dependencyTotals.projectTwo.major],
+        ["minor", dependencyTotals.projectOne.minor,
+            dependencyTotals.projectTwo.minor],
+        ["patch", dependencyTotals.projectOne.patch,
+            dependencyTotals.projectTwo.patch],
+        ["unmatched", dependencyTotals.projectOne.unmatched,
+            dependencyTotals.projectTwo.unmatched]
+    ], {align: ["l", "l", "l"]});
+    return summaryTable;
+}
+
+function checkTotals(dependencyTotals){
+    if(dependencyTotals == undefined){
+        throw new Error("Summary table error: " +
+            "Dependency Totals is undefined");
+    }else if(dependencyTotals.projectOne == undefined){
+        throw new Error("Summary table error: " +
+            "Project One Totals is undefined");
+    }else if(dependencyTotals.projectTwo == undefined){
+        throw new Error("Summary table error: " +
+            "Project Two Totals is undefined");
+    }else if(dependencyTotals.projectOne.major<0){
+        throw new Error("Summary table error: Project One " +
+            "major difference count is negative")
+    }else if(dependencyTotals.projectOne.minor<0){
+        throw new Error("Summary table error: Project One " +
+            "minor difference count is negative")
+    }else if(dependencyTotals.projectOne.patch<0){
+        throw new Error("Summary table error: Project One " +
+            "patch difference count is negative")
+    }else if(dependencyTotals.projectOne.unmatched<0){
+        throw new Error("Summary table error: Project One " +
+            "unmatched difference count is negative")
+    }else if(dependencyTotals.projectTwo.major<0){
+        throw new Error("Summary table error: Project Two " +
+            "major difference count is negative")
+    }else if(dependencyTotals.projectTwo.minor<0){
+        throw new Error("Summary table error: Project Two " +
+            "minor difference count is negative")
+    }else if(dependencyTotals.projectTwo.patch<0){
+        throw new Error("Summary table error: Project Two " +
+            "patch difference count is negative")
+    }else if(dependencyTotals.projectTwo.unmatched<0){
+        throw new Error("Summary table error: Project Two " +
+            "unmatched difference count is negative")
+    }
+}
+
 module.exports = {printSummaryTable: printSummaryTable,
+    createSummaryTable: createSummaryTable,
     totals: totals}

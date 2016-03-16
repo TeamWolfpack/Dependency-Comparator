@@ -118,9 +118,9 @@ function assignColor(instances, npmVersion, globalProjectOne,
             instance.color = "upToDate";
         }else if (version.major < parsedNPMVersion.major) {
             instance.color = "major";
-            if (instance.Project == globalProjectOne) {
+            if (instance.projectNumber == 1) {
                 summarizer.totals.projectOne.major++;
-            } else if (instance.Project == globalProjectTwo) {
+            } else if (instance.projectNumber == 2) {
                 summarizer.totals.projectTwo.major++;
             }
             summarizer.totals.major++;
@@ -129,9 +129,9 @@ function assignColor(instances, npmVersion, globalProjectOne,
             }
         }else if (version.minor < parsedNPMVersion.minor) {
             instance.color = "minor";
-            if (instance.Project == globalProjectOne) {
+            if (instance.projectNumber == 1) {
                 summarizer.totals.projectOne.minor++;
-            } else if (instance.Project == globalProjectTwo) {
+            } else if (instance.projectNumber == 2) {
                 summarizer.totals.projectTwo.minor++;
             }
             if (lowestColor < 2) {
@@ -139,9 +139,9 @@ function assignColor(instances, npmVersion, globalProjectOne,
             }
         }else if (version.patch < parsedNPMVersion.patch) {
             instance.color = "patch";
-            if (instance.Project == globalProjectOne) {
+            if (instance.projectNumber == 1) {
                 summarizer.totals.projectOne.patch++;
-            } else if (instance.Project == globalProjectTwo) {
+            } else if (instance.projectNumber == 2) {
                 summarizer.totals.projectTwo.patch++;
             }
             if (lowestColor < 1) {

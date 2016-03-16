@@ -153,6 +153,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
+                    projectNumber: 1,
                     path: projectOneDep[dep][instance].path,
                     color: "white"
                 };
@@ -161,6 +162,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
+                    projectNumber: 2,
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
@@ -182,6 +184,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
+                    projectNumber: 1,
                     path: projectOneDep[dep][instance].path,
                     color: "white"
                 };
@@ -199,6 +202,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
+                    projectNumber: 2,
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
@@ -310,7 +314,7 @@ function compare(projectOne, projectTwo) {
                         process.argv[1] === "cmp") {
                     createTable(matchedDependencies);
                     if (!commander.commands[0].hideSummary) {
-                        summarizer.printSummaryTable(globalProjectOne,globalProjectTwo);
+                        summarizer.printSummaryTable();
                     }
                     if (commander.commands[0].colorLegend) {
                         color.displayColorLegend();
@@ -323,7 +327,7 @@ function compare(projectOne, projectTwo) {
                     if (commander.commands[1].showTable) {
                         createTable(matchedDependencies);
                     }
-                    summarizer.printSummaryTable(globalProjectOne,globalProjectTwo);
+                    summarizer.printSummaryTable();
                 }
             });
         }else {
