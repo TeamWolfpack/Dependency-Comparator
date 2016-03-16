@@ -4,7 +4,7 @@ var childProcess = require("child_process");
 var path = require("path");
 
 /**
- Simple unit test fr testing in the CI
+ Simple unit test for testing in the CI
  @author Josh Leonard
  */
 describe("Simple Test", function() {
@@ -128,5 +128,47 @@ describe("Test Compare", function() {
             expect(capturedStdout).to.contain("unmatched");
             expect(capturedStdout).to.not.contain("Major Difference");
         });
+    });
+});
+
+describe("Test Summary", function() {
+    this.timeout(0);
+    describe("Print Summary", function() {
+        var capturedStdout;
+        before(function(done) {
+            childProcess.exec("node bin/brady-tool summary . .", function(error, stdout, stderr) {
+                if (error) { console.log(error); } // Handle errors.
+                capturedStdout = stdout;
+                return done();
+            });
+        });
+        it("should include color legend", function() {
+            expect(capturedStdout).to.contain("major");
+            expect(capturedStdout).to.contain("minor");
+            expect(capturedStdout).to.contain("patch");
+            expect(capturedStdout).to.contain("unmatched");
+        });
+    });
+});
+
+describe("Compare and Summary", function() {
+    var capturedCompare;
+    var capturedSummary;
+    before(function(done) {
+        childProcess.exec("node bin/brady-tool compare . . -a", function(error, stdout, stderr) {
+            if (error) { console.log(error); } // Handle errors.
+            capturedCompare = stdout;
+            return done();
+        });
+    });
+    before(function(done) {
+        childProcess.exec("node bin/brady-tool summary . . -at", function(error, stdout, stderr) {
+            if (error) { console.log(error); } // Handle errors.
+            capturedSummary = stdout;
+            return done();
+        });
+    });
+    it("should log a table that is a depth of two", function() {
+        expect(capturedCompare).to.equal(capturedSummary);
     });
 });
