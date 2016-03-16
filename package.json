@@ -37,6 +37,7 @@
     "gulp-jscs": "^3.0.2",
     "gulp-mocha": "^2.2.0",
     "gulp-prompt": "^0.1.2",
+    "gulp-shell": "^0.5.2",
     "mocha": "^2.3.4",
     "mocha-sinon": "^1.1.5",
     "sinon": "^1.17.2"
