@@ -6,9 +6,9 @@ gulp supportMac
 # what to do when the build and tests succeed on dev
 if [ "$TRAVIS_BRANCH" == "dev" ]; then
 	gulp
-	if [ "$TRAVIS_TAG"]; then
-		echo $TRAVIS_TAG
-	fi
+	#if [ "$TRAVIS_TAG"]; then
+	echo $TRAVIS_TAG
+	#fi
 	#gulp bumpPatchBeta
 	#gulp publish
 	echo "ran in dev"
