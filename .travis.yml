@@ -20,7 +20,7 @@ script:
   - gulp
   - gulp jscs
   - gulp lint
-#  - gulp unitTests
+  - gulp unitTests
   - gulp integrationTests
 after_success:
   - ./afterSuccess.sh
