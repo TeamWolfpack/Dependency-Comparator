@@ -4,6 +4,7 @@ var git = require('gulp-git');
 var eslint = require('gulp-eslint');
 var jscs = require('gulp-jscs');
 var mocha = require('gulp-mocha');
+var shell = require('gulp-shell');
 var npm = require('npm');// NPM, needed for npm publish
 var fs = require('fs');
 var util = require('util');
@@ -179,11 +180,23 @@ var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
     });
 };
 
+//fixes the '\n\r' problem in Mac
+gulp.task('supportMac', function(){
+    //cat brady-tool.js | tr -d '\r' > fixed.js
+    //then remove the 'brady-tool.js'
+    //rename 'fixed.js' to 'brady-tool.js'
+    shell.task([
+        "cat brady-tool.js | tr -d '\\r' > fixed.js",
+        'rm brady-tool.js -r -f',
+        'mv fixed.js brady-tool.js'
+    ]);
+});
+
 //Publishes module to npm.
 gulp.task('npmPublish', function (callback) {
-    var username = "bradyteamstark";
-    var password = "1PddAQLjXpWP";
-    var email = "kuczynskij@msoe.edu";
+    var username = "";
+    var password = "";
+    var email = "";
     var uri = "http://registry.npmjs.org/";
     npm.load(null, function (loadError) {
         if (loadError) {
