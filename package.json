@@ -1,6 +1,6 @@
 {
   "name": "dependency-comparator",
-  "version": "1.2.7",
+  "version": "1.2.9",
   "description": "Node.js dependency comparison tool.",
   "bin": {
     "dependency-comparator": "bin/brady-tool.js",

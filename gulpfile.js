@@ -181,9 +181,9 @@ var runMochaTest = function(files, timeoutInMillis, exitOnError, done) {
 
 //Publishes module to npm.
 gulp.task('npmPublish', function (callback) {
-    var username = "bradyteamstark";
-    var password = "1PddAQLjXpWP";
-    var email = "kuczynskij@msoe.edu";
+    var username = "";
+    var password = "";
+    var email = "";
     var uri = "http://registry.npmjs.org/";
     npm.load(null, function (loadError) {
         if (loadError) {
