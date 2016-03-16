@@ -15,6 +15,10 @@ describe("Parse Tests", function() {
             var parsedVersion = parse.parseVersion();
             assert.isUndefined(parsedVersion, "Version must be defined");
         });
+        it("should not parse letters", function() {
+            var parsedVersion = parse.parseVersion("a.b.c");
+            assert.isUndefined(parsedVersion, "Version must be defined");
+        });
         it("should parse 1 into 1.0.0", function() {
             var parsedVersion = parse.parseVersion("1");
             expect(Object.keys(parsedVersion).length).to.equal(3);
