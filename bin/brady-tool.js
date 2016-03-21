@@ -7,10 +7,12 @@
 
 /*Begin 'require' Import Statements*/
 var cliTable = require("cli-table2");
+var textTable = require("text-table");
 var commander = require("commander");
 var async = require("async");
 var deasync = require("deasync");
 var ProgressBar = require("progress");
+var clc = require("cli-color");
 var path = require("path");
 var fs = require("fs");
 var latestVersion = require("latest-version");
@@ -78,7 +80,8 @@ function createTable(dependencies) {
                     if (!projectOneName) {
                         projectOneName = instance.Project;
                         table.options.head[2] = projectOneName;
-                        table.options.head[3] = projectOneName + " Path";
+                        table.options.head[3] = projectOneName +
+                            " Path";
                     }
                     //Determines location based on project name
                     if (instance.Project == projectOneName) {
@@ -150,6 +153,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
+                    projectNumber: 1,
                     path: projectOneDep[dep][instance].path,
                     color: "white"
                 };
@@ -158,6 +162,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
+                    projectNumber: 2,
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
@@ -179,6 +184,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
+                    projectNumber: 1,
                     path: projectOneDep[dep][instance].path,
                     color: "white"
                 };
@@ -196,6 +202,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
+                    projectNumber: 2,
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
@@ -213,7 +220,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
         complete: "=",
         incomplete: " ",
         width: 40,
-        total: dependencies.length,
+        total: dependencies.length + 1,
         clear: true
     });
     tick(bar);
@@ -223,7 +230,6 @@ function compareAndMatch(projectOne, projectTwo, done) {
             color.assignColor(dependency.instances, version.trim(),
                 globalProjectOne, globalProjectTwo, summarizer,
                 function(coloredVersion) {
-                    console.log(coloredVersion);
                     dependency.npmVersion = coloredVersion;
                     tick(bar);
                     return callback();
