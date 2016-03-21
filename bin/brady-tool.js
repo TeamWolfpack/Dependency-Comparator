@@ -7,12 +7,9 @@
 
 /*Begin 'require' Import Statements*/
 var cliTable = require("cli-table2");
-var textTable = require("text-table");
 var commander = require("commander");
 var async = require("async");
-var deasync = require("deasync");
 var ProgressBar = require("progress");
-var clc = require("cli-color");
 var path = require("path");
 var fs = require("fs");
 var latestVersion = require("latest-version");
@@ -39,11 +36,11 @@ var globalProjectTwo;
  * @author Josh Leonard
  */
 function createTable(dependencies) {
-    var projectOneName;
-    var projectTwoName;
+    var projectOneName = globalProjectOne;
+    var projectTwoName = globalProjectTwo;
 
     var table = new cliTable({
-        head: ["Module Name", "NPM Version", "", "", "", ""],
+        head: ["Module Name", "NPM Version", projectOneName, projectOneName + " Path", projectTwoName, projectTwoName + " Path"],
         style: {
             head: [] //disable colors in header cells
         },
@@ -63,12 +60,6 @@ function createTable(dependencies) {
                 var instanceVersion = color.colorVersion(instance);
 
                 if (i == 0) { //first instance fills in Module name
-                    if (!projectOneName) {
-                        projectOneName = instance.Project;
-                        table.options.head[2] = projectOneName;
-                        table.options.head[3] = projectOneName +
-                            " Path";
-                    }
                     //Determines location based on project name
                     if (instance.Project == projectOneName) {
                         rows.push([{rowSpan: rowSpan,
@@ -88,13 +79,6 @@ function createTable(dependencies) {
                             instance.path]);
                     }
                 } else { //fill any missing Project Two instances
-                    if (!projectTwoName) { //sets the name of
-                        // Project 2 if previously undefined
-                        projectTwoName = instance.Project;
-                        table.options.head[4] = projectTwoName;
-                        table.options.head[5] = projectTwoName +
-                            " Path";
-                    }
                     if (rows[i - rowSpan].length == 6) {
                         rows[i - rowSpan][4] = instanceVersion;
                         rows[i - rowSpan][5] = instance.path;
@@ -206,7 +190,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
         complete: "=",
         incomplete: " ",
         width: 40,
-        total: dependencies.length + 1,
+        total: dependencies.length,
         clear: true
     });
     tick(bar);
