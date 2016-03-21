@@ -54,28 +54,14 @@ function createTable(dependencies) {
         dependencies.forEach(function(dependency) {
             var dependencyName = dependency.name;
             var rowSpan = dependency.maxinstances;
-            var npmVersion = dependency.npmVersion;
+            var npmVersion = color.colorVersion(dependency.npmVersion);
             var instances = dependency.instances;
             var rows = [];
 
             for (i in instances) {
                 var instance = instances[i];
-                if (instance.color == "upToDate") {
-                    var instanceVersion
-                        = color.colorScheme.upToDate(instance.version);
-                } else if (instance.color == "minor") {
-                    var instanceVersion
-                        = color.colorScheme.minor(instance.version);
-                } else if (instance.color == "patch") {
-                    var instanceVersion
-                        = color.colorScheme.patch(instance.version);
-                } else if (instance.color == "major") {
-                    var instanceVersion
-                        = color.colorScheme.major(instance.version);
-                } else {
-                    var instanceVersion
-                        = color.colorScheme.unmatched(instance.version);
-                }
+                var instanceVersion = color.colorVersion(instance);
+
                 if (i == 0) { //first instance fills in Module name
                     if (!projectOneName) {
                         projectOneName = instance.Project;

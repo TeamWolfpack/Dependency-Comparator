@@ -149,7 +149,7 @@ function assignColor(instances, npmVersion, globalProjectOne,
             }
         }
     }
-    npmVersion = { version : "npmVersion" };
+    npmVersion = { version : npmVersion };
     if (lowestColor == 3) {
         npmVersion.color = "major";
     } else if (lowestColor == 2) {
@@ -160,6 +160,27 @@ function assignColor(instances, npmVersion, globalProjectOne,
         npmVersion.color = "upToDate";
     }
     return callback(npmVersion);
+}
+
+/**
+ * Colors the version based on the color type
+ *
+ * @param instance {JSON} version to update
+ */
+function colorVersion(instance) {
+    var version = "";
+    if (instance.color == "upToDate") {
+        version = colorScheme.upToDate(instance.version);
+    } else if (instance.color == "minor") {
+        version = colorScheme.minor(instance.version);
+    } else if (instance.color == "patch") {
+        version = colorScheme.patch(instance.version);
+    } else if (instance.color == "major") {
+        version = colorScheme.major(instance.version);
+    } else {
+        version = colorScheme.unmatched(instance.version);
+    }
+    return version;
 }
 
 /**
@@ -193,4 +214,5 @@ module.exports = {colorScheme: colorScheme,
     loadConfigColors: loadConfigColors,
     assignColor: assignColor,
     displayColorLegend: displayColorLegend,
-    initializeColors: initializeColors};
+    initializeColors: initializeColors,
+    colorVersion: colorVersion};
