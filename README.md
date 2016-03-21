@@ -106,3 +106,7 @@ OR
 
 <h2 id="ColorConfig">Color Configuration</h2>
 In order to color code the version number of each dependency to show any differences, the program looks at the colorConfig.json file. The program uses the [cli-color](https://www.npmjs.com/package/cli-color) node module in order to color the text in the terminal. If the terminal being used supports [xTerm colors](https://gist.github.com/jasonm23/2868981), then the colorConfig.json file can be modified to the users preference. <b>NOTE:</b> When updating to a newer version of the tool, the colorConfig.json file may be reset to the default values.
+
+<h2 id="RelativePathSupport">Relative Path Support</h2>
+<img img="" alt="Failed to load screenshot Relative Support">
+<p>We support support relative paths now so that you can be more lazy! Who wants to type so much anyways? Now with relative paths you can type less!</p>
