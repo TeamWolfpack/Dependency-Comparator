@@ -44,6 +44,7 @@ deploy:
   on:
     condition: $TRAVIS_TAGS == "beta" || $TRAVIS_TAGS == "patch" || $TRAVIS_TAGS == "minor" || $TRAVIS_TAGS == "major"
     tags: true
+    all_branches: true
 after_deploy: 
 after_script: 
 env:
