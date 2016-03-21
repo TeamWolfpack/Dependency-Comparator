@@ -31,14 +31,13 @@ after_success:
 after_failure: 
 
 before_deploy: 
-# gulp supportMac
-# gulp bumps and stuff
+
 deploy:
   provider: npm
   api_key:
     secure: FIYifm7Ox/HTsWrGZ2210qGAUEv1pnOivyYwhN2iBaPpMSt+hTOt+LHsjyG3Q6Wm/xqLcfrAtBRANEfrRjjdTdr2vHelp3xVkpdIuFxaHe1Rcj/rzVUjn+GG/iq2kv5oLEVgJSW94ktrikc38sReBvEMU5iC/NOXt+inIHYoDMnCmg4NUf0GrtCnDHEnWQcBcgeYEd+8qZ12p4UqcAwv2ZlDsqRrOYl4BdUgGUhbSuybvq0c4cT4Pl1zWXVzyj5vBuIqQCXDde/dbj0prJM9jp21IhQIr7QsOTDv3mIwtSrGCmH3SHVLAuuNW8vZkgoTfDSzQtFxzYuwZ9DkIloqpRFipt2qFPQRaV1iuvrcAcEzf4O5ctURZuBjjtJ+VTFDRu/dm7D9i5RQBIq7rQlBzNdRP1pVEpiCNUfvrdZImbuOOHBkb1pVLWqzsiWXDhYdm8dW1wU2Q6s/JK3sp4xs1H+ksTwwitwSRisn52QEPvzHW3i6drmq0NT/W/VtVYTrfSWYsKAHms66XiMGb08odiVbCgoBDWAMNLYoIyPwIDGOBqkdHD6JN1SQI3otmAFW91D8P6LNz5qPvxKzg63sK1gUa4rOJKprXksYYc7bVWM8hDLsu0FBm9m2mS7UalNdGzofaEn060ppWIHZZvig77pQrc2TlBsfpszlbqSSqww=
   on:
-    branch: master
+    tags: beta, patch, minor, major
 after_deploy: 
 after_script: 
 env:
