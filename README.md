@@ -18,6 +18,7 @@ If you don't wish to install the dependency-comparator globally, all you need to
 ##Examples
 
 <h3 id="Compare">Compare</h3>
+<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Color%20Legend.JPG" atl="Failed to load screenshot of Compare Command">
 If you want to compare the dependencies between two different Node projects, you will want to use the compare method. This will produce a table that will shows the path and version of each dependency in both projects, as well as match and compare them with the other project. All dependencies that are found in both projects appear at the top of the table while all dependencies that don't exist in both projects are listed toward the bottom of the table.
 
 <pre><code>dep-tool compare "&lt;project1_path>" "&lt;project2_path>"</code>
