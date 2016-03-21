@@ -20,7 +20,7 @@ function logDependencies(dependencies,outputFile){
     var fileName = __dirname+"/../logfiles/"+dateString;
     var fileName = path.normalize(fileName)+".json";
     var depString = JSON.stringify(dependencies);
-    mkdirp('__dirname+/../logfiles', function (err) {
+    mkdirp(__dirname+'/../logfiles', function (err) {
         if (err){
             console.log("An error has occured with the"+
                 "logger:\n"+err);
