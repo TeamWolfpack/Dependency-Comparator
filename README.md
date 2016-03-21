@@ -2,7 +2,9 @@
 [![Build Status](https://travis-ci.org/TeamWolfpack/Dependency-Comparator.svg?branch=dev)](https://travis-ci.org/TeamWolfpack/Dependency-Comparator)
 
 [![Dependency Status](https://david-dm.org/TeamWolfpack/Dependency-Comparator.svg)](https://david-dm.org/TeamWolfpack/Dependency-Comparator)
-
+<p>
+<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Juicy Demo.gif" atl="Failed to load juicy demo">
+</p>
 ##Synopsis
 <p>The dependency-comparator is designed by developers for developers. Maintaining node dependencies can be a pain, so we have made this to help analyze out-dated dependencies.</p>
 
@@ -19,7 +21,7 @@ If you don't wish to install the dependency-comparator globally, all you need to
 
 <h3 id="Compare">Compare</h3>
 <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Compare.JPG" atl="Failed to load screenshot of Compare Command">
-<p>If you want to compare the dependencies between two different Node projects, you will want to use the compare method. This will produce a table that will shows the path and version of each dependency in both projects, as well as match and compare them with the other project. All dependencies that are found in both projects appear at the top of the table while all dependencies that don't exist in both projects are listed toward the bottom of the table.</p>
+<p>If you want to compare the dependencies between two different Node projects, you will want to use the compare method. This will produce a table that will shows the path and version of each dependency in both projects, as well as match and compare them with the other project. All dependencies that are found in both projects appear at the top of the table while all dependencies that don't exist in both projects are listed toward the bottom of the table. In addition, a logfile is stored in the directory where the program is saved by npm (by default in appdata/npm/nodemodules).  This logfile contains a json file that contains the information about the comparison.</p>
 
 <pre><code>dep-tool compare "&lt;project1_path>" "&lt;project2_path>"</code>
 
