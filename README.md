@@ -2,7 +2,9 @@
 [![Build Status](https://travis-ci.org/TeamWolfpack/Dependency-Comparator.svg?branch=dev)](https://travis-ci.org/TeamWolfpack/Dependency-Comparator)
 
 [![Dependency Status](https://david-dm.org/TeamWolfpack/Dependency-Comparator.svg)](https://david-dm.org/TeamWolfpack/Dependency-Comparator)
-
+<p>
+<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Juicy Demo.gif" atl="Failed to load juicy demo">
+</p>
 ##Synopsis
 <p>The dependency-comparator is designed by developers for developers. Maintaining node dependencies can be a pain, so we have made this to help analyze out-dated dependencies.</p>
 
