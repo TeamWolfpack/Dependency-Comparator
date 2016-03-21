@@ -149,14 +149,15 @@ function assignColor(instances, npmVersion, globalProjectOne,
             }
         }
     }
+    npmVersion = { version : "npmVersion" };
     if (lowestColor == 3) {
-        npmVersion = colorScheme.major(npmVersion);
+        npmVersion.color = "major";
     } else if (lowestColor == 2) {
-        npmVersion = colorScheme.minor(npmVersion);
+        npmVersion.color = "minor";
     } else if (lowestColor == 1) {
-        npmVersion = colorScheme.patch(npmVersion);
+        npmVersion.color = "patch";
     } else {
-        npmVersion = colorScheme.upToDate(npmVersion);
+        npmVersion.color = "upToDate";
     }
     return callback(npmVersion);
 }

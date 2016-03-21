@@ -78,8 +78,7 @@ function createTable(dependencies) {
                     if (!projectOneName) {
                         projectOneName = instance.Project;
                         table.options.head[2] = projectOneName;
-                        table.options.head[3] = projectOneName +
-                            " Path";
+                        table.options.head[3] = projectOneName + " Path";
                     }
                     //Determines location based on project name
                     if (instance.Project == projectOneName) {
@@ -224,6 +223,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
             color.assignColor(dependency.instances, version.trim(),
                 globalProjectOne, globalProjectTwo, summarizer,
                 function(coloredVersion) {
+                    console.log(coloredVersion);
                     dependency.npmVersion = coloredVersion;
                     tick(bar);
                     return callback();
@@ -325,8 +325,7 @@ function compare(projectOne, projectTwo) {
                     if (commander.commands[0].colorLegend) {
                         color.displayColorLegend();
                     }
-                    logger.logDependencies(matchedDependencies);
-                }else if (process.argv[2] === "summary" ||
+                } else if (process.argv[2] === "summary" ||
                         process.argv[1] === "summary" ||
                         process.argv[2] === "sum" ||
                         process.argv[1] === "sum") {
@@ -336,6 +335,7 @@ function compare(projectOne, projectTwo) {
                     summarizer.printSummaryTable(globalProjectOne,
                         globalProjectTwo);
                 }
+                logger.logDependencies(matchedDependencies);
             });
         }else {
             console.log("Invalid depth given.");
