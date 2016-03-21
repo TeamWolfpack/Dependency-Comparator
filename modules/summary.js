@@ -83,6 +83,30 @@ function checkTotals(dependencyTotals){
     }else if(dependencyTotals.projectTwo.unmatched<0){
         throw new Error("Summary table error: Project Two " +
             "unmatched difference count is negative")
+    }else if(! dependencyTotals.projectOne.hasOwnProperty("major")){
+        throw new Error("Summary table error: Project One " +
+            "major difference count is missing")
+    }else if(! dependencyTotals.projectOne.hasOwnProperty("minor")){
+        throw new Error("Summary table error: Project One " +
+            "minor difference count is missing")
+    }else if(! dependencyTotals.projectOne.hasOwnProperty("patch")){
+        throw new Error("Summary table error: Project One " +
+            "patch difference count is missing")
+    }else if(! dependencyTotals.projectOne.hasOwnProperty("unmatched")){
+        throw new Error("Summary table error: Project One " +
+            "unmatched difference count is missing")
+    }else if(! dependencyTotals.projectTwo.hasOwnProperty("major")){
+        throw new Error("Summary table error: Project Two " +
+            "major difference count is missing")
+    }else if(! dependencyTotals.projectTwo.hasOwnProperty("minor")){
+        throw new Error("Summary table error: Project Two " +
+            "minor difference count is missing")
+    }else if(! dependencyTotals.projectTwo.hasOwnProperty("patch")){
+        throw new Error("Summary table error: Project Two " +
+            "patch difference count is missing")
+    }else if(! dependencyTotals.projectTwo.hasOwnProperty("unmatched")){
+        throw new Error("Summary table error: Project Two " +
+            "unmatched difference count is missing")
     }
 }
 
