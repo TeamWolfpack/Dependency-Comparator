@@ -46,6 +46,9 @@ OR
 <code>dep-tool compare "&lt;project1_path>" "&lt;project2_path>" --depth 2</code></pre>
 
 <h3 id="HideUnmatched">Compare without Unmatched Dependencies</h3>
+<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Unhide%20Compare.JPG" alt="Failed to load screenshot Unhide Unmatched">
+<p>becomes</p>
+<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Hide%20Compare.JPG" alt="Failed to load screenshot Hide Unmatched">
 <p>By default, the compare method will compare and match all dependencies. If you want to only see the matched dependencies, you can hide the unmatched dependencies with a simple flag.</p>
 
 <pre><code>dep-tool compare "&lt;project1_path>" "&lt;project2_path>" -u</code>
