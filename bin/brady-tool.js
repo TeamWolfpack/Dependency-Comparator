@@ -7,10 +7,12 @@
 
 /*Begin 'require' Import Statements*/
 var cliTable = require("cli-table2");
+var textTable = require("text-table");
 var commander = require("commander");
 var async = require("async");
 var deasync = require("deasync");
 var ProgressBar = require("progress");
+var clc = require("cli-color");
 var path = require("path");
 var fs = require("fs");
 var latestVersion = require("latest-version");
@@ -151,6 +153,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
+                    projectNumber: 1,
                     path: projectOneDep[dep][instance].path,
                     color: "white"
                 };
@@ -159,6 +162,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
+                    projectNumber: 2,
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
@@ -180,6 +184,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
+                    projectNumber: 1,
                     path: projectOneDep[dep][instance].path,
                     color: "white"
                 };
@@ -197,6 +202,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
+                    projectNumber: 2,
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
@@ -214,7 +220,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
         complete: "=",
         incomplete: " ",
         width: 40,
-        total: dependencies.length,
+        total: dependencies.length + 1,
         clear: true
     });
     tick(bar);
@@ -325,8 +331,7 @@ function compare(projectOne, projectTwo) {
                     if (commander.commands[0].colorLegend) {
                         color.displayColorLegend();
                     }
-                    logger.logDependencies(matchedDependencies);
-                }else if (process.argv[2] === "summary" ||
+                } else if (process.argv[2] === "summary" ||
                         process.argv[1] === "summary" ||
                         process.argv[2] === "sum" ||
                         process.argv[1] === "sum") {
@@ -336,6 +341,7 @@ function compare(projectOne, projectTwo) {
                     summarizer.printSummaryTable(globalProjectOne,
                         globalProjectTwo);
                 }
+                logger.logDependencies(matchedDependencies);
             });
         }else {
             console.log("Invalid depth given.");

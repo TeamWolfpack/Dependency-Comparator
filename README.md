@@ -18,7 +18,8 @@ If you don't wish to install the dependency-comparator globally, all you need to
 ##Examples
 
 <h3 id="Compare">Compare</h3>
-If you want to compare the dependencies between two different Node projects, you will want to use the compare method. This will produce a table that will shows the path and version of each dependency in both projects, as well as match and compare them with the other project. All dependencies that are found in both projects appear at the top of the table while all dependencies that don't exist in both projects are listed toward the bottom of the table.
+<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Compare.JPG" atl="Failed to load screenshot of Compare Command">
+<p>If you want to compare the dependencies between two different Node projects, you will want to use the compare method. This will produce a table that will shows the path and version of each dependency in both projects, as well as match and compare them with the other project. All dependencies that are found in both projects appear at the top of the table while all dependencies that don't exist in both projects are listed toward the bottom of the table.</p>
 
 <pre><code>dep-tool compare "&lt;project1_path>" "&lt;project2_path>"</code>
 
@@ -63,7 +64,8 @@ OR
 <code>dep-tool compare "&lt;project1_path>" "&lt;project2_path>" --colorConfig "ColorBlind"</code></pre>
 
 <h3 id="ColorLegend">Compare with a Color Legend</h3>
-When running the compare method, the dependencies in the table are colored depending on how out-of-date they are. If you want to see a color legend, you just need to add a flag to the command to have it displayed below your table.
+<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Color%20Legend.JPG" alt="Failed to load screenshot of Color Legend Command">
+<p>When running the compare method, the dependencies in the table are colored depending on how out-of-date they are. If you want to see a color legend, you just need to add a flag to the command to have it displayed below your table.</p>
 
 <pre><code>dep-tool compare "&lt;project1_path>" "&lt;project2_path>" -l</code>
 
@@ -81,6 +83,7 @@ OR
 <code>dep-tool compare "&lt;project1_path>" "&lt;project2_path>" --hideSummary</code></pre>
 
 <h3 id="Summary">Summary</h3>
+<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Summary.JPG" alt="Failed to load screenshot of Summary Command">
 <p>By default, a summary of the results will be displayed below the comparison table. If you want to hide the summary from being displayed, you can add the following flag to your command. The <a href="#CompareDepth">depth</a>, <a href="#devDependencies">all</a>, and <a href="#HideUnmatched">hideUnmatched</a> flags can also be used with the summary command.</p>
 
 <pre><code>dep-tool summary "&lt;project1_path>" "&lt;project2_path>"</code>
