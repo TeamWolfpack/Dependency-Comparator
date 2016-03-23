@@ -13,3 +13,7 @@ elif [ "$TRAVIS_TAG" == "patch" ]; then
 elif [ "$TRAVIS_TAG" == "beta" ]; then
 	gulp bumpBeta
 fi
+
+# will push with another tag so that travis can deploy. This will help avoid deploying code that breaks our tests
+git tag "deploy" -f
+git push --tags -f
