@@ -15,5 +15,10 @@ elif [ "$TRAVIS_TAG" == "beta" ]; then
 fi
 
 # will push with another tag so that travis can deploy. This will help avoid deploying code that breaks our tests
+eval "$(ssh-agent -s)" #start the ssh agent
+chmod 600 .travis/deploy_key.pem # this key should have push access
+ssh-add .travis/deploy_key.pem
+# git remote add deploy DEPLOY_REPO_URI_GOES_HERE
+git remote add deploy git@github.com:TeamWolfpack/Dependency-Comparator.git
 git tag "deploy" -f
 git push --tags -f
