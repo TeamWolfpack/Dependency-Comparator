@@ -30,7 +30,7 @@ var colorScheme = {
 function checkForXterm() {
     var orange = clc.xterm(202);
     var red = clc.redBright;
-    return !(orange("A") === red("A"));;
+    return !(orange("A") === red("A"));
 }
 
 /**
