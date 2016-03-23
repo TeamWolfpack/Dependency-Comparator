@@ -29,7 +29,7 @@
   "license": "ISC",
   "homepage": "https://www.npmjs.com/package/sdl-brady-dependency-tool",
   "devDependencies": {
-    "chai": "^1.6.1",
+    "chai": "^1.10.0",
     "chai-fs": "^0.1.0",
     "chai@1": "1.6.1",
     "extfs": "0.0.7",
