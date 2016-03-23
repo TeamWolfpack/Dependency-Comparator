@@ -63,10 +63,9 @@ describe("Logger", function() {
     });
     it("can make folder", function() {
         var loc = path.normalize(__dirname + "/../../logfiles");
-        extfs.removeSync(loc, function(err) {
-            console.log("Folder removed.");
+        extfs.remove(loc, function(err) {
+			var project = logger.logDependencies(testJSON);
+			assert.isDirectory(loc, "directory found");
         });
-        var project = logger.logDependencies(testJSON);
-        assert.isDirectory(loc, "directory found");
     });
 });
