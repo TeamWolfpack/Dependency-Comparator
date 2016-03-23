@@ -198,8 +198,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
         var name = dependency.name;
         latestVersion(name).then(function(version) {
             color.assignColor(dependency.instances, version.trim(),
-                globalProjectOne, globalProjectTwo, summarizer,
-                function(coloredVersion) {
+                summarizer, function(coloredVersion) {
                     dependency.npmVersion = coloredVersion;
                     tick(bar);
                     return callback();

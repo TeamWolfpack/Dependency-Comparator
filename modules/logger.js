@@ -11,16 +11,16 @@ module.exports = {
     logDependencies: logDependencies
 };
 
-function logDependencies(dependencies,outputFile){
+function logDependencies(dependencies){
     var date = new Date();
     var dateString = date.toUTCString();
     dateString = dateString.replace(",","");
     dateString = dateString.replace(/:/g,"-");
     dateString = dateString.replace(/\s+/g,"");
-    var fileName = __dirname+"/../logfiles/"+dateString;
-    var fileName = path.normalize(fileName)+".json";
-    var depString = JSON.stringify(dependencies);
-    mkdirp(__dirname+'/../logfiles', function (err) {
+    var logFolder = path.normalize(__dirname+"/../logfiles");
+    var fileName = path.normalize(logFolder+"/"+dateString+".json");
+
+    mkdirp(logFolder, function (err) {
         if (err){
             console.log("An error has occured with the"+
                 "logger:\n"+err);
