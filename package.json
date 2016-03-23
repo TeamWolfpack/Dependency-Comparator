@@ -48,14 +48,11 @@
     "cli-color": "^1.1.0",
     "cli-table2": "^0.2.0",
     "commander": "^2.9.0",
-    "deasync": "^0.1.4",
     "fs": "0.0.2",
-    "jenkins": "^0.13.0",
     "jsonfile": "^2.2.3",
     "latest-version": "^2.0.0",
     "mkdirp": "^0.5.1",
     "npm": "^3.7.2",
-    "os-utils": "0.0.14",
     "progress": "^1.1.8",
     "text-table": "^0.2.0"
   }
