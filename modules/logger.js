@@ -22,14 +22,12 @@ function logDependencies(dependencies){
 
     mkdirp(logFolder, function (err) {
         if (err){
-            console.log("An error has occured with the"+
-                "logger:\n"+err);
+            console.log("Can't make the logfiles folder:\n"+err);
         }
     });
     jsonfile.writeFile(fileName,dependencies,{spaces:1},function(err){
-        if(err!=null) {
-            console.log("An error has occured with the"+
-                "logger:\n"+err);
+        if(err){
+			console.log("Can't make the logfiles json file:\n"+err);           
         }
 
     })
