@@ -21,12 +21,12 @@ notifications:
     on_failure: change
 
 before_install:
-  - npm install chai@1.6.1
-  - npm install lodash
+  #- npm install chai@1.6.1
+  #- npm install lodash
 install:
 
 before_script:
-  - npm install -g npm3
+  #- npm install -g npm3
   - npm install -g gulp
   - chmod +x afterSuccess.sh
 script:
