@@ -21,7 +21,7 @@ notifications:
     on_failure: change
 
 before_install:
-  - npm install chai
+  - npm install chai@1.6.1
   - npm install lodash
 install:
 
