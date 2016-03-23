@@ -17,7 +17,7 @@ describe("Color Tests", function() {
             assert.equal(customColorsSupported,colors.checkForXterm());
         });
     });
-    describe("colorVersion Tests", function(){
+    describe("colorVersion Tests", function() {
         it("Should give the up to date color when an instance is up to date", function() {
             var colors = require("../../modules/colors");
             var instance = {
