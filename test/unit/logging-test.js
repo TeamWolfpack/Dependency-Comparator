@@ -1,4 +1,4 @@
-var chai = require("chai@1.6.1");
+var chai = require("chai");
 chai.use(require("chai-fs"));
 var path = require("path");
 var fs = require("fs");

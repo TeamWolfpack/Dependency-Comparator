@@ -30,6 +30,7 @@
   "homepage": "https://www.npmjs.com/package/sdl-brady-dependency-tool",
   "devDependencies": {
     "chai": "^3.4.1",
+	"chai@1": "1.6.1",
     "chai-fs": "^0.1.0",
     "extfs": "0.0.7",
     "gulp": "^3.9.0",
