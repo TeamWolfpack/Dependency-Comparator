@@ -30,7 +30,7 @@ var colorScheme = {
 function checkForXterm() {
     var orange = clc.xterm(202);
     var red = clc.redBright;
-    return !(orange("A") === red("A"));;
+    return !(orange("A") === red("A"));
 }
 
 /**
@@ -40,52 +40,50 @@ function checkForXterm() {
  * of the config that should be loaded
  */
 function loadConfigColors(typeOfColors) {
-    if (true) {
-        var colorConfig = require(
-            path.normalize("../colorConfig.json"));
-        if(colorConfig[typeOfColors]!=undefined) {
-            if (colorConfig[typeOfColors].major) {
-                colorScheme.major = clc.xterm(
-                    colorConfig[typeOfColors].major);
-            }
-            if (colorConfig[typeOfColors].minor) {
-                colorScheme.minor = clc.xterm(
-                    colorConfig[typeOfColors].minor);
-            }
-            if (colorConfig[typeOfColors].patch) {
-                colorScheme.patch = clc.xterm(
-                    colorConfig[typeOfColors].patch);
-            }
-            if (colorConfig[typeOfColors].upToDate) {
-                colorScheme.upToDate = clc.xterm(
-                    colorConfig[typeOfColors].upToDate);
-            }
-            if (colorConfig[typeOfColors].unmatched) {
-                colorScheme.unmatched = clc.xterm(
-                    colorConfig[typeOfColors].unmatched);
-            }
+    var colorConfig = require(path.normalize("../colorConfig.json"));
+
+    if(colorConfig[typeOfColors]!=undefined) {
+        if (colorConfig[typeOfColors].major) {
+            colorScheme.major = clc.xterm(
+                colorConfig[typeOfColors].major);
         }
-        else{
-            if (colorConfig["Standard"].major) {
-                colorScheme.major = clc.xterm(
-                    colorConfig["Standard"].major);
-            }
-            if (colorConfig["Standard"].minor) {
-                colorScheme.minor = clc.xterm(
-                    colorConfig["Standard"].minor);
-            }
-            if (colorConfig["Standard"].patch) {
-                colorScheme.patch = clc.xterm(
-                    colorConfig["Standard"].patch);
-            }
-            if (colorConfig["Standard"].upToDate) {
-                colorScheme.upToDate = clc.xterm(
-                    colorConfig["Standard"].upToDate);
-            }
-            if (colorConfig["Standard"].unmatched) {
-                colorScheme.unmatched = clc.xterm(
-                    colorConfig["Standard"].unmatched);
-            }
+        if (colorConfig[typeOfColors].minor) {
+            colorScheme.minor = clc.xterm(
+                colorConfig[typeOfColors].minor);
+        }
+        if (colorConfig[typeOfColors].patch) {
+            colorScheme.patch = clc.xterm(
+                colorConfig[typeOfColors].patch);
+        }
+        if (colorConfig[typeOfColors].upToDate) {
+            colorScheme.upToDate = clc.xterm(
+                colorConfig[typeOfColors].upToDate);
+        }
+        if (colorConfig[typeOfColors].unmatched) {
+            colorScheme.unmatched = clc.xterm(
+                colorConfig[typeOfColors].unmatched);
+        }
+    }
+    else{
+        if (colorConfig["Standard"].major) {
+            colorScheme.major = clc.xterm(
+                colorConfig["Standard"].major);
+        }
+        if (colorConfig["Standard"].minor) {
+            colorScheme.minor = clc.xterm(
+                colorConfig["Standard"].minor);
+        }
+        if (colorConfig["Standard"].patch) {
+            colorScheme.patch = clc.xterm(
+                colorConfig["Standard"].patch);
+        }
+        if (colorConfig["Standard"].upToDate) {
+            colorScheme.upToDate = clc.xterm(
+                colorConfig["Standard"].upToDate);
+        }
+        if (colorConfig["Standard"].unmatched) {
+            colorScheme.unmatched = clc.xterm(
+                colorConfig["Standard"].unmatched);
         }
     }
 }
@@ -97,9 +95,10 @@ function loadConfigColors(typeOfColors) {
  *
  * @param {Array} instances An array of instances of the dependency
  * @param {JSON} npmVersion The instance's version on npm
+ * @param {Object} summarizer Tracks the number of versions
+ * @param {function} callback Function to execute when finished
  */
-function assignColor(instances, npmVersion, globalProjectOne,
-                     globalProjectTwo, summarizer, callback) {
+function assignColor(instances, npmVersion, summarizer, callback) {
     parsedNPMVersion = parse.parseVersion(npmVersion);
     for (var i in instances) {
         var instance = instances[i];
