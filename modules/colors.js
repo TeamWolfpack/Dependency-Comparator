@@ -100,51 +100,53 @@ function loadConfigColors(typeOfColors) {
  */
 function assignColor(instances, npmVersion, summarizer, callback) {
     parsedNPMVersion = parse.parseVersion(npmVersion);
-    for (var i in instances) {
-        var instance = instances[i];
-        var version = parse.parseVersion(instance.version);
-        var lowestColor = 0; //green
+    if (parsedNPMVersion){
+        for (var i in instances) {
+            var instance = instances[i];
+            var version = parse.parseVersion(instance.version);
+            var lowestColor = 0; //green
 
-        //Compare the version of this instance with the npm version
-        if (JSON.stringify(version) === JSON.stringify(parsedNPMVersion)) {
-            instance.color = "upToDate";
-        } else if (version.major > parsedNPMVersion.major ||
-            (version.major == parsedNPMVersion.major &&
-            version.minor > parsedNPMVersion.minor) ||
-            (version.major == parsedNPMVersion.major &&
-            version.minor == parsedNPMVersion.minor &&
-            version.patch > parsedNPMVersion.patch)) {
-            instance.color = "upToDate";
-        }else if (version.major < parsedNPMVersion.major) {
-            instance.color = "major";
-            if (instance.projectNumber == 1) {
-                summarizer.totals.projectOne.major++;
-            } else if (instance.projectNumber == 2) {
-                summarizer.totals.projectTwo.major++;
-            }
-            summarizer.totals.major++;
-            if (lowestColor < 3) {
-                lowestColor = 3; //red
-            }
-        }else if (version.minor < parsedNPMVersion.minor) {
-            instance.color = "minor";
-            if (instance.projectNumber == 1) {
-                summarizer.totals.projectOne.minor++;
-            } else if (instance.projectNumber == 2) {
-                summarizer.totals.projectTwo.minor++;
-            }
-            if (lowestColor < 2) {
-                lowestColor = 2; //magenta
-            }
-        }else if (version.patch < parsedNPMVersion.patch) {
-            instance.color = "patch";
-            if (instance.projectNumber == 1) {
-                summarizer.totals.projectOne.patch++;
-            } else if (instance.projectNumber == 2) {
-                summarizer.totals.projectTwo.patch++;
-            }
-            if (lowestColor < 1) {
-                lowestColor = 1; //yellow
+            //Compare the version of this instance with the npm version
+            if (JSON.stringify(version) === JSON.stringify(parsedNPMVersion)) {
+                instance.color = "upToDate";
+            } else if (version.major > parsedNPMVersion.major ||
+                (version.major == parsedNPMVersion.major &&
+                version.minor > parsedNPMVersion.minor) ||
+                (version.major == parsedNPMVersion.major &&
+                version.minor == parsedNPMVersion.minor &&
+                version.patch > parsedNPMVersion.patch)) {
+                instance.color = "upToDate";
+            }else if (version.major < parsedNPMVersion.major) {
+                instance.color = "major";
+                if (instance.projectNumber == 1) {
+                    summarizer.totals.projectOne.major++;
+                } else if (instance.projectNumber == 2) {
+                    summarizer.totals.projectTwo.major++;
+                }
+                summarizer.totals.major++;
+                if (lowestColor < 3) {
+                    lowestColor = 3; //red
+                }
+            }else if (version.minor < parsedNPMVersion.minor) {
+                instance.color = "minor";
+                if (instance.projectNumber == 1) {
+                    summarizer.totals.projectOne.minor++;
+                } else if (instance.projectNumber == 2) {
+                    summarizer.totals.projectTwo.minor++;
+                }
+                if (lowestColor < 2) {
+                    lowestColor = 2; //magenta
+                }
+            }else if (version.patch < parsedNPMVersion.patch) {
+                instance.color = "patch";
+                if (instance.projectNumber == 1) {
+                    summarizer.totals.projectOne.patch++;
+                } else if (instance.projectNumber == 2) {
+                    summarizer.totals.projectTwo.patch++;
+                }
+                if (lowestColor < 1) {
+                    lowestColor = 1; //yellow
+                }
             }
         }
     }
