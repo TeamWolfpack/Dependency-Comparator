@@ -194,6 +194,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
         clear: true
     });
     tick(bar);
+
     async.each(dependencies, function(dependency, callback) {
         var name = dependency.name;
         latestVersion(name).then(function(version) {

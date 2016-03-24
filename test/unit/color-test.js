@@ -2,9 +2,11 @@
  * Created by farrowc on 3/23/2016.
  */
 var chai = require("chai");
+var sinon = require("mocha-sinon");
 var expect = chai.expect;
 var assert = chai.assert;
-var textTable = require("text-table");
+var cliTable = require("cli-table2");
+var childProcess = require("child_process");
 var clc = require("cli-color");
 
 describe("Color Tests", function() {
@@ -63,5 +65,23 @@ describe("Color Tests", function() {
             var versionedInstance = colors.colorScheme.unmatched(instance.version);
             assert.equal(colors.colorVersion(instance),versionedInstance);
         });
+        it("Should give the unmatched color when an instance does not have a color", function() {
+            var colors = require("../../modules/colors");
+            var instance = {
+                version: "poopInstance"
+            };
+            var versionedInstance = colors.colorScheme.unmatched(instance.version);
+            assert.equal(colors.colorVersion(instance),versionedInstance);
+        });
+        it("Should give the unmatched color when an instance has an incorrect color assignment", function() {
+            var colors = require("../../modules/colors");
+            var instance = {
+                version: "poopInstance",
+                color: "poopColor"
+            };
+            var versionedInstance = colors.colorScheme.unmatched(instance.version);
+            assert.equal(colors.colorVersion(instance),versionedInstance);
+        });
     });
+    
 });
