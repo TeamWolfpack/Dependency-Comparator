@@ -236,4 +236,75 @@ describe("Color Tests", function() {
                 });
         });
     });
+    describe("Initialize Colors Tests", function(){
+        it("Should not initialize Colors if the terminal does not support xterm colors and should if it is supported", function(){
+            var colorScheme = colors.colorScheme.upToDate;
+            colors.initializeColors("ColorBlind");
+            if(colors.checkForXterm()){
+                assert.notEqual(colors.colorScheme.upToDate("TestString"),colorScheme("TestString"));
+            }
+            else{
+                assert.equal(colors.colorScheme.upToDate("TestString"),colorScheme("TestString"));
+            }
+        });
+    });
+    describe("Load Color Config Tests", function(){
+        it("Should Load Standard Colors", function(){
+            var colorConfig = require(path.normalize("../../colorConfig.json"));
+            var colorConfigSection = colorConfig["Standard"];
+
+            var colorScheme = {
+                patch: clc.xterm(colorConfigSection.patch),
+                minor: clc.xterm(colorConfigSection.minor),
+                major: clc.xterm(colorConfigSection.major),
+                upToDate: clc.xterm(colorConfigSection.upToDate),
+                unmatched: clc.xterm(colorConfigSection.unmatched)
+            };
+
+            colors.loadConfigColors("Standard");
+            assert.equal(colorScheme.patch("TestString"),colors.colorScheme.patch("TestString"));
+            assert.equal(colorScheme.minor("TestString"),colors.colorScheme.minor("TestString"));
+            assert.equal(colorScheme.major("TestString"),colors.colorScheme.major("TestString"));
+            assert.equal(colorScheme.upToDate("TestString"),colors.colorScheme.upToDate("TestString"));
+            assert.equal(colorScheme.unmatched("TestString"),colors.colorScheme.unmatched("TestString"));
+        });
+        it("Should Load Color Blind Colors", function(){
+            var colorConfig = require(path.normalize("../../colorConfig.json"));
+            var colorConfigSection = colorConfig["ColorBlind"];
+
+            var colorScheme = {
+                patch: clc.xterm(colorConfigSection.patch),
+                minor: clc.xterm(colorConfigSection.minor),
+                major: clc.xterm(colorConfigSection.major),
+                upToDate: clc.xterm(colorConfigSection.upToDate),
+                unmatched: clc.xterm(colorConfigSection.unmatched)
+            };
+
+            colors.loadConfigColors("ColorBlind");
+            assert.equal(colorScheme.patch("TestString"),colors.colorScheme.patch("TestString"));
+            assert.equal(colorScheme.minor("TestString"),colors.colorScheme.minor("TestString"));
+            assert.equal(colorScheme.major("TestString"),colors.colorScheme.major("TestString"));
+            assert.equal(colorScheme.upToDate("TestString"),colors.colorScheme.upToDate("TestString"));
+            assert.equal(colorScheme.unmatched("TestString"),colors.colorScheme.unmatched("TestString"));
+        });
+        it("Should Load Standard Colors if an Invalid Color Scheme is Given", function(){
+            var colorConfig = require(path.normalize("../../colorConfig.json"));
+            var colorConfigSection = colorConfig["Standard"];
+
+            var colorScheme = {
+                patch: clc.xterm(colorConfigSection.patch),
+                minor: clc.xterm(colorConfigSection.minor),
+                major: clc.xterm(colorConfigSection.major),
+                upToDate: clc.xterm(colorConfigSection.upToDate),
+                unmatched: clc.xterm(colorConfigSection.unmatched)
+            };
+
+            colors.loadConfigColors("Invalid Scheme");
+            assert.equal(colorScheme.patch("TestString"),colors.colorScheme.patch("TestString"));
+            assert.equal(colorScheme.minor("TestString"),colors.colorScheme.minor("TestString"));
+            assert.equal(colorScheme.major("TestString"),colors.colorScheme.major("TestString"));
+            assert.equal(colorScheme.upToDate("TestString"),colors.colorScheme.upToDate("TestString"));
+            assert.equal(colorScheme.unmatched("TestString"),colors.colorScheme.unmatched("TestString"));
+        });
+    });
 });
