@@ -7,246 +7,23 @@
 
 /*Begin 'require' Import Statements*/
 var cliTable = require("cli-table2");
-var textTable = require("text-table");
 var commander = require("commander");
-var exec = require("child_process").exec;
 var async = require("async");
-var deasync = require("deasync");
 var ProgressBar = require("progress");
-var clc = require("cli-color");
 var path = require("path");
-var osUtils = require("os-utils");
+var fs = require("fs");
+var latestVersion = require("latest-version");
 var pjson = require(path.normalize("../package.json"));
-var logger = require(path.normalize("../logger/depLogger"));
+var logger = require(path.normalize("../modules/logger"));
+var color = require(path.normalize("../modules/colors"));
+var summarizer = require(path.normalize("../modules/summary"));
+var parse = require(path.normalize("../modules/parse"));
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
-var customColorsSupported = true;
-
 var globalProjectOne;
 var globalProjectTwo;
-
-/*
- Numbers used are xterm color numbers.
- They can be found here:
- https://en.wikipedia.org/wiki/File:Xterm_256color_chart.svg
- */
-var colorScheme = {
-    patch: clc.yellowBright,
-    minor: clc.magentaBright,
-    major: clc.redBright,
-    upToDate: clc.greenBright,
-    unmatched: clc.whiteBright
-};
-
-var totals = {
-    projectOne: {
-        major: 0,
-        minor: 0,
-        patch: 0,
-        unmatched: 0
-    },
-    projectTwo: {
-        major: 0,
-        minor: 0,
-        patch: 0,
-        unmatched: 0
-    }
-};
 /*End Global Variables*/
-
-/**
- * Checks for xterm compatibility.
- *
- * @returns {boolean} true if console supports xterm colors
- */
-function checkForXterm() {
-    var orange = clc.xterm(202);
-    var red = clc.redBright;
-    customColorsSupported = !(orange("A") === red("A"));
-    return customColorsSupported;
-}
-
-/**
- * Selects which colors to load from the config.
- *
- * @param {String} typeOfColors A string that is the name of the area
- * of the config that should be loaded
- */
-function loadConfigColors(typeOfColors) {
-    if (checkForXterm()) {
-        switch (typeOfColors) {
-            case "Standard":
-                loadStandardConfigColors();
-                break;
-            case "ColorBlind":
-                loadColorBlindConfigColors();
-                break;
-            default:
-                loadStandardConfigColors();
-                break;
-        }
-    }
-}
-
-/**
- * Sets the colors in the standard section of the color config as the
- * current color scheme.
- */
-function loadStandardConfigColors() {
-    if (checkForXterm()) {
-        try {
-            var colorConfig = require(
-                path.normalize("../colorConfig.json"));
-            if (colorConfig.Standard.major) {
-                colorScheme.major = clc.xterm(
-                    colorConfig.Standard.major);
-            }
-            if (colorConfig.Standard.minor) {
-                colorScheme.minor = clc.xterm(
-                    colorConfig.Standard.minor);
-            }
-            if (colorConfig.Standard.patch) {
-                colorScheme.patch = clc.xterm(
-                    colorConfig.Standard.patch);
-            }
-            if (colorConfig.Standard.upToDate) {
-                colorScheme.upToDate = clc.xterm(
-                    colorConfig.Standard.upToDate);
-            }
-            if (colorConfig.Standard.unmatched) {
-                colorScheme.unmatched = clc.xterm(
-                    colorConfig.Standard.unmatched);
-            }
-        } catch (err) {
-            throw Error(err.message);
-        }
-    }
-
-}
-
-/**
- * Sets the colors in the color blind section of the color config as
- * the current color scheme.
- */
-function loadColorBlindConfigColors() {
-    if (checkForXterm()) {
-        try {
-            var colorConfig = require(
-                path.normalize("../colorConfig.json"));
-            if (colorConfig.ColorBlind.major) {
-                colorScheme.major = clc.xterm(
-                    colorConfig.ColorBlind.major);
-            }
-            if (colorConfig.ColorBlind.minor) {
-                colorScheme.minor = clc.xterm(
-                    colorConfig.ColorBlind.minor);
-            }
-            if (colorConfig.ColorBlind.patch) {
-                colorScheme.patch = clc.xterm(
-                    colorConfig.ColorBlind.patch);
-            }
-            if (colorConfig.ColorBlind.upToDate) {
-                colorScheme.upToDate = clc.xterm(
-                    colorConfig.ColorBlind.upToDate);
-            }
-            if (colorConfig.ColorBlind.unmatched) {
-                colorScheme.unmatched = clc.xterm(
-                    colorConfig.ColorBlind.unmatched);
-            }
-        } catch (err) {
-            throw Error("colorConfig is missing or syntax is" +
-                " incorrect.");
-        }
-    }
-
-}
-
-/**
- * Turns the string representation of a version into a
- * JSON object with major, minor, and patch elements
- *
- * @param {string} stringVersion String representation of a version
- */
-function parseVersion(stringVersion) {
-    var splitVersion = stringVersion.split(".");
-    var version = {
-        major: Number(splitVersion[0]),
-        minor: splitVersion.length > 0 ? Number(splitVersion[1]) : 0,
-        patch: splitVersion.length > 1 ? Number(splitVersion[2]) : 0
-    };
-    return version;
-}
-
-/**
- * Assigns colors to instances in an array of instances of a
- * dependency based off of the version of that instance and the
- * max version found.
- *
- * @param {Array} instances An array of instances of the dependency
- * @param {JSON} npmVersion The instance's version on npm
- */
-function assignColor(instances, npmVersion, callback) {
-    parsedNPMVersion = parseVersion(npmVersion);
-    for (var i in instances) {
-        var instance = instances[i];
-        var version = parseVersion(instance.version);
-        var lowestColor = 0; //green
-
-        //Compare the version of this instance with the npm version
-        if (JSON.stringify(version) === JSON.stringify(parsedNPMVersion)) {
-            instance.color = "upToDate";
-        } else if (version.major > parsedNPMVersion.major ||
-            (version.major == parsedNPMVersion.major &&
-            version.minor > parsedNPMVersion.minor) ||
-            (version.major == parsedNPMVersion.major &&
-            version.minor == parsedNPMVersion.minor &&
-            version.patch > parsedNPMVersion.patch)) {
-            instance.color = "upToDate";
-        }else if (version.major < parsedNPMVersion.major) {
-            instance.color = "major";
-            if (instance.Project == globalProjectOne) {
-                totals.projectOne.major++;
-            } else if (instance.Project == globalProjectTwo) {
-                totals.projectTwo.major++;
-            }
-            totals.major++;
-            if (lowestColor < 3) {
-                lowestColor = 3; //red
-            }
-        }else if (version.minor < parsedNPMVersion.minor) {
-            instance.color = "minor";
-            if (instance.Project == globalProjectOne) {
-                totals.projectOne.minor++;
-            } else if (instance.Project == globalProjectTwo) {
-                totals.projectTwo.minor++;
-            }
-            if (lowestColor < 2) {
-                lowestColor = 2; //magenta
-            }
-        }else if (version.patch < parsedNPMVersion.patch) {
-            instance.color = "patch";
-            if (instance.Project == globalProjectOne) {
-                totals.projectOne.patch++;
-            } else if (instance.Project == globalProjectTwo) {
-                totals.projectTwo.patch++;
-            }
-            if (lowestColor < 1) {
-                lowestColor = 1; //yellow
-            }
-        }
-    }
-    if (lowestColor == 3) {
-        npmVersion = colorScheme.major(npmVersion);
-    } else if (lowestColor == 2) {
-        npmVersion = colorScheme.minor(npmVersion);
-    } else if (lowestColor == 1) {
-        npmVersion = colorScheme.patch(npmVersion);
-    } else {
-        npmVersion = colorScheme.upToDate(npmVersion);
-    }
-    return callback(npmVersion);
-}
 
 /**
  * Creates, fills, and prints the table based on a list of
@@ -259,11 +36,11 @@ function assignColor(instances, npmVersion, callback) {
  * @author Josh Leonard
  */
 function createTable(dependencies) {
-    var projectOneName;
-    var projectTwoName;
+    var projectOneName = globalProjectOne;
+    var projectTwoName = globalProjectTwo;
 
     var table = new cliTable({
-        head: ["Module Name", "NPM Version", "", "", "", ""],
+        head: ["Module Name", "NPM Version", projectOneName, projectOneName + " Path", projectTwoName, projectTwoName + " Path"],
         style: {
             head: [] //disable colors in header cells
         },
@@ -274,35 +51,15 @@ function createTable(dependencies) {
         dependencies.forEach(function(dependency) {
             var dependencyName = dependency.name;
             var rowSpan = dependency.maxinstances;
-            var npmVersion = dependency.npmVersion;
+            var npmVersion = color.colorVersion(dependency.npmVersion);
             var instances = dependency.instances;
             var rows = [];
 
             for (i in instances) {
                 var instance = instances[i];
-                if (instance.color == "upToDate") {
-                    var instanceVersion
-                        = colorScheme.upToDate(instance.version);
-                } else if (instance.color == "minor") {
-                    var instanceVersion
-                        = colorScheme.minor(instance.version);
-                } else if (instance.color == "patch") {
-                    var instanceVersion
-                        = colorScheme.patch(instance.version);
-                } else if (instance.color == "major") {
-                    var instanceVersion
-                        = colorScheme.major(instance.version);
-                } else {
-                    var instanceVersion
-                        = colorScheme.unmatched(instance.version);
-                }
+                var instanceVersion = color.colorVersion(instance);
+
                 if (i == 0) { //first instance fills in Module name
-                    if (!projectOneName) {
-                        projectOneName = instance.Project;
-                        table.options.head[2] = projectOneName;
-                        table.options.head[3] = projectOneName +
-                            " Path";
-                    }
                     //Determines location based on project name
                     if (instance.Project == projectOneName) {
                         rows.push([{rowSpan: rowSpan,
@@ -322,13 +79,6 @@ function createTable(dependencies) {
                             instance.path]);
                     }
                 } else { //fill any missing Project Two instances
-                    if (!projectTwoName) { //sets the name of
-                        // Project 2 if previously undefined
-                        projectTwoName = instance.Project;
-                        table.options.head[4] = projectTwoName;
-                        table.options.head[5] = projectTwoName +
-                            " Path";
-                    }
                     if (rows[i - rowSpan].length == 6) {
                         rows[i - rowSpan][4] = instanceVersion;
                         rows[i - rowSpan][5] = instance.path;
@@ -352,10 +102,10 @@ function createTable(dependencies) {
 /**
  * Compares and matches dependencies from two arrays of dependencies
  * from projects.
- * **Must be edited for comparing with depth.
  *
  * @param {Object} projectOne Dependencies from project 1
  * @param {Object} projectTwo Dependencies from project 2
+ * @param {function} done callback
  */
 function compareAndMatch(projectOne, projectTwo, done) {
     globalProjectOne = projectOne.name; //needed to seperate totals
@@ -373,6 +123,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
+                    projectNumber: 1,
                     path: projectOneDep[dep][instance].path,
                     color: "white"
                 };
@@ -381,6 +132,7 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
+                    projectNumber: 2,
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
@@ -402,10 +154,11 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectOneDep[dep][instance].version,
                     Project: projectOne.name,
+                    projectNumber: 1,
                     path: projectOneDep[dep][instance].path,
                     color: "white"
                 };
-                totals.projectOne.unmatched++;
+                summarizer.totals.projectOne.unmatched++;
             }
             dependencies[dependencies.length] = {
                 name: dep,
@@ -419,10 +172,11 @@ function compareAndMatch(projectOne, projectTwo, done) {
                 matchedDeps[matchedDeps.length] = {
                     version: projectTwoDep[dep][instance].version,
                     Project: projectTwo.name,
+                    projectNumber: 2,
                     path: projectTwoDep[dep][instance].path,
                     color: "white"
                 };
-                totals.projectTwo.unmatched++;
+                summarizer.totals.projectTwo.unmatched++;
             }
 
             dependencies[dependencies.length] = {
@@ -439,121 +193,53 @@ function compareAndMatch(projectOne, projectTwo, done) {
         total: dependencies.length,
         clear: true
     });
-    try {
-        bar.tick();
-    } catch (err) {
-        //progress bar not supported
-    }
-    var processCount = 0;
+    tick(bar);
+
     async.each(dependencies, function(dependency, callback) {
         var name = dependency.name;
-        processCount++;
-        exec("npm view " + name + " version",
-                function(error, stdout, stderr) {
-            processCount--;
-            assignColor(dependency.instances, stdout.trim(),
-                    function(coloredVersion) {
-                dependency.npmVersion = coloredVersion;
-                try {
-                    bar.tick();
-                } catch (err) {
-                    //progress bar not supported
-                }
-                return callback();
-            });
-        });
-        deasync.loopWhile(function() {
-            return (processCount > 30 || osUtils.freememPercentage() < 0.35);
+        latestVersion(name).then(function(version) {
+            color.assignColor(dependency.instances, version.trim(),
+                summarizer, function(coloredVersion) {
+                    dependency.npmVersion = coloredVersion;
+                    tick(bar);
+                    return callback();
+                });
         });
     }, function(err) {
+        tick(bar);
         return done(dependencies);
     });
 }
 
 /**
- * Takes in the location of the root file of the project and outputs
- * an object with the name, path, and dependencies of the project.
+ * Tries to tick the progress bar
+ * NOTE: Progress is not supported on some terminals
  *
- * @param {File} file Location of the root file of the project
- * @param {int} depth Layers of dependencies to look at
- * @returns {Object} {{name: Project Name, path: Project Path,
- * dependencies: Array of Dependencies}}
+ * @param {Object} bar progress bar for pulling version
  */
-function parseDependencies(file, depth) {
-    //Get the package.json for the project
-    var filePackage = require(path.normalize(file + "/package.json"));
-    //Get the dependencies of the project
-    //var fileDep = filePackage.dependencies;
-    //Store the name and path of the project
-    var fileParsedDependencies = {
-        name: filePackage.name.toString(),
-        path: file.toString(),
-        dependencies: []
-    };
-    //Iterate through dependencies and save them in the
-    // specified format
-    parseDependenciesRecursively(file,depth,
-        fileParsedDependencies.dependencies,".");
-
-    //Return the completed and parsed json object with the
-    // dependencies
-    return fileParsedDependencies;
-}
-
-function parseDependenciesRecursively(file, depth, dependencies,
-		previousDependencyPath) {
-    //Get the package.json for the project
-    var filePackage = require(path.normalize(file + "/package.json"));
-    //Get the dependencies of the project
-    var fileDep = filePackage.dependencies;
-    if (commander.all) {
-        for (devDep in filePackage.devDependencies) {
-            if (!fileDep[devDep]) {
-                fileDep[devDep] = devDep.version;
-            }
-        }
-    }
-    //Iterate through dependencies and save them in the specified
-    // format
-    for (dep in fileDep) {
-        try {
-            if (!dependencies[dep]) {
-                dependencies[dep] = [];
-            }
-            var dependency = require(path.normalize(file +
-                "/node_modules/" + dep + "/package.json"));
-            dependencies[dep][dependencies[dep].length] =
-            {
-                version: dependency.version,
-                path: path.normalize(previousDependencyPath +
-                    "/node_modules/" + dep)
-            };
-
-            if (depth - 1 >= 0) {
-                parseDependenciesRecursively(path.normalize(file +
-                    "/node_modules/" + dep), depth - 1, dependencies,
-                    path.normalize(previousDependencyPath +
-                        "/node_modules/" + dep));
-
-            }
-        } catch (err) {
-            // No node_modules after a certain depth so module not
-            // found and is skipped
-        }
+function tick(bar) {
+    try {
+        bar.tick();
+    } catch (err) {
+        //progress bar not supported
     }
 }
+
 /**
- * Displays a legend that shows what each of the colors mean.
+ * Ensures file path support to relative file paths and cross-platform
+ * support.
+ *
+ * @param {string} project path to project directory
+ * @returns {string} path valid path to directory
  */
-function displayColorLegend() {
-    var colorLegendTable = new cliTable();
-    colorLegendTable.push([colorScheme.major("Major Difference"),
-        colorScheme.minor("Minor Difference"),
-        colorScheme.patch("Patch Difference")]);
-    colorLegendTable.push([colorScheme.upToDate("Up to Date"),
-        colorScheme.unmatched("Unmatched")]);
-
-    console.log(colorLegendTable.toString());
+function validatePath(project) {
+    try {
+        project = path.normalize(project);
+        fs.accessSync(project, fs.F_OK);
+    } catch (err) {
+        throw Error("Project path is invalid: " + project);
+    }
+    return path.resolve(project);
 }
 
 /**
@@ -566,40 +252,31 @@ function displayColorLegend() {
  * @param {File} projectTwo The second project that will be compared
  */
 function compare(projectOne, projectTwo) {
-    checkForXterm();
-    if (customColorsSupported) {
-        colorScheme.minor = clc.xterm(202);
-        loadConfigColors(commander.colorConfig);
-    }
-
+    color.initializeColors(commander.colorConfig);
     //If the files exist, parse them
     try {
-        try {
-            projectOne = path.normalize(projectOne);
-        } catch (err) {
-            throw Error("First project path is invalid: " + projectOne);
-        }
-        try {
-            projectTwo = path.normalize(projectTwo);
-        } catch (err) {
-            throw Error("Second project path is invalid: " + projectTwo);
-        }
+        projectOne = validatePath(projectOne);
+        projectTwo = validatePath(projectTwo);
 		
         //var depth = 0;
         if (commander.depth >= 1) { //for 1 indexed-commander.depth>0
             var depth = commander.depth - 1;
-            //Parse project one
+            var includeDev = commander.all;
+            var fileOneParsedDependencies;
+            var fileTwoParsedDependencies;
+
             try {
-                var fileOneParsedDependencies
-                                    = parseDependencies(projectOne, depth);
+                fileOneParsedDependencies =
+                                    parse.parseDependencies(projectOne,
+                                        depth, includeDev);
             } catch (err) {
                 throw Error(err.message + " in " + projectOne);
             }
-            
-            //Parse project two
+
             try {
-                var fileTwoParsedDependencies
-                                    = parseDependencies(projectTwo, depth);
+                fileTwoParsedDependencies =
+                                    parse.parseDependencies(projectTwo,
+                                        depth, includeDev);
             } catch (err) {
                 throw Error(err.message + " in " + projectTwo);
             }
@@ -618,22 +295,23 @@ function compare(projectOne, projectTwo) {
                         process.argv[1] === "cmp") {
                     createTable(matchedDependencies);
                     if (!commander.commands[0].hideSummary) {
-                        printSummaryTable();
+                        summarizer.printSummaryTable(globalProjectOne,
+                            globalProjectTwo);
                     }
                     if (commander.commands[0].colorLegend) {
-                        displayColorLegend();
+                        color.displayColorLegend();
                     }
-                    logger.logDependencies(matchedDependencies,
-                        commander.commands[0].output);
-                }else if (process.argv[2] === "summary" ||
+                } else if (process.argv[2] === "summary" ||
                         process.argv[1] === "summary" ||
                         process.argv[2] === "sum" ||
                         process.argv[1] === "sum") {
                     if (commander.commands[1].showTable) {
                         createTable(matchedDependencies);
                     }
-                    printSummaryTable();
+                    summarizer.printSummaryTable(globalProjectOne,
+                        globalProjectTwo);
                 }
+                logger.logDependencies(matchedDependencies);
             });
         }else {
             console.log("Invalid depth given.");
@@ -643,26 +321,6 @@ function compare(projectOne, projectTwo) {
         console.log(err);
         return 1;
     }
-}
-
-/**
- * Prints the summary table.
- */
-function printSummaryTable() {
-    if (globalProjectOne == globalProjectTwo) {
-        totals.projectOne.major /= 2;
-        totals.projectOne.minor /= 2;
-        totals.projectOne.patch /= 2;
-        totals.projectTwo = totals.projectOne;
-    }
-    var summaryTable = textTable([
-    ["", "Project One", "Project Two"],
-    ["major", totals.projectOne.major, totals.projectTwo.major],
-    ["minor", totals.projectOne.minor, totals.projectTwo.minor],
-    ["patch", totals.projectOne.patch, totals.projectTwo.patch],
-    ["unmatched", totals.projectOne.unmatched, totals.projectTwo.unmatched]
-    ], {align: ["l", "l", "l"]});
-    console.log(summaryTable);
 }
 
 /**

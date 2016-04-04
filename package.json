@@ -1,9 +1,10 @@
 {
-  "name": "sdl-brady-dependency-tool",
-  "version": "1.2.3",
+  "name": "dependency-comparator",
+  "version": "1.2.12",
   "description": "Node.js dependency comparison tool.",
   "bin": {
-    "brady-tool": "bin/brady-tool.js"
+    "dependency-comparator": "bin/brady-tool.js",
+    "dep-tool": "bin/brady-tool.js"
   },
   "main": "./bin/brady-tool.js",
   "scripts": {
@@ -15,13 +16,22 @@
   },
   "keywords": [
     "dependency",
-    "comparison"
+    "comparison",
+    "outdated",
+    "comparator",
+    "update",
+    "brady",
+    "heatmap",
+    "compare",
+    "modules"
   ],
   "author": "team-wolfpack",
   "license": "ISC",
   "homepage": "https://www.npmjs.com/package/sdl-brady-dependency-tool",
   "devDependencies": {
-    "chai": "^3.4.1",
+    "chai": "^1.10.0",
+    "chai-fs": "^0.1.0",
+    "extfs": "0.0.7",
     "gulp": "^3.9.0",
     "gulp-bump": "^1.0.0",
     "gulp-eslint": "^1.1.1",
@@ -29,6 +39,7 @@
     "gulp-jscs": "^3.0.2",
     "gulp-mocha": "^2.2.0",
     "gulp-prompt": "^0.1.2",
+    "gulp-shell": "^0.5.2",
     "mocha": "^2.3.4",
     "mocha-sinon": "^1.1.5",
     "sinon": "^1.17.2"
@@ -39,13 +50,11 @@
     "cli-color": "^1.1.0",
     "cli-table2": "^0.2.0",
     "commander": "^2.9.0",
-    "deasync": "^0.1.4",
     "fs": "0.0.2",
-    "jenkins": "^0.13.0",
     "jsonfile": "^2.2.3",
+    "latest-version": "^2.0.0",
     "mkdirp": "^0.5.1",
     "npm": "^3.7.2",
-    "os-utils": "0.0.14",
     "progress": "^1.1.8",
     "text-table": "^0.2.0"
   }
