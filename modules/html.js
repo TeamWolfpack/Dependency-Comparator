@@ -11,13 +11,13 @@ module.exports = {
 };
 
 function openHTML(matchedDependencies){
-
-    open(path.normalize(__dirname+"/../html/dep-tool.html"));
+	open(path.normalize(__dirname+"/../html/dep-tool.html"));
+    
 }
 
 
 function getLogger(){
-	
+	open(path.normalize(__dirname+"/../logfiles/dep-tool.html"));
 }
 
 function createHTMLTable(){
