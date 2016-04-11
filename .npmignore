@@ -8,6 +8,9 @@
 *.yml
 *.sh
 
+# ignore testing files
+*.jscsrc
+
 # ignoring the idea folder from jetbrains
 .idea/*
 
