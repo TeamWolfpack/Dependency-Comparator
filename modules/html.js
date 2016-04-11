@@ -14,3 +14,12 @@ function openHTML(matchedDependencies){
 
     open(path.normalize(__dirname+"/../html/dep-tool.html"));
 }
+
+
+function getLogger(){
+	
+}
+
+function createHTMLTable(){
+	
+}
