@@ -18,6 +18,7 @@ var logger = require(path.normalize("../modules/logger"));
 var color = require(path.normalize("../modules/colors"));
 var summarizer = require(path.normalize("../modules/summary"));
 var parse = require(path.normalize("../modules/parse"));
+var walker = require("walk");
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -331,6 +332,34 @@ function generateSummaryTable(projectOne, projectTwo) {
     compare(projectOne, projectTwo);
 }
 
+function parseDirectory(directory){
+	if(!directory){
+		directory = __dirname
+	}
+	
+	console.log(directory)
+	
+	//iterate through all the directories in directory
+	//verify they are node projects
+		// /project1/package.json --> good
+			//can have other shit in it
+		// /mypornfolder/pictures --> bad
+	
+	walker.on("folder", function (root, fileStats, next) {
+		console.log(fileStats);
+		fs.readDir(fileStats.name, function (err, content) {
+			//verify they are node projects
+			console.log(content)
+	    next();//callback
+	    });
+	});
+	
+	
+	//compare
+	
+	
+}
+
 //Commander lines go below this comment
 commander
     .version(pjson.version)
@@ -362,4 +391,22 @@ commander
     .option("-t, --showTable", "Shows the table.")
     .action(generateSummaryTable);
 
+commander
+	.command("summary [fileOne] [fileTwo]")
+	.alias("sum")
+	.description("Display the summary of the dependencies" +
+	    " being compared.")
+	.option("-t, --showTable", "Shows the table.")
+	.action(generateSummaryTable);
+
+commander
+	.command("topDir [topDirectory]")
+	.alias("dir")
+	.description("Parses through the directory for node projects.")
+	.action(parseDirectory);
+
 commander.parse(process.argv);
+
+if (!process.argv.slice(2).length) {
+	parseDirectory(__dirname);
+}
