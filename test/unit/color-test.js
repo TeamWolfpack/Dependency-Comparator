@@ -2,9 +2,11 @@
  * Created by farrowc on 3/23/2016.
  */
 var chai = require("chai");
+var sinon = require("mocha-sinon");
 var expect = chai.expect;
 var assert = chai.assert;
-var textTable = require("text-table");
+var cliTable = require("cli-table2");
+var childProcess = require("child_process");
 var clc = require("cli-color");
 var path = require("path");
 var summarizer = require(path.normalize("../../modules/summary"));
@@ -56,6 +58,23 @@ describe("Color Tests", function() {
             var instance = {
                 version: "poopInstance",
                 color: "unmatched"
+            };
+            var versionedInstance = colors.colorScheme.unmatched(instance.version);
+            assert.equal(colors.colorVersion(instance),versionedInstance);
+        });
+        it("Should give the unmatched color when an instance does not have a color", function() {
+            var colors = require("../../modules/colors");
+            var instance = {
+                version: "poopInstance"
+            };
+            var versionedInstance = colors.colorScheme.unmatched(instance.version);
+            assert.equal(colors.colorVersion(instance),versionedInstance);
+        });
+        it("Should give the unmatched color when an instance has an incorrect color assignment", function() {
+            var colors = require("../../modules/colors");
+            var instance = {
+                version: "poopInstance",
+                color: "poopColor"
             };
             var versionedInstance = colors.colorScheme.unmatched(instance.version);
             assert.equal(colors.colorVersion(instance),versionedInstance);
@@ -215,6 +234,77 @@ describe("Color Tests", function() {
                     assert.equal(coloredVersion.version, badVersion, "npmVersion is blank");
                     assert.equal(coloredVersion.color, "upToDate", "upToDate is default color");
                 });
+        });
+    });
+    describe("Initialize Colors Tests", function(){
+        it("Should not initialize Colors if the terminal does not support xterm colors and should if it is supported", function(){
+            var colorScheme = colors.colorScheme.upToDate;
+            colors.initializeColors("ColorBlind");
+            if(colors.checkForXterm()){
+                assert.notEqual(colors.colorScheme.upToDate("TestString"),colorScheme("TestString"));
+            }
+            else{
+                assert.equal(colors.colorScheme.upToDate("TestString"),colorScheme("TestString"));
+            }
+        });
+    });
+    describe("Load Color Config Tests", function(){
+        it("Should Load Standard Colors", function(){
+            var colorConfig = require(path.normalize("../../colorConfig.json"));
+            var colorConfigSection = colorConfig["Standard"];
+
+            var colorScheme = {
+                patch: clc.xterm(colorConfigSection.patch),
+                minor: clc.xterm(colorConfigSection.minor),
+                major: clc.xterm(colorConfigSection.major),
+                upToDate: clc.xterm(colorConfigSection.upToDate),
+                unmatched: clc.xterm(colorConfigSection.unmatched)
+            };
+
+            colors.loadConfigColors("Standard");
+            assert.equal(colorScheme.patch("TestString"),colors.colorScheme.patch("TestString"));
+            assert.equal(colorScheme.minor("TestString"),colors.colorScheme.minor("TestString"));
+            assert.equal(colorScheme.major("TestString"),colors.colorScheme.major("TestString"));
+            assert.equal(colorScheme.upToDate("TestString"),colors.colorScheme.upToDate("TestString"));
+            assert.equal(colorScheme.unmatched("TestString"),colors.colorScheme.unmatched("TestString"));
+        });
+        it("Should Load Color Blind Colors", function(){
+            var colorConfig = require(path.normalize("../../colorConfig.json"));
+            var colorConfigSection = colorConfig["ColorBlind"];
+
+            var colorScheme = {
+                patch: clc.xterm(colorConfigSection.patch),
+                minor: clc.xterm(colorConfigSection.minor),
+                major: clc.xterm(colorConfigSection.major),
+                upToDate: clc.xterm(colorConfigSection.upToDate),
+                unmatched: clc.xterm(colorConfigSection.unmatched)
+            };
+
+            colors.loadConfigColors("ColorBlind");
+            assert.equal(colorScheme.patch("TestString"),colors.colorScheme.patch("TestString"));
+            assert.equal(colorScheme.minor("TestString"),colors.colorScheme.minor("TestString"));
+            assert.equal(colorScheme.major("TestString"),colors.colorScheme.major("TestString"));
+            assert.equal(colorScheme.upToDate("TestString"),colors.colorScheme.upToDate("TestString"));
+            assert.equal(colorScheme.unmatched("TestString"),colors.colorScheme.unmatched("TestString"));
+        });
+        it("Should Load Standard Colors if an Invalid Color Scheme is Given", function(){
+            var colorConfig = require(path.normalize("../../colorConfig.json"));
+            var colorConfigSection = colorConfig["Standard"];
+
+            var colorScheme = {
+                patch: clc.xterm(colorConfigSection.patch),
+                minor: clc.xterm(colorConfigSection.minor),
+                major: clc.xterm(colorConfigSection.major),
+                upToDate: clc.xterm(colorConfigSection.upToDate),
+                unmatched: clc.xterm(colorConfigSection.unmatched)
+            };
+
+            colors.loadConfigColors("Invalid Scheme");
+            assert.equal(colorScheme.patch("TestString"),colors.colorScheme.patch("TestString"));
+            assert.equal(colorScheme.minor("TestString"),colors.colorScheme.minor("TestString"));
+            assert.equal(colorScheme.major("TestString"),colors.colorScheme.major("TestString"));
+            assert.equal(colorScheme.upToDate("TestString"),colors.colorScheme.upToDate("TestString"));
+            assert.equal(colorScheme.unmatched("TestString"),colors.colorScheme.unmatched("TestString"));
         });
     });
 });
