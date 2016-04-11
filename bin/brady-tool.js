@@ -331,6 +331,13 @@ function generateSummaryTable(projectOne, projectTwo) {
     compare(projectOne, projectTwo);
 }
 
+/**
+ * Generate the new html files for the web browser.
+ */
+function generatePages() {
+	console.log("test");
+}
+
 //Commander lines go below this comment
 commander
     .version(pjson.version)
@@ -363,3 +370,7 @@ commander
     .action(generateSummaryTable);
 
 commander.parse(process.argv);
+
+if (!process.argv.slice(2).length) {
+	generatePages();
+}
