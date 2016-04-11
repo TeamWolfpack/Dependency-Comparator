@@ -11,5 +11,8 @@
 dist/*
 test/*
 
+# ignore screenshots when publishing
+screenshots/*
+
 # ignore log files
 logfiles/*
