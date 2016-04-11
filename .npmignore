@@ -23,3 +23,6 @@ screenshots/*
 
 # ignore log files
 logfiles/*
+
+# ignoring node_modules folder just in case
+node_modules/*
