@@ -18,7 +18,7 @@ var logger = require(path.normalize("../modules/logger"));
 var color = require(path.normalize("../modules/colors"));
 var summarizer = require(path.normalize("../modules/summary"));
 var parse = require(path.normalize("../modules/parse"));
-var open = require("open");
+var htmlOpener = require(path/normalize("../modules/htmlOpener"))
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -313,8 +313,8 @@ function compare(projectOne, projectTwo) {
                         globalProjectTwo);
                 }
                 logger.logDependencies(matchedDependencies);
+                htmlOpener.openHTML(matchedDependencies);
             });
-            open(path.normalize(__dirname+"/../html/dep-tool.html"));
         }else {
             console.log("Invalid depth given.");
             return 1;
