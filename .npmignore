@@ -8,6 +8,9 @@
 *.yml
 *.sh
 
+# ignore testing files
+*.jscsrc
+
 # ignoring the idea folder from jetbrains
 .idea/*
 
@@ -20,3 +23,6 @@ screenshots/*
 
 # ignore log files
 logfiles/*
+
+# ignoring node_modules folder just in case
+node_modules/*
