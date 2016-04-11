@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>dep-tool</title>
+    <link rel="stylesheet" type="text/css" href="dep-tool.css">
     <!--Include BootStrap -->
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -18,24 +19,28 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
-            Project Filter
+            <div class="form-group">
+                <input type="text" class="form-control" id="projectFilter">
+                <!--<label for="projectFilter">Project Filter</label>-->
+                Project Filter
+            </div>
         </div>
         <div class="col-sm-4">
-            Dependency Filter
+            <div class="form-group">
+                <input type="text" class="form-control" id="dependencyFilter">
+                Dependency Filter
+            </div>
         </div>
-        <div class="col-sm-4">
-            Blank
-        </div>
+
     </div>
     <div class="row">
         <div class="col-sm-4">
-            Depth Filter
-        </div>
-        <div class="col-sm-4">
-            Blank
-        </div>
-        <div class="col-sm-4">
-            Blank
+            <div class="form-group">
+                <select class="form-control" id="depthFilter">
+                    <option>1</option>
+                </select>
+                Depth Filter
+            </div>
         </div>
     </div>
     <div class="row">
@@ -71,11 +76,10 @@
                 <label><input type="checkbox" value="">devDependencies</label>
             </div>
         </div>
-        <div class="col-sm-3">
-            Blank
-        </div>
-        <div class="col-sm-3">
-            Blank
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-primary">Filter</button>
         </div>
     </div>
 </div>
