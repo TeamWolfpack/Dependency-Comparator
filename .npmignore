@@ -4,6 +4,10 @@
 *.orig
 *.tgz
 
+# ignore travis files
+*.yml
+*.sh
+
 # ignoring the idea folder from jetbrains
 .idea/*
 
