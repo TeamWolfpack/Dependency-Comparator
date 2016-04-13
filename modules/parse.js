@@ -32,21 +32,21 @@ function parseVersion(stringVersion) {
  * @param {string} directory String representation of a directory
  */
 function getNodeProjects(directory) {
+	var projects = [];
 	var content = fs.readdirSync(directory);
 	if (content){
 		for (d in content){
-			var dir = path.normalize(directory + "/" + content[d]);
+			var dir = path.join(directory, content[d]);
 			var stats = fs.statSync(dir);
 			if (stats && stats.isDirectory()){
 				var project = fs.readdirSync(dir);
-				if (project && project.indexOf("package.json") == -1){
-					content.remove
-					content.splice(d, 1);
+				if (project && project.indexOf("package.json") > -1){
+					projects.push(content[d]);
 				}
 			}
 		}
 	}
-	return content;
+	return projects;
 }
 
 /**
