@@ -18,7 +18,7 @@ var logger = require(path.normalize("../modules/logger"));
 var color = require(path.normalize("../modules/colors"));
 var summarizer = require(path.normalize("../modules/summary"));
 var parse = require(path.normalize("../modules/parse"));
-var htmlOpener = require(path.normalize("../modules/htmlOpener"))
+var htmlOpener = require(path.normalize("../modules/html"))
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -372,6 +372,10 @@ commander
     .action(generateSummaryTable);
 
 commander.parse(process.argv);
+
+module.exports = {
+    compare: compare
+};
 
 if (!process.argv.slice(2).length) {
 	generatePages();
