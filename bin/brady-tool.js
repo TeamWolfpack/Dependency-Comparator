@@ -390,6 +390,10 @@ commander
 
 commander.parse(process.argv);
 
+module.exports = {
+    compare: compare
+};
+
 if (!process.argv.slice(2).length) {
 	parseDirectory(path.normalize("."));
 }
