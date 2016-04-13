@@ -18,7 +18,9 @@ var logger = require(path.normalize("../modules/logger"));
 var color = require(path.normalize("../modules/colors"));
 var summarizer = require(path.normalize("../modules/summary"));
 var parse = require(path.normalize("../modules/parse"));
-var htmlOpener = require(path.normalize("../modules/html"))
+var htmlOpener = require(path.normalize("../modules/html"));
+var walk = require("walk");
+var dir = require('node-dir');
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -333,11 +335,20 @@ function generateSummaryTable(projectOne, projectTwo) {
     compare(projectOne, projectTwo);
 }
 
-/**
- * Generate the new html files for the web browser.
- */
-function generatePages() {
-	console.log("test");
+function parseDirectory(directory){
+	if(!directory){
+		directory = ".";
+	}
+	directory = path.normalize(directory);
+	var projects = parse.getNodeProjects(directory);
+	
+	console.log(projects);
+	
+	//iterate through all the directories in directory
+	//verify they are node projects
+		// /project1/package.json --> good
+			//can have other shit in it
+		// /mypornfolder/pictures --> bad
 }
 
 //Commander lines go below this comment
@@ -371,6 +382,12 @@ commander
     .option("-t, --showTable", "Shows the table.")
     .action(generateSummaryTable);
 
+commander
+	.command("topDir [topDirectory]")
+	.alias("dir")
+	.description("Parses through the directory for node projects.")
+	.action(parseDirectory);
+
 commander.parse(process.argv);
 
 module.exports = {
@@ -378,5 +395,5 @@ module.exports = {
 };
 
 if (!process.argv.slice(2).length) {
-	generatePages();
+	parseDirectory(path.normalize("."));
 }

@@ -1,4 +1,5 @@
 var path = require("path");
+var fs = require("fs");
 var allDependencies;
 
 /**
@@ -23,6 +24,29 @@ function parseVersion(stringVersion) {
         }
     }
     return version;
+}
+
+/**
+ * Returns all the node projects in the given directory
+ *
+ * @param {string} directory String representation of a directory
+ */
+function getNodeProjects(directory) {
+	var content = fs.readdirSync(directory);
+	if (content){
+		for (d in content){
+			var dir = path.normalize(directory + "/" + content[d]);
+			var stats = fs.statSync(dir);
+			if (stats && stats.isDirectory()){
+				var project = fs.readdirSync(dir);
+				if (project && project.indexOf("package.json") == -1){
+					content.remove
+					content.splice(d, 1);
+				}
+			}
+		}
+	}
+	return content;
 }
 
 /**
@@ -94,5 +118,6 @@ function parseDependenciesRecursively(project, depth, dependencies,
 
 module.exports = {
     parseVersion: parseVersion,
-    parseDependencies: parseDependencies
+    parseDependencies: parseDependencies,
+	getNodeProjects: getNodeProjects
 }
