@@ -121,7 +121,7 @@ describe("Test Compare", function() {
             });
         });
         it("should log a table that is a depth of two", function() {
-            expect(capturedStdout).to.contain(path.normalize("/node_modules/strip-ansi"));
+            expect(capturedStdout).to.contain(path.normalize("/node_modules/minimist"));
             expect(capturedStdout).to.contain("major");
             expect(capturedStdout).to.contain("minor");
             expect(capturedStdout).to.contain("patch");

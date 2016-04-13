@@ -33,8 +33,8 @@ function parseVersion(stringVersion) {
  */
 function getNodeProjects(directory) {
 	var projects = [];
-	var content = fs.readdirSync(directory);
-	if (content){
+	try {
+		var content = fs.readdirSync(directory);
 		for (d in content){
 			var dir = path.join(directory, content[d]);
 			var stats = fs.statSync(dir);
@@ -45,6 +45,12 @@ function getNodeProjects(directory) {
 				}
 			}
 		}
+	} catch (err) {
+		var message = err.code === "ENOENT" ? 
+			"Error: Directory not found \'" + directory + "\'" :
+			"Error: Failure reading directory \'" + directory + "\'";
+		console.log(message);
+		return;
 	}
 	return projects;
 }

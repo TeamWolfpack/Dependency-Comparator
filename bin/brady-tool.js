@@ -19,8 +19,6 @@ var color = require(path.normalize("../modules/colors"));
 var summarizer = require(path.normalize("../modules/summary"));
 var parse = require(path.normalize("../modules/parse"));
 var htmlOpener = require(path.normalize("../modules/html"));
-var walk = require("walk");
-var dir = require('node-dir');
 /*End 'require' Import Statements*/
 
 /*Begin Global Variables*/
@@ -335,20 +333,19 @@ function generateSummaryTable(projectOne, projectTwo) {
     compare(projectOne, projectTwo);
 }
 
-function parseDirectory(directory){
-	if(!directory){
-		directory = ".";
-	}
-	directory = path.normalize(directory);
-	var projects = parse.getNodeProjects(directory);
+function parseDirectory(directory) {
+    if (!directory) {
+        directory = ".";
+    }
+    directory = path.normalize(directory);
+    var projects = parse.getNodeProjects(directory);
 	
-	console.log(projects);
+    if (!projects) {
+        return;
+    }
 	
-	//iterate through all the directories in directory
-	//verify they are node projects
-		// /project1/package.json --> good
-			//can have other shit in it
-		// /mypornfolder/pictures --> bad
+    console.log(projects);
+    //TODO - iterate through projects
 }
 
 //Commander lines go below this comment
@@ -395,5 +392,5 @@ module.exports = {
 };
 
 if (!process.argv.slice(2).length) {
-	parseDirectory(path.normalize("."));
+    parseDirectory(path.normalize("."));
 }

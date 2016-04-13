@@ -236,22 +236,21 @@ describe("Color Tests", function() {
                 });
         });
     });
-    describe("Initialize Colors Tests", function(){
-        it("Should not initialize Colors if the terminal does not support xterm colors and should if it is supported", function(){
+    describe("Initialize Colors Tests", function() {
+        it("Should not initialize Colors if the terminal does not support xterm colors and should if it is supported", function() {
             var colorScheme = colors.colorScheme.upToDate;
             colors.initializeColors("ColorBlind");
-            if(colors.checkForXterm()){
+            if (colors.checkForXterm()) {
                 assert.notEqual(colors.colorScheme.upToDate("TestString"),colorScheme("TestString"));
-            }
-            else{
+            } else {
                 assert.equal(colors.colorScheme.upToDate("TestString"),colorScheme("TestString"));
             }
         });
     });
-    describe("Load Color Config Tests", function(){
-        it("Should Load Standard Colors", function(){
+    describe("Load Color Config Tests", function() {
+        it("Should Load Standard Colors", function() {
             var colorConfig = require(path.normalize("../../colorConfig.json"));
-            var colorConfigSection = colorConfig["Standard"];
+            var colorConfigSection = colorConfig.Standard;
 
             var colorScheme = {
                 patch: clc.xterm(colorConfigSection.patch),
@@ -268,9 +267,9 @@ describe("Color Tests", function() {
             assert.equal(colorScheme.upToDate("TestString"),colors.colorScheme.upToDate("TestString"));
             assert.equal(colorScheme.unmatched("TestString"),colors.colorScheme.unmatched("TestString"));
         });
-        it("Should Load Color Blind Colors", function(){
+        it("Should Load Color Blind Colors", function() {
             var colorConfig = require(path.normalize("../../colorConfig.json"));
-            var colorConfigSection = colorConfig["ColorBlind"];
+            var colorConfigSection = colorConfig.ColorBlind;
 
             var colorScheme = {
                 patch: clc.xterm(colorConfigSection.patch),
@@ -287,9 +286,9 @@ describe("Color Tests", function() {
             assert.equal(colorScheme.upToDate("TestString"),colors.colorScheme.upToDate("TestString"));
             assert.equal(colorScheme.unmatched("TestString"),colors.colorScheme.unmatched("TestString"));
         });
-        it("Should Load Standard Colors if an Invalid Color Scheme is Given", function(){
+        it("Should Load Standard Colors if an Invalid Color Scheme is Given", function() {
             var colorConfig = require(path.normalize("../../colorConfig.json"));
-            var colorConfigSection = colorConfig["Standard"];
+            var colorConfigSection = colorConfig.Standard;
 
             var colorScheme = {
                 patch: clc.xterm(colorConfigSection.patch),
