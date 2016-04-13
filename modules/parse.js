@@ -34,6 +34,7 @@ function parseVersion(stringVersion) {
 function getNodeProjects(directory) {
 	var projects = [];
 	try {
+		directory = path.normalize(directory);
 		var content = fs.readdirSync(directory);
 		for (d in content){
 			var dir = path.join(directory, content[d]);
@@ -50,6 +51,10 @@ function getNodeProjects(directory) {
 			"Error: Directory not found \'" + directory + "\'" :
 			"Error: Failure reading directory \'" + directory + "\'";
 		console.log(message);
+		return;
+	}
+	if (projects.length < 1){
+		console.log("No projects in directory: \'" + directory + "\'");
 		return;
 	}
 	return projects;

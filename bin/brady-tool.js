@@ -337,7 +337,6 @@ function parseDirectory(directory) {
     if (!directory) {
         directory = ".";
     }
-    directory = path.normalize(directory);
     var projects = parse.getNodeProjects(directory);
 	
     if (!projects) {
