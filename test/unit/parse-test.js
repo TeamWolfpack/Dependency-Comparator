@@ -67,19 +67,19 @@ describe("Parse Tests", function() {
             assert.isFunction(parse.parseDependencies, "true");
         }); // might not be needed
         it("should parse dependencies", function() {
-            var project = parse.parseDependencies("..", 1, false);
+            var project = parse.parseDependencies(".", 1, false);
             assert.isArray(project.dependencies, "Array of dependencies is made");
             assert.isDefined(project.dependencies.async, "Async is in the list");
             assert.isUndefined(project.dependencies.mocha, "Mocha is a devDep");
         });
         it("should parse all dependencies including dev", function() {
-            var project = parse.parseDependencies("..", 1, true);
+            var project = parse.parseDependencies(".", 1, true);
             assert.isArray(project.dependencies, "Array of dependencies is made");
             assert.isDefined(project.dependencies.async, "Async is in the list");
             assert.isDefined(project.dependencies.mocha, "Mocha is included");
         });
         it("should parse all dependencies depth 2", function() {
-            var project = parse.parseDependencies("..", 2, true);
+            var project = parse.parseDependencies(".", 2, true);
             assert.isArray(project.dependencies, "Array of dependencies is made");
             assert.isDefined(project.dependencies.async, "Async is in the list");
             assert.isDefined(project.dependencies.mocha, "Mocha is included");

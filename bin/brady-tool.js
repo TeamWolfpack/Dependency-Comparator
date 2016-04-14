@@ -188,8 +188,6 @@ function compareAndMatch(projectOne, projectTwo, done) {
         }
     }
 	
-	console.log(dependencies);
-	
     var bar = new ProgressBar("pulling npm versions [:bar] :percent",{
         complete: "=",
         incomplete: " ",
@@ -311,7 +309,7 @@ function compare(projectOne, projectTwo) {
                         globalProjectTwo);
                 }
                 logger.logDependencies(matchedDependencies);
-                //htmlOpener.openHTML(matchedDependencies);
+                htmlOpener.openHTML(matchedDependencies);
             });
         }else {
             console.log("Invalid depth given.");
@@ -356,7 +354,7 @@ function compareProjects(projects) {
 
 function matchDependencies(allDependencies, done){
 	var dependencies = [];
-	async.each(allDependencies, function(project, callback) {
+	async.each(allDependencies, function(project, projectCallback) {
         var projectName = project.name;
 		for (d in project.dependencies){
 			var dependencyName = d;
@@ -371,7 +369,7 @@ function matchDependencies(allDependencies, done){
 					path: dependency[0].path,
 					color: "white"
 				};
-			if (!index){			
+			if (!index){
 				var item = {
 					name: dependencyName,
 					maxinstances: 1,
@@ -382,10 +380,30 @@ function matchDependencies(allDependencies, done){
 				index.instances.push(instance);
 			}
 		}
-		return callback();
+		return projectCallback();
     }, function(err) {
-		console.log(dependencies);
-        return done(dependencies);
+		var bar = new ProgressBar("pulling npm versions [:bar] :percent",{
+			complete: "=",
+			incomplete: " ",
+			width: 40,
+			total: dependencies.length + 1,
+			clear: true
+		});
+		tick(bar);
+		async.each(dependencies, function(dependency, callback) {
+			var name = dependency.name;
+			latestVersion(name).then(function(version) {
+				color.assignColor(dependency.instances, version.trim(),
+					summarizer, function(coloredVersion) {
+						dependency.npmVersion = coloredVersion;
+						tick(bar);
+						return callback();
+					});
+			});
+		}, function(err) {
+			tick(bar);
+			return done(dependencies);
+		});
     });
 }
 
@@ -403,7 +421,6 @@ function parseDirectory(directory) {
     }
     parse.getNodeProjects(directory, function(projects){
 		if (projects){
-			console.log(projects);
 			compareProjects(projects);
 		}
 	});
