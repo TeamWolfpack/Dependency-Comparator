@@ -187,6 +187,9 @@ function compareAndMatch(projectOne, projectTwo, done) {
             };
         }
     }
+	
+	console.log(dependencies);
+	
     var bar = new ProgressBar("pulling npm versions [:bar] :percent",{
         complete: "=",
         incomplete: " ",
@@ -281,13 +284,77 @@ function compare(projectOne, projectTwo) {
             } catch (err) {
                 throw Error(err.message + " in " + projectTwo);
             }
-
-            //Combine the parsed projects
-            var combined = {
-                project1: fileOneParsedDependencies,
-                project2: fileTwoParsedDependencies
-            };
+			
             //Here we will compare the dependencies
+            compareAndMatch(fileOneParsedDependencies, fileTwoParsedDependencies,
+                    function(matchedDependencies) {
+                if (process.argv[2] === "compare" ||
+                        process.argv[1] === "compare" ||
+                        process.argv[2] === "cmp" ||
+                        process.argv[1] === "cmp") {
+                    createTable(matchedDependencies);
+                    if (!commander.commands[0].hideSummary) {
+                        summarizer.printSummaryTable(globalProjectOne,
+                            globalProjectTwo);
+                    }
+                    if (commander.commands[0].colorLegend) {
+                        color.displayColorLegend();
+                    }
+                } else if (process.argv[2] === "summary" ||
+                        process.argv[1] === "summary" ||
+                        process.argv[2] === "sum" ||
+                        process.argv[1] === "sum") {
+                    if (commander.commands[1].showTable) {
+                        createTable(matchedDependencies);
+                    }
+                    summarizer.printSummaryTable(globalProjectOne,
+                        globalProjectTwo);
+                }
+                logger.logDependencies(matchedDependencies);
+                //htmlOpener.openHTML(matchedDependencies);
+            });
+        }else {
+            console.log("Invalid depth given.");
+            return;
+        }
+    }catch (err) {
+        console.log(err);
+        return;
+    }
+}
+
+function compareProjects(projects) {
+    color.initializeColors(commander.colorConfig);
+    //If the files exist, parse them
+	
+	if (commander.depth < 1){
+		console.log("Depth must be greater than 0.");
+		return;
+	}
+	
+	var allDependencies = [];
+	var depth = commander.depth - 1;
+	var includeDev = commander.all;
+	
+	for (p in projects){
+		var project = projects[p];
+		var dependencies;
+		
+		try {
+			dependencies = parse.parseDependencies(project, depth, includeDev);
+		} catch (err) {
+			throw Error(err.message + " in " + project);
+		}
+		if (dependencies){
+			allDependencies.push(dependencies);
+		}
+	}
+	
+	matchDependencies(allDependencies, function(depArray) {
+		console.log("print table");
+	});
+		
+	/*
             compareAndMatch(combined.project1,combined.project2,
                     function(matchedDependencies) {
                 if (process.argv[2] === "compare" ||
@@ -317,12 +384,106 @@ function compare(projectOne, projectTwo) {
             });
         }else {
             console.log("Invalid depth given.");
-            return 1;
+            return;
         }
     }catch (err) {
         console.log(err);
-        return 1;
+        return;
     }
+	*/
+}
+
+function matchDependencies(allDependencies, done){
+	var dependencies = [];
+	async.each(allDependencies, function(project, callback) {
+        var name = project.name;
+		for (d in project.dependencies){
+			var name = d;
+			var dependency = project.dependencies[d];
+			console.log(dependency);
+		}
+		return callback();
+    }, function(err) {
+        return done(dependencies);
+    });
+	
+	/*
+	//Create new object, ordered by dependencies
+    var projectOneDep = projectOne.dependencies;
+    var projectTwoDep = projectTwo.dependencies;
+    var dependencies = [];
+    // Checks
+    for (var dep in projectOneDep) {
+        if (projectTwoDep[dep]) {
+            var matchedDeps = [];
+            for (var instance in projectOneDep[dep]) {
+                matchedDeps[matchedDeps.length] = {
+                    version: projectOneDep[dep][instance].version,
+                    Project: projectOne.name,
+                    projectNumber: 1,
+                    path: projectOneDep[dep][instance].path,
+                    color: "white"
+                };
+            }
+            for (var instance in projectTwoDep[dep]) {
+                matchedDeps[matchedDeps.length] = {
+                    version: projectTwoDep[dep][instance].version,
+                    Project: projectTwo.name,
+                    projectNumber: 2,
+                    path: projectTwoDep[dep][instance].path,
+                    color: "white"
+                };
+            }
+            dependencies[dependencies.length] = {
+                name: dep,
+                maxinstances: Math.max(projectOneDep[dep].length,
+                    projectTwoDep[dep].length),
+                instances: matchedDeps
+            };
+            delete projectTwoDep[dep];
+            delete projectOneDep[dep];
+        }
+    }
+    if (!commander.hideUnmatched) {
+        for (var dep in projectOneDep) {
+            var matchedDeps = [];
+            for (var instance in projectOneDep[dep]) {
+                matchedDeps[matchedDeps.length] = {
+                    version: projectOneDep[dep][instance].version,
+                    Project: projectOne.name,
+                    projectNumber: 1,
+                    path: projectOneDep[dep][instance].path,
+                    color: "white"
+                };
+                summarizer.totals.projectOne.unmatched++;
+            }
+            dependencies[dependencies.length] = {
+                name: dep,
+                maxinstances: projectOneDep[dep].length,
+                instances: matchedDeps
+            };
+        }
+        for (var dep in projectTwoDep) {
+            var matchedDeps = [];
+            for (var instance in projectTwoDep[dep]) {
+                matchedDeps[matchedDeps.length] = {
+                    version: projectTwoDep[dep][instance].version,
+                    Project: projectTwo.name,
+                    projectNumber: 2,
+                    path: projectTwoDep[dep][instance].path,
+                    color: "white"
+                };
+                summarizer.totals.projectTwo.unmatched++;
+            }
+
+            dependencies[dependencies.length] = {
+                name: dep,
+                maxinstances: projectTwoDep[dep].length,
+                instances: matchedDeps
+            };
+        }
+    }
+	*/
 }
 
 /**
@@ -337,14 +498,12 @@ function parseDirectory(directory) {
     if (!directory) {
         directory = ".";
     }
-    var projects = parse.getNodeProjects(directory);
-	
-    if (!projects) {
-        return;
-    }
-	
-    console.log(projects);
-    //TODO - iterate through projects
+    parse.getNodeProjects(directory, function(projects){
+		if (projects){
+			console.log(projects);
+			compareProjects(projects);
+		}
+	});
 }
 
 //Commander lines go below this comment
