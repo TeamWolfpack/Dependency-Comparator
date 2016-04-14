@@ -188,8 +188,6 @@ function compareAndMatch(projectOne, projectTwo, done) {
         }
     }
 	
-	console.log(dependencies);
-	
     var bar = new ProgressBar("pulling npm versions [:bar] :percent",{
         complete: "=",
         incomplete: " ",
@@ -325,7 +323,6 @@ function compare(projectOne, projectTwo) {
 
 function compareProjects(projects) {
     color.initializeColors(commander.colorConfig);
-    //If the files exist, parse them
 	
 	if (commander.depth < 1){
 		console.log("Depth must be greater than 0.");
@@ -351,139 +348,39 @@ function compareProjects(projects) {
 	}
 	
 	matchDependencies(allDependencies, function(depArray) {
-		console.log("print table");
+		console.log("finished");
 	});
-		
-	/*
-            compareAndMatch(combined.project1,combined.project2,
-                    function(matchedDependencies) {
-                if (process.argv[2] === "compare" ||
-                        process.argv[1] === "compare" ||
-                        process.argv[2] === "cmp" ||
-                        process.argv[1] === "cmp") {
-                    createTable(matchedDependencies);
-                    if (!commander.commands[0].hideSummary) {
-                        summarizer.printSummaryTable(globalProjectOne,
-                            globalProjectTwo);
-                    }
-                    if (commander.commands[0].colorLegend) {
-                        color.displayColorLegend();
-                    }
-                } else if (process.argv[2] === "summary" ||
-                        process.argv[1] === "summary" ||
-                        process.argv[2] === "sum" ||
-                        process.argv[1] === "sum") {
-                    if (commander.commands[1].showTable) {
-                        createTable(matchedDependencies);
-                    }
-                    summarizer.printSummaryTable(globalProjectOne,
-                        globalProjectTwo);
-                }
-                logger.logDependencies(matchedDependencies);
-                htmlOpener.openHTML(matchedDependencies);
-            });
-        }else {
-            console.log("Invalid depth given.");
-            return;
-        }
-    }catch (err) {
-        console.log(err);
-        return;
-    }
-	*/
 }
 
 function matchDependencies(allDependencies, done){
 	var dependencies = [];
 	async.each(allDependencies, function(project, callback) {
-        var name = project.name;
+        var projectName = project.name;
 		for (d in project.dependencies){
-			var name = d;
+			var dependencyName = d;
 			var dependency = project.dependencies[d];
-			console.log(dependency);
+			var instance = {
+					version: dependency[0].version,
+					Project: projectName,
+					projectNumber: allDependencies.indexOf(project),
+					path: dependency[0].path,
+					color: "white"
+				};
+			if (!dependencies[dependencyName]){			
+				var item = {
+					name: dependencyName,
+					maxinstances: 1,
+					instances: []
+				};
+				dependencies[dependencyName] = item;
+			}
+			dependencies[dependencyName].instances.push(instance);
 		}
 		return callback();
     }, function(err) {
+		console.log(dependencies["chalk"].instances);
         return done(dependencies);
     });
-	
-	/*
-	//Create new object, ordered by dependencies
-    var projectOneDep = projectOne.dependencies;
-    var projectTwoDep = projectTwo.dependencies;
-    var dependencies = [];
-    // Checks
-    for (var dep in projectOneDep) {
-        if (projectTwoDep[dep]) {
-            var matchedDeps = [];
-            for (var instance in projectOneDep[dep]) {
-                matchedDeps[matchedDeps.length] = {
-                    version: projectOneDep[dep][instance].version,
-                    Project: projectOne.name,
-                    projectNumber: 1,
-                    path: projectOneDep[dep][instance].path,
-                    color: "white"
-                };
-            }
-            for (var instance in projectTwoDep[dep]) {
-                matchedDeps[matchedDeps.length] = {
-                    version: projectTwoDep[dep][instance].version,
-                    Project: projectTwo.name,
-                    projectNumber: 2,
-                    path: projectTwoDep[dep][instance].path,
-                    color: "white"
-                };
-            }
-            dependencies[dependencies.length] = {
-                name: dep,
-                maxinstances: Math.max(projectOneDep[dep].length,
-                    projectTwoDep[dep].length),
-                instances: matchedDeps
-            };
-            delete projectTwoDep[dep];
-            delete projectOneDep[dep];
-        }
-    }
-    if (!commander.hideUnmatched) {
-        for (var dep in projectOneDep) {
-            var matchedDeps = [];
-            for (var instance in projectOneDep[dep]) {
-                matchedDeps[matchedDeps.length] = {
-                    version: projectOneDep[dep][instance].version,
-                    Project: projectOne.name,
-                    projectNumber: 1,
-                    path: projectOneDep[dep][instance].path,
-                    color: "white"
-                };
-                summarizer.totals.projectOne.unmatched++;
-            }
-            dependencies[dependencies.length] = {
-                name: dep,
-                maxinstances: projectOneDep[dep].length,
-                instances: matchedDeps
-            };
-        }
-        for (var dep in projectTwoDep) {
-            var matchedDeps = [];
-            for (var instance in projectTwoDep[dep]) {
-                matchedDeps[matchedDeps.length] = {
-                    version: projectTwoDep[dep][instance].version,
-                    Project: projectTwo.name,
-                    projectNumber: 2,
-                    path: projectTwoDep[dep][instance].path,
-                    color: "white"
-                };
-                summarizer.totals.projectTwo.unmatched++;
-            }
-
-            dependencies[dependencies.length] = {
-                name: dep,
-                maxinstances: projectTwoDep[dep].length,
-                instances: matchedDeps
-            };
-        }
-    }
-	*/
 }
 
 /**
