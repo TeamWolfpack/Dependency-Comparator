@@ -188,6 +188,8 @@ function compareAndMatch(projectOne, projectTwo, done) {
         }
     }
 	
+	console.log(dependencies);
+	
     var bar = new ProgressBar("pulling npm versions [:bar] :percent",{
         complete: "=",
         incomplete: " ",
@@ -335,8 +337,8 @@ function compareProjects(projects) {
 	
 	for (p in projects){
 		var project = projects[p];
-		var dependencies;
 		
+		var dependencies;
 		try {
 			dependencies = parse.parseDependencies(project, depth, includeDev);
 		} catch (err) {
@@ -359,6 +361,9 @@ function matchDependencies(allDependencies, done){
 		for (d in project.dependencies){
 			var dependencyName = d;
 			var dependency = project.dependencies[d];
+			var index = dependencies.find(function(a) {
+					return a.name === dependencyName;
+				});
 			var instance = {
 					version: dependency[0].version,
 					Project: projectName,
@@ -366,19 +371,20 @@ function matchDependencies(allDependencies, done){
 					path: dependency[0].path,
 					color: "white"
 				};
-			if (!dependencies[dependencyName]){			
+			if (!index){			
 				var item = {
 					name: dependencyName,
 					maxinstances: 1,
-					instances: []
+					instances: [instance]
 				};
-				dependencies[dependencyName] = item;
+				dependencies.push(item);
+			} else {
+				index.instances.push(instance);
 			}
-			dependencies[dependencyName].instances.push(instance);
 		}
 		return callback();
     }, function(err) {
-		console.log(dependencies["chalk"].instances);
+		console.log(dependencies);
         return done(dependencies);
     });
 }
