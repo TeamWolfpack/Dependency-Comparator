@@ -324,86 +324,86 @@ function compare(projectOne, projectTwo) {
 function compareProjects(projects) {
     color.initializeColors(commander.colorConfig);
 	
-	if (commander.depth < 1){
-		console.log("Depth must be greater than 0.");
-		return;
-	}
+    if (commander.depth < 1) {
+        console.log("Depth must be greater than 0.");
+        return;
+    }
 	
-	var allDependencies = [];
-	var depth = commander.depth - 1;
-	var includeDev = commander.all;
+    var allDependencies = [];
+    var depth = commander.depth - 1;
+    var includeDev = commander.all;
 	
-	for (p in projects){
-		var project = projects[p];
+    for (p in projects) {
+        var project = projects[p];
 		
-		var dependencies;
-		try {
-			dependencies = parse.parseDependencies(project, depth, includeDev);
-		} catch (err) {
-			throw Error(err.message + " in " + project);
-		}
-		if (dependencies){
-			allDependencies.push(dependencies);
-		}
-	}
+        var dependencies;
+        try {
+            dependencies = parse.parseDependencies(project, depth, includeDev);
+        } catch (err) {
+            throw Error(err.message + " in " + project);
+        }
+        if (dependencies) {
+            allDependencies.push(dependencies);
+        }
+    }
 	
-	matchDependencies(allDependencies, function(depArray) {
-		console.log("finished");
-	});
+    matchDependencies(allDependencies, function(depArray) {
+        console.log("finished");
+    });
 }
 
-function matchDependencies(allDependencies, done){
-	var dependencies = [];
-	async.each(allDependencies, function(project, projectCallback) {
+function matchDependencies(allDependencies, done) {
+    var dependencies = [];
+    async.each(allDependencies, function(project, projectCallback) {
         var projectName = project.name;
-		for (d in project.dependencies){
-			var dependencyName = d;
-			var dependency = project.dependencies[d];
-			var index = dependencies.find(function(a) {
-					return a.name === dependencyName;
-				});
-			var instance = {
-					version: dependency[0].version,
-					Project: projectName,
-					projectNumber: allDependencies.indexOf(project),
-					path: dependency[0].path,
-					color: "white"
-				};
-			if (!index){
-				var item = {
-					name: dependencyName,
-					maxinstances: 1,
-					instances: [instance]
-				};
-				dependencies.push(item);
-			} else {
-				index.instances.push(instance);
-			}
-		}
-		return projectCallback();
+        for (d in project.dependencies) {
+            var dependencyName = d;
+            var dependency = project.dependencies[d];
+            var index = dependencies.find(function(a) {
+                return a.name === dependencyName;
+            });
+            var instance = {
+                version: dependency[0].version,
+                Project: projectName,
+                projectNumber: allDependencies.indexOf(project),
+                path: dependency[0].path,
+                color: "white"
+            };
+            if (!index) {
+                var item = {
+                    name: dependencyName,
+                    maxinstances: 1,
+                    instances: [instance]
+                };
+                dependencies.push(item);
+            } else {
+                index.instances.push(instance);
+            }
+        }
+        return projectCallback();
     }, function(err) {
-		var bar = new ProgressBar("pulling npm versions [:bar] :percent",{
-			complete: "=",
-			incomplete: " ",
-			width: 40,
-			total: dependencies.length + 1,
-			clear: true
-		});
-		tick(bar);
-		async.each(dependencies, function(dependency, callback) {
-			var name = dependency.name;
-			latestVersion(name).then(function(version) {
-				color.assignColor(dependency.instances, version.trim(),
+        var bar = new ProgressBar("pulling npm versions [:bar] :percent",{
+            complete: "=",
+            incomplete: " ",
+            width: 40,
+            total: dependencies.length + 1,
+            clear: true
+        });
+        tick(bar);
+        async.each(dependencies, function(dependency, callback) {
+            var name = dependency.name;
+            latestVersion(name).then(function(version) {
+                color.assignColor(dependency.instances, version.trim(),
 					summarizer, function(coloredVersion) {
-						dependency.npmVersion = coloredVersion;
-						tick(bar);
-						return callback();
+    dependency.npmVersion = coloredVersion;
+    tick(bar);
+    return callback();
 					});
-			});
-		}, function(err) {
-			tick(bar);
-			return done(dependencies);
-		});
+            });
+        }, function(err) {
+            tick(bar);
+            return done(dependencies);
+        });
     });
 }
 
@@ -419,11 +419,11 @@ function parseDirectory(directory) {
     if (!directory) {
         directory = ".";
     }
-    parse.getNodeProjects(directory, function(projects){
-		if (projects){
-			compareProjects(projects);
-		}
-	});
+    parse.getNodeProjects(directory, function(projects) {
+        if (projects) {
+            compareProjects(projects);
+        }
+    });
 }
 
 //Commander lines go below this comment
