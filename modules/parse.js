@@ -101,24 +101,23 @@ function parseDependenciesRecursively(baseProject, packageJSON, depth,
     }
     for (dep in fileDep) {
         try {
-            if (!dependencies[dep]) {
-                dependencies[dep] = [];
-            }
-			
 			var pathToSubJSON = path.join(baseProject, "node_modules", dep, "package.json");
 			var subPackageJSON = JSON.parse(fs.readFileSync(pathToSubJSON));
+			var pathToSubDependency = path.join(parentPath, "node_modules", dep);
 			
-			var subDependencyPath = path.join(parentPath, "node_modules", dep);
+			if (!dependencies[dep]) {
+                dependencies[dep] = [];
+            }
 			
             dependencies[dep][dependencies[dep].length] =
             {
                 version: subPackageJSON.version,
-                path: subDependencyPath
+                path: pathToSubDependency
             };
 
             if (depth - 1 >= 0) {
-                parseDependenciesRecursively(subDependencyPath, subPackageJSON,
-												depth - 1, dependencies, subDependencyPath);
+                parseDependenciesRecursively(pathToSubDependency, subPackageJSON,
+												depth - 1, dependencies, pathToSubDependency);
             }
         } catch (err) {
             // No node_modules after a certain depth so module not
