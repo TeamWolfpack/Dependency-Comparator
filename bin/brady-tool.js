@@ -139,9 +139,10 @@ function createCliTable(dependencies) {
 
         for (p in globalProjects) {
             //Filter all instances from first project, then second, third, etc.
-            var projectInstances = instances.filter(i => {
+            var projectInstances = instances.filter(function(i) {
                 return i.projectNumber == p;
             });
+            
             //Concat two colums to the table: Project Version | Project Path
             for (var i = 0; i < rowSpan; i++) {
                 if (projectInstances[i]) {
@@ -396,8 +397,8 @@ function compareProjects(projects) {
 	
     matchDependencies(allDependenciesFound, function(matchedDependencies) {
         //Do whatever with the list of dependencies
-		//Print cli table for now
-		createCliTable(matchedDependencies);
+        //Print cli table for now
+        createCliTable(matchedDependencies);
     });
 }
 
@@ -438,7 +439,7 @@ function matchDependencies(allDependencies, done) {
             var maxinstances = dependency.length;
 			
             //Searches the array for an existing object
-            var index = dependencies.find(a => {
+            var index = dependencies.find(function(a) {
                 return a.name === dependencyName;
             });
 			
@@ -501,9 +502,9 @@ function getNPMVersions(dependencies, done) {
         latestVersion(name).then(function(version) {
             color.assignColor(dependency.instances, version.trim(),
 				summarizer, function(coloredVersion) {
-					dependency.npmVersion = coloredVersion;
-					tick(bar);
-					return callback();
+    dependency.npmVersion = coloredVersion;
+    tick(bar);
+    return callback();
 				});
         });
     }, function(err) { //Called when every dependency is finished
