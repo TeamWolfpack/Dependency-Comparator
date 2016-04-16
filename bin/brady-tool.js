@@ -330,8 +330,7 @@ function compare(projectOne, projectTwo) {
                         process.argv[1] === "compare" ||
                         process.argv[2] === "cmp" ||
                         process.argv[1] === "cmp") {
-                    //createTable(matchedDependencies);
-					createCliTable(matchedDependencies);
+                    createTable(matchedDependencies);
                     if (!commander.commands[0].hideSummary) {
                         summarizer.printSummaryTable(globalProjectOne,
                             globalProjectTwo);
@@ -350,7 +349,7 @@ function compare(projectOne, projectTwo) {
                         globalProjectTwo);
                 }
                 logger.logDependencies(matchedDependencies);
-                //htmlOpener.openHTML(matchedDependencies);
+                htmlOpener.openHTML(matchedDependencies);
             });
         }else {
             console.log("Invalid depth given.");
@@ -395,8 +394,10 @@ function compareProjects(projects) {
         }
     }
 	
-    matchDependencies(allDependenciesFound, function(depArray) {
-        createCliTable(depArray);
+    matchDependencies(allDependenciesFound, function(matchedDependencies) {
+        //Do whatever with the list of dependencies
+		//Print cli table for now
+		createCliTable(matchedDependencies);
     });
 }
 
