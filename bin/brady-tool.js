@@ -119,83 +119,6 @@ function validatePath(project) {
     return path.resolve(project);
 }
 
-///**
-// * Method that runs when the user enters the 'compare' command.
-// * Will compare the versions of the dependencies of two projects
-// * and print out the differences.
-// *
-// * @author Chris Farrow
-// * @param {File} projectOne The first project that will be compared
-// * @param {File} projectTwo The second project that will be compared
-// */
-//function compare(projectOne, projectTwo) {
-//    color.initializeColors(commander.colorConfig);
-//    //If the files exist, parse them
-//    try {
-//        projectOne = validatePath(projectOne);
-//        projectTwo = validatePath(projectTwo);
-//		
-//        //var depth = 0;
-//        if (commander.depth >= 1) { //for 1 indexed-commander.depth>0
-//            var depth = commander.depth - 1;
-//            var includeDev = commander.all;
-//            var fileOneParsedDependencies;
-//            var fileTwoParsedDependencies;
-//
-//            try {
-//                fileOneParsedDependencies =
-//                                    parse.parseDependencies(projectOne,
-//                                        depth, includeDev);
-//            } catch (err) {
-//                throw Error(err.message + " in " + projectOne);
-//            }
-//
-//            try {
-//                fileTwoParsedDependencies =
-//                                    parse.parseDependencies(projectTwo,
-//                                        depth, includeDev);
-//            } catch (err) {
-//                throw Error(err.message + " in " + projectTwo);
-//            }
-//			
-//            //Here we will compare the dependencies
-//            compareAndMatch(fileOneParsedDependencies, fileTwoParsedDependencies,
-//                    function(matchedDependencies) {
-//                if (process.argv[2] === "compare" ||
-//                        process.argv[1] === "compare" ||
-//                        process.argv[2] === "cmp" ||
-//                        process.argv[1] === "cmp") {
-//                    createTable(matchedDependencies);
-//                    if (!commander.commands[0].hideSummary) {
-//                        summarizer.printSummaryTable(globalProjectOne,
-//                            globalProjectTwo);
-//                    }
-//                    if (commander.commands[0].colorLegend) {
-//                        color.displayColorLegend();
-//                    }
-//                } else if (process.argv[2] === "summary" ||
-//                        process.argv[1] === "summary" ||
-//                        process.argv[2] === "sum" ||
-//                        process.argv[1] === "sum") {
-//                    if (commander.commands[1].showTable) {
-//                        createTable(matchedDependencies);
-//                    }
-//                    summarizer.printSummaryTable(globalProjectOne,
-//                        globalProjectTwo);
-//                }
-//                logger.logDependencies(matchedDependencies);
-//                htmlOpener.openHTML(matchedDependencies);
-//            });
-//        }else {
-//            console.log("Invalid depth given.");
-//            return;
-//        }
-//    }catch (err) {
-//        console.log(err);
-//        return;
-//    }
-//}
-
 /**
  * Parses each project to find all dependencies based on the depth.
  * Each list is then pushed to a 'master' list that contains each
@@ -253,7 +176,7 @@ function compareProjects(projects) {
             if (commander.commands[1].showTable) {
                 createCliTable(matchedDependencies);
             }
-            	summarizer.printSummaryTable();
+            summarizer.printSummaryTable();
         }
         logger.logDependencies(matchedDependencies);
         htmlOpener.openHTML(matchedDependencies);    	
@@ -437,7 +360,7 @@ commander
 commander.parse(process.argv);
 
 module.exports = {
-    compare: compare
+    compareProjects: compareProjects
 };
 
 if (!process.argv.slice(2).length) {
