@@ -241,7 +241,7 @@ function compareProjects(projects) {
                 process.argv[1] === "cmp") {
             createCliTable(matchedDependencies);
             if (!commander.commands[0].hideSummary) {
-            	summarizer.printSummaryTable();
+            	summarizer.printSummaryTable(matchedDependencies);
             }
             if (commander.commands[0].colorLegend) {
                 color.displayColorLegend();
@@ -253,7 +253,7 @@ function compareProjects(projects) {
             if (commander.commands[1].showTable) {
                 createCliTable(matchedDependencies);
             }
-            	summarizer.printSummaryTable();
+            	summarizer.printSummaryTable(matchedDependencies);
         }
         logger.logDependencies(matchedDependencies);
         htmlOpener.openHTML(matchedDependencies);    	
