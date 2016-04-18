@@ -12,7 +12,12 @@ module.exports = {
 };
 
 function openHTML(matchedDependencies){
-	open(path.normalize(__dirname+"/../html/dep-tool.html"));
+	try {
+		open(path.normalize(__dirname + "/../html/dep-tool.html"));
+	}catch(err){
+		return false;
+	}
+	return true;
     
 }
 
