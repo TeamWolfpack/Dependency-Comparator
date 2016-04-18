@@ -505,7 +505,7 @@ function getNPMVersions(dependencies, done) {
     dependency.npmVersion = coloredVersion;
     tick(bar);
     return callback();
-				});
+			});
         });
     }, function(err) { //Called when every dependency is finished
         tick(bar);
