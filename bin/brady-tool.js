@@ -21,12 +21,7 @@ var parse = require(path.normalize("../modules/parse"));
 var htmlOpener = require(path.normalize("../modules/html"));
 /*End 'require' Import Statements*/
 
-/*Begin Global Variables*/
-var globalProjectOne;
-var globalProjectTwo;
-
 var globalProjects = [];
-/*End Global Variables*/
 
 /**
  * Creates cli table based on the list of dependencies.
@@ -113,10 +108,11 @@ function validatePath(project) {
     try {
         project = path.normalize(project);
         fs.accessSync(project, fs.F_OK);
+        return path.resolve(project);
     } catch (err) {
-        throw Error("Project path is invalid: " + project);
+        console.log("Project path is invalid: " + project);
     }
-    return path.resolve(project);
+    return;
 }
 
 /**
@@ -137,15 +133,18 @@ function compareProjects(projects) {
     var allDependenciesFound = [];
     var depth = commander.depth - 1; //0-index
     var includeDev = commander.all;
-	    
+	
     for (p in projects) {
         var project = projects[p];
+        if (!parse.isNodeProject(project)) {
+            continue;
+        }
 		
         var dependencies;
         try {
             dependencies = parse.parseDependencies(project, depth, includeDev);
         } catch (err) {
-        	throw Error(err.message + " in " + project);
+            throw new Error(err.message + " in " + project);
         }
         if (dependencies) {
             allDependenciesFound.push(dependencies);
@@ -153,18 +152,13 @@ function compareProjects(projects) {
     }
 	
     matchDependencies(allDependenciesFound, function(matchedDependencies) {
-        //Do whatever with the list of dependencies
-        //Print cli table for now
-    	
-    	//Here we will compare the dependencies
-       
         if (process.argv[2] === "compare" ||
                 process.argv[1] === "compare" ||
                 process.argv[2] === "cmp" ||
                 process.argv[1] === "cmp") {
             createCliTable(matchedDependencies);
             if (!commander.commands[0].hideSummary) {
-            	summarizer.printSummaryTable();
+                summarizer.printSummaryTable();
             }
             if (commander.commands[0].colorLegend) {
                 color.displayColorLegend();
@@ -179,7 +173,7 @@ function compareProjects(projects) {
             summarizer.printSummaryTable();
         }
         logger.logDependencies(matchedDependencies);
-        htmlOpener.openHTML(matchedDependencies);    	
+        htmlOpener.openHTML(matchedDependencies);
     });
 }
 
@@ -311,13 +305,31 @@ function parseDirectory(directory) {
     });
 }
 
-function normalizeProjectPaths(project, projects){
-	var allOfThem = [];
-	allOfThem.push(path.normalize(project));
-	projects.forEach(function(p){
-		allOfThem.push(path.normalize(p));
-	})
-	compareProjects(allOfThem);
+function normalizeProjectPaths(project, projects) {
+    var allOfThem = [];
+    project = validatePath(project);
+    if (project) {
+        if (parse.isNodeProject(project)) {
+            allOfThem.push(project);
+        } else {
+            console.log(project + " is not a Node Project.");
+        }
+    }
+    projects.forEach(function(p) {
+        var pro = validatePath(p);
+        if (pro) {
+            if (parse.isNodeProject(pro)) {
+                allOfThem.push(pro);
+            } else {
+                console.log(pro + " is not a Node Project.");
+            }
+        }
+    });
+    if (allOfThem.length < 1) {
+        console.log("No projects found.");
+        return;
+    }
+    compareProjects(allOfThem);
 }
 
 //Commander lines go below this comment

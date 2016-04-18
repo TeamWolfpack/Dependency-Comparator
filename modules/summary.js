@@ -1,7 +1,6 @@
 /**
  * Created by farrowc on 3/7/2016.
  */
-
 var textTable = require("text-table");
 
 var totals = [];
@@ -13,54 +12,33 @@ var totals = [];
 //    unmatched: 0
 //}];
 
-function printSummaryTable(matchedDependencies) {
-    createTotals(matchedDependencies);
-	createSummaryTable());
-}
-
-function createTotals(matchedDependencies){
-	
-	for(d in matchedDependencies){
-		
-	}
-}
-
 function createSummaryTable(){
     checkTotalsForErrors();
-    
-    //create empty table
-    var table = new cliTable({
-        head: [""],
-        style: {
-            head: [] //disable colors in header cells
-        },
-        wordWrap: true
-        //{align: ["l", "l", "l"]}	//fix this later
-    });
-    
-    var rows = [];
+	
+	var rows = [];
+	rows.push([""]);
     rows.push(["major"]);
     rows.push(["minor"]);
     rows.push(["patch"]);
     rows.push(["unmatched"]);
     
-    //Add each project to the header
     for (t in totals) {
-        table.options.head.push(totals[t]);
-        rows[0].push(totals[t].major);
-        rows[1].push(totals[t].minor);
-        rows[2].push(totals[t].patch);
-        rows[3].push(totals[t].unmatched);
+        rows[0].push(totals[t].name);
+        rows[1].push(totals[t].major);
+        rows[2].push(totals[t].minor);
+        rows[3].push(totals[t].patch);
+        rows[4].push(totals[t].unmatched);
     }
-    
-    //Add each row to the table
-    for (r in rows) {
-        table.push(rows[r]);
-    }
+	
+	var table = textTable([
+        rows[0],
+        rows[1],
+        rows[2],
+        rows[3],
+        rows[4]
+	]);
 
-    console.log(table.toString());
-    
-    //return summaryTable;
+    console.log(table);
 }
 
 function checkTotalsForErrors(){  
@@ -101,6 +79,7 @@ function checkTotalsForErrors(){
     }	
 }
 
-module.exports = {printSummaryTable: printSummaryTable,
-    createSummaryTable: createSummaryTable,
-    totals: totals}
+module.exports = {
+    printSummaryTable: createSummaryTable,
+    totals: totals
+}
