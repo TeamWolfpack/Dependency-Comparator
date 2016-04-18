@@ -4,6 +4,7 @@
 
 var path = require("path");
 var open = require("open");
+var express = require("express");
 
 
 module.exports = {
@@ -21,5 +22,12 @@ function getLogger(){
 }
 
 function createHTMLTable(){
-	
+	express.get('/', function (req, res) {
+		res.send('Hello World!');
+	});
+
+	express.listen(3000, function () {
+		console.log('Example express listening on port 3000!');
+	});
+
 }
