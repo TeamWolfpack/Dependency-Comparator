@@ -13,31 +13,29 @@ var totals = [];
 //    unmatched: 0
 //}];
 
-function printSummaryTable() {
-    createSummaryTable(totals);
+function printSummaryTable(matchedDependencies) {
+    createTotals(matchedDependencies);
+	createSummaryTable());
 }
 
-function createSummaryTable(dependencyTotals){
-    checkTotalsForErrors(dependencyTotals);
-//    var summaryTable = textTable([
-//        ["", "Project One", "Project Two"],
-//        ["major", dependencyTotals.projectOne.major,
-//            dependencyTotals.projectTwo.major],
-//        ["minor", dependencyTotals.projectOne.minor,
-//            dependencyTotals.projectTwo.minor],
-//        ["patch", dependencyTotals.projectOne.patch,
-//            dependencyTotals.projectTwo.patch],
-//        ["unmatched", dependencyTotals.projectOne.unmatched,
-//            dependencyTotals.projectTwo.unmatched]
-//    ], {align: ["l", "l", "l"]});
+function createTotals(matchedDependencies){
+	
+	for(d in matchedDependencies){
+		
+	}
+}
+
+function createSummaryTable(){
+    checkTotalsForErrors();
     
     //create empty table
     var table = new cliTable({
-        head: ["", ],
+        head: [""],
         style: {
             head: [] //disable colors in header cells
         },
         wordWrap: true
+        //{align: ["l", "l", "l"]}	//fix this later
     });
     
     var rows = [];
@@ -47,12 +45,12 @@ function createSummaryTable(dependencyTotals){
     rows.push(["unmatched"]);
     
     //Add each project to the header
-    for (p in dependecyTotals) {
-        table.options.head.push(totals[p]);
-        rows[0].push(dependecyTotals[p].major);
-        rows[1].push(dependecyTotals[p].minor);
-        rows[2].push(dependecyTotals[p].patch);
-        rows[3].push(dependecyTotals[p].unmatched);
+    for (t in totals) {
+        table.options.head.push(totals[t]);
+        rows[0].push(totals[t].major);
+        rows[1].push(totals[t].minor);
+        rows[2].push(totals[t].patch);
+        rows[3].push(totals[t].unmatched);
     }
     
     //Add each row to the table
@@ -65,38 +63,38 @@ function createSummaryTable(dependencyTotals){
     //return summaryTable;
 }
 
-function checkTotalsForErrors(dependencyTotals){  
-	if(dependencyTotals == undefined){
+function checkTotalsForErrors(){  
+	if(totals == undefined){
         throw new Error("Summary table error: " +
             "Dependency Totals is undefined");
     }
-	for(i in dependecyTotals){
-		var totals = dependencyTotals[i];
-		if(totals == undefined){
+	for(i in totals){
+		var tots = totals[i];
+		if(tots == undefined){
 	        throw new Error("Summary table error: " +
 	            "Project " + i + " Totals is undefined");
-	    }else if(totals.major<0){
+	    }else if(tots.major<0){
 	        throw new Error("Summary table error: Project " + i +
 	            " major difference count is negative")
-	    }else if(totals.minor<0){
+	    }else if(tots.minor<0){
 	        throw new Error("Summary table error: Project " + i +
 	            " minor difference count is negative")
-	    }else if(totals.patch<0){
+	    }else if(tots.patch<0){
 	        throw new Error("Summary table error: Project " + i +
 	            " patch difference count is negative")
-	    }else if(totals.unmatched<0){
+	    }else if(tots.unmatched<0){
 	        throw new Error("Summary table error: Project " + i +
 	            " unmatched difference count is negative")
-	    }else if(! totals.hasOwnProperty("major")){
+	    }else if(! tots.hasOwnProperty("major")){
 	        throw new Error("Summary table error: Project " + i +
 	            " major difference count is missing")
-	    }else if(! totals.hasOwnProperty("minor")){
+	    }else if(! tots.hasOwnProperty("minor")){
 	        throw new Error("Summary table error: Project " + i +
 	            " minor difference count is missing")
-	    }else if(! totals.hasOwnProperty("patch")){
+	    }else if(! tots.hasOwnProperty("patch")){
 	        throw new Error("Summary table error: Project " + i +
 	            " patch difference count is missing")
-	    }else if(! totals.hasOwnProperty("unmatched")){
+	    }else if(! tots.hasOwnProperty("unmatched")){
 	        throw new Error("Summary table error: Project " + i +
 	            " unmatched difference count is missing")
 	    }
