@@ -38,12 +38,8 @@ function getNodeProjects(directory, callback) {
 		var content = fs.readdirSync(directory);
 		for (d in content){
 			var dir = path.join(directory, content[d]);
-			var stats = fs.statSync(dir);
-			if (stats && stats.isDirectory()){
-				var project = fs.readdirSync(dir);
-				if (project && project.indexOf("package.json") > -1){
-					projects.push(dir);
-				}
+			if (isNodeProject(dir)){
+				projects.push(dir);
 			}
 		}
 	} catch (err) {
@@ -58,6 +54,16 @@ function getNodeProjects(directory, callback) {
 		return;
 	}
 	return callback(projects);
+}
+
+function isNodeProject(dir){
+	var stats = fs.statSync(dir);
+	if (stats && stats.isDirectory()){
+		var project = fs.readdirSync(dir);
+		if (project && project.indexOf("package.json") > -1){
+			return true;
+		}
+	}
 }
 
 /**
@@ -129,5 +135,6 @@ function parseDependenciesRecursively(baseProject, packageJSON, depth,
 module.exports = {
     parseVersion: parseVersion,
     parseDependencies: parseDependencies,
-	getNodeProjects: getNodeProjects
+	getNodeProjects: getNodeProjects,
+	isNodeProject: isNodeProject
 }

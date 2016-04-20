@@ -105,6 +105,18 @@ function assignColor(instances, npmVersion, summarizer, callback) {
             var instance = instances[i];
             var version = parse.parseVersion(instance.version);
             var lowestColor = 0; //green
+			
+			var projectNumber = instance.projectNumber;
+			if (!summarizer.totals[projectNumber]){
+				var project = {
+					name: instance.Project,
+					major: 0,
+					minor: 0,
+					patch: 0,
+					unmatched: 0
+				}
+				summarizer.totals[projectNumber] = project;
+			}
 
             //Compare the version of this instance with the npm version
             if (JSON.stringify(version) === JSON.stringify(parsedNPMVersion)) {
@@ -118,32 +130,19 @@ function assignColor(instances, npmVersion, summarizer, callback) {
                 instance.color = "upToDate";
             }else if (version.major < parsedNPMVersion.major) {
                 instance.color = "major";
-                if (instance.projectNumber == 1) {
-                    summarizer.totals.projectOne.major++;
-                } else if (instance.projectNumber == 2) {
-                    summarizer.totals.projectTwo.major++;
-                }
-                summarizer.totals.major++;
+				summarizer.totals[projectNumber].major++;
                 if (lowestColor < 3) {
                     lowestColor = 3; //red
                 }
             }else if (version.minor < parsedNPMVersion.minor) {
                 instance.color = "minor";
-                if (instance.projectNumber == 1) {
-                    summarizer.totals.projectOne.minor++;
-                } else if (instance.projectNumber == 2) {
-                    summarizer.totals.projectTwo.minor++;
-                }
+                summarizer.totals[projectNumber].minor++;
                 if (lowestColor < 2) {
                     lowestColor = 2; //magenta
                 }
             }else if (version.patch < parsedNPMVersion.patch) {
                 instance.color = "patch";
-                if (instance.projectNumber == 1) {
-                    summarizer.totals.projectOne.patch++;
-                } else if (instance.projectNumber == 2) {
-                    summarizer.totals.projectTwo.patch++;
-                }
+                summarizer.totals[projectNumber].patch++;
                 if (lowestColor < 1) {
                     lowestColor = 1; //yellow
                 }
