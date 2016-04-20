@@ -24,3 +24,6 @@ logfiles/*
 
 #ignore .DS_Store file that appears with Mac
 .DS_Store
+
+#ignore the search.json
+html/search.json
