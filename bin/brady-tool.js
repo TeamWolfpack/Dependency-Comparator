@@ -83,6 +83,58 @@ function createCliTable(dependencies) {
     console.log(table.toString());
 }
 
+function exportTable(dependencies) {
+    var table = new cliTable({
+        head: ["Module Name", "NPM Version"],
+        style: {
+            head: [] //disable colors in header cells
+        },
+        wordWrap: true
+    });
+	
+    //Add each project to the header
+    for (p in globalProjects) {
+        table.options.head.push(globalProjects[p]);
+        table.options.head.push(globalProjects[p] + " Path");
+    }
+    dependencies.forEach(function(dependency) {
+        var dependencyName = dependency.name;
+        var rowSpan = dependency.maxinstances;
+        var npmVersion = dependency.npmVersion;
+        var instances = dependency.instances;
+        var rows = [];
+				
+        //Fill the first two columns: Dependency Name | Npm version
+        rows.push([{rowSpan: rowSpan, content: dependencyName}, npmVersion]);
+        while (rows.length < rowSpan) {
+            rows.push([""]);
+        }
+
+        for (p in globalProjects) {
+            //Filter all instances from first project, then second, third, etc.
+            var projectInstances = instances.filter(function(i) {
+                return i.projectNumber == p;
+            });
+            
+            //Concat two colums to the table: Project Version | Project Path
+            for (var i = 0; i < rowSpan; i++) {
+                if (projectInstances[i]) {
+                    var instance = projectInstances[i];
+                    var version = {version: instance.version, color: instance.color};
+                    rows[i] = rows[i].concat([version, instance.path]);
+                } else {
+                    rows[i] = rows[i].concat(["", ""]);
+                }
+            }
+        }
+        //Add each row to the table
+        for (r in rows) {
+            table.push(rows[r]);
+        }
+    });
+    return table;
+}
+
 /**
  * Tries to tick the progress bar
  * NOTE: Progress is not supported on some terminals
@@ -173,7 +225,8 @@ function compareProjects(projects) {
             summarizer.printSummaryTable();
         }
         logger.logDependencies(matchedDependencies);
-        htmlOpener.openHTML(matchedDependencies);
+        var table = exportTable(matchedDependencies);
+        htmlOpener.openHTML(table);
     });
 }
 
