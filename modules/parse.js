@@ -31,19 +31,15 @@ function parseVersion(stringVersion) {
  *
  * @param {string} directory String representation of a directory
  */
-function getNodeProjects(directory) {
+function getNodeProjects(directory, callback) {
 	var projects = [];
 	try {
 		directory = path.normalize(directory);
 		var content = fs.readdirSync(directory);
 		for (d in content){
 			var dir = path.join(directory, content[d]);
-			var stats = fs.statSync(dir);
-			if (stats && stats.isDirectory()){
-				var project = fs.readdirSync(dir);
-				if (project && project.indexOf("package.json") > -1){
-					projects.push(content[d]);
-				}
+			if (isNodeProject(dir)){
+				projects.push(dir);
 			}
 		}
 	} catch (err) {
@@ -57,7 +53,17 @@ function getNodeProjects(directory) {
 		console.log("No projects in directory: \'" + directory + "\'");
 		return;
 	}
-	return projects;
+	return callback(projects);
+}
+
+function isNodeProject(dir){
+	var stats = fs.statSync(dir);
+	if (stats && stats.isDirectory()){
+		var project = fs.readdirSync(dir);
+		if (project && project.indexOf("package.json") > -1){
+			return true;
+		}
+	}
 }
 
 /**
@@ -72,24 +78,24 @@ function getNodeProjects(directory) {
  */
 function parseDependencies(project, depth, includeDev) {
     allDependencies = includeDev;
-    var packageJSON = require(path.normalize(project + "/package.json"));
-
+    
+	var pathToPackageJSON = path.join(project, "package.json");
+	var packageJSON = JSON.parse(fs.readFileSync(pathToPackageJSON));
+	
     var fileParsedDependencies = {
-        name: packageJSON.name.toString(),
-        path: project.toString(),
+        name: packageJSON.name,
+        path: project,
         dependencies: []
     };
 
-    parseDependenciesRecursively(project, depth,
+    parseDependenciesRecursively(project, packageJSON, depth,
         fileParsedDependencies.dependencies, ".");
 
     return fileParsedDependencies;
 }
 
-function parseDependenciesRecursively(project, depth, dependencies,
-                                      previousDependencyPath) {
-    //Get the package.json for the project
-    var packageJSON = require(path.normalize(project + "/package.json"));
+function parseDependenciesRecursively(baseProject, packageJSON, depth,
+										dependencies, parentPath) {
     //Get the dependencies of the project
     var fileDep = packageJSON.dependencies;
     if (allDependencies) {
@@ -101,24 +107,23 @@ function parseDependenciesRecursively(project, depth, dependencies,
     }
     for (dep in fileDep) {
         try {
-            if (!dependencies[dep]) {
+			var pathToSubJSON = path.join(baseProject, "node_modules", dep, "package.json");
+			var subPackageJSON = JSON.parse(fs.readFileSync(pathToSubJSON));
+			var pathToSubDependency = path.join(parentPath, "node_modules", dep);
+			
+			if (!dependencies[dep]) {
                 dependencies[dep] = [];
             }
-            var dependency = require(path.normalize(project +
-                "/node_modules/" + dep + "/package.json"));
+			
             dependencies[dep][dependencies[dep].length] =
             {
-                version: dependency.version,
-                path: path.normalize(previousDependencyPath +
-                    "/node_modules/" + dep)
+                version: subPackageJSON.version,
+                path: pathToSubDependency
             };
 
             if (depth - 1 >= 0) {
-                parseDependenciesRecursively(path.normalize(project +
-                        "/node_modules/" + dep), depth - 1, dependencies,
-                    path.normalize(previousDependencyPath +
-                        "/node_modules/" + dep));
-
+                parseDependenciesRecursively(pathToSubDependency, subPackageJSON,
+												depth - 1, dependencies, pathToSubDependency);
             }
         } catch (err) {
             // No node_modules after a certain depth so module not
@@ -130,5 +135,6 @@ function parseDependenciesRecursively(project, depth, dependencies,
 module.exports = {
     parseVersion: parseVersion,
     parseDependencies: parseDependencies,
-	getNodeProjects: getNodeProjects
+	getNodeProjects: getNodeProjects,
+	isNodeProject: isNodeProject
 }
