@@ -1,11 +1,19 @@
 body {
     padding-top: 10px;
     color: black;
+    background-color: white;
 }
 
-/*#menu {*/
-    /*position: fixed | center ;*/
-/*}*/
+#menu {
+    background-color: white;
+    overflow: hidden;
+}
+
+.affix {
+    width: 100%;
+    top: 0;
+    /*position: center;*/
+ }
 
 #filterButton {
     width: 75%;
@@ -13,4 +21,9 @@ body {
 
 #saveButton {
     width: 75%;
+}
+
+#resultDiv {
+    overflow-y: auto;
+    overflow-x: auto;
 }
