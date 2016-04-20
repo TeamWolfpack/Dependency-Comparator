@@ -3,12 +3,10 @@ body {
     color: black;
 }
 
-#test {
-    color: black;
-    border: solid black 1px;
+#filterButton {
+    width: 75%;
 }
 
-#test tr td{
-    color: black;
-    border: solid black 1px;
+#saveButton {
+    width: 75%;
 }

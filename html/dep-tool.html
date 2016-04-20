@@ -17,81 +17,90 @@
 </head>
 <body>
 <div class="container">
-    <div class="row">
-        <div class="col-sm-4">
-            <div class="form-group">
-                <input type="text" class="form-control" id="projectFilter">
-                <!--<label for="projectFilter">Project Filter</label>-->
-                Project Filter
+    <div id="mainFilters">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="projectFilter">
+                    <!--<label for="projectFilter">Project Filter</label>-->
+                    Project Filter
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="dependencyFilter">
+                    Dependency Filter
+                </div>
+            </div>
+            <div class="col-sm-1 col-sm-offset-3">
+                <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#moreFilters" id="moreButton">More</button>
             </div>
         </div>
-        <div class="col-sm-4">
-            <div class="form-group">
-                <input type="text" class="form-control" id="dependencyFilter">
-                Dependency Filter
+    </div>
+    <div id="moreFilters" class="collapse">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <select class="form-control" id="depthFilter">
+                        <option>1</option>
+                    </select>
+                    Depth Filter
+                </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input type="checkbox" value="" checked>Major</label>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input type="checkbox" value="" checked>Minor</label>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input type="checkbox" value="" checked>Patch</label>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input type="checkbox" value="" checked>Up To Date</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input type="checkbox" value="">Unmatched</label>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input type="checkbox" value="">devDependencies</label>
+                </div>
+            </div>
+        </div>
+        <!--<div class="row">-->
+        <!--<div class="col-sm-2">-->
+        <!--<button type="button" class="btn btn-primary">Filter</button>-->
+        <!--</div>-->
+        <!--</div>-->
+    </div>
+    <div id="submitButtonRow" class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-primary" id="filterButton">Filter</button>
+            </div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+            </div>
+        </div>
+    </div>
+    <div id="resultDiv" class="container">
 
     </div>
-    <div class="row">
-        <div class="col-sm-4">
-            <div class="form-group">
-                <select class="form-control" id="depthFilter">
-                    <option>1</option>
-                </select>
-                Depth Filter
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="checkbox">
-                <label><input type="checkbox" value="" checked>Major</label>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="checkbox">
-                <label><input type="checkbox" value="" checked>Minor</label>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="checkbox">
-                <label><input type="checkbox" value="" checked>Patch</label>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="checkbox">
-                <label><input type="checkbox" value="" checked>Up To Date</label>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3">
-            <div class="checkbox">
-                <label><input type="checkbox" value="">Unmatched</label>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="checkbox">
-                <label><input type="checkbox" value="">devDependencies</label>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-2">
-            <button type="button" class="btn btn-primary">Filter</button>
-        </div>
-    </div>
-</div>
-<div class="container">
-    <table id="test">
-        <tr>
-            <td rowspan="2"> cell one </td> <td> cell two-1asdfasdfasdfasdf </td> <td> cell three </td>
-        </tr>
-        <tr>
-            <td> cell one </td> <td> cell two </td> <td> cell three </td>
-        </tr>
-    </table>
 </div>
 </body>
 </html>
