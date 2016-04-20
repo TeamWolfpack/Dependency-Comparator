@@ -1,11 +1,18 @@
 body {
     padding-top: 10px;
     color: black;
+    background-color: white;
 }
 
-/*#menu {*/
-    /*position: fixed | center ;*/
-/*}*/
+#menu {
+    background-color: white;
+}
+
+.affix {
+    width: 100%;
+    top: 0;
+    /*position: center;*/
+ }
 
 #filterButton {
     width: 75%;
