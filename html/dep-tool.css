@@ -2,3 +2,15 @@ body {
     padding-top: 10px;
     color: black;
 }
+
+/*#menu {*/
+    /*position: fixed | center ;*/
+/*}*/
+
+#filterButton {
+    width: 75%;
+}
+
+#saveButton {
+    width: 75%;
+}
