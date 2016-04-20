@@ -394,9 +394,10 @@ function compareProjects(projects) {
             allDependenciesFound.push(dependencies);
         }
     }
-	
+
     matchDependencies(allDependenciesFound, function(matchedDependencies) {
         //Do whatever with the list of dependencies
+        logger.logDependencies(matchedDependencies);
         //Print cli table for now
         createCliTable(matchedDependencies);
     });

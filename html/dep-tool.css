@@ -2,3 +2,13 @@ body {
     padding-top: 10px;
     color: black;
 }
+
+#test {
+    color: black;
+    border: solid black 1px;
+}
+
+#test tr td{
+    color: black;
+    border: solid black 1px;
+}
