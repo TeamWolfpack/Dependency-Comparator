@@ -7,6 +7,7 @@ body {
 #menu {
     background-color: white;
     overflow: hidden;
+    min-height: 50px;
 }
 
 .affix {
@@ -26,4 +27,9 @@ body {
 #resultDiv {
     overflow-y: auto;
     overflow-x: auto;
+    top: 15%;
+}
+
+#resultTable table tr td {
+    border: solid black 1px;
 }
