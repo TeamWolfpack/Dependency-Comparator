@@ -6,6 +6,7 @@ body {
 
 #menu {
     background-color: white;
+    overflow: hidden;
 }
 
 .affix {
@@ -20,4 +21,9 @@ body {
 
 #saveButton {
     width: 75%;
+}
+
+#resultDiv {
+    overflow-y: auto;
+    overflow-x: auto;
 }
