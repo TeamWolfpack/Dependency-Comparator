@@ -4,6 +4,7 @@
 
 var path = require("path");
 var open = require("open");
+var jsonfile = require("jsonfile");
 
 
 module.exports = {
@@ -11,6 +12,12 @@ module.exports = {
 };
 
 function openHTML(matchedDependencies){
+	jsonfile.writeFile(path.normalize(__dirname +"/../html/search.json"),matchedDependencies,{spaces:1},function(err){
+		if(err){
+			console.log("Can't make the logfiles json file:\n"+err);
+		}
+
+	});
 	try {
 		open(path.normalize(__dirname + "/../html/dep-tool.html"));
 	}catch(err){
@@ -23,8 +30,4 @@ function openHTML(matchedDependencies){
 
 function getLogger(){
 	open(path.normalize(__dirname+"/../logfiles/dep-tool.html"));
-}
-
-function createHTMLTable(){
-	
 }
