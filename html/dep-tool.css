@@ -31,6 +31,6 @@ body {
     padding-top: 12.5%;
 }
 
-#resultTable table tr td {
+#resultTable td, th {
     border: solid black 1px;
 }

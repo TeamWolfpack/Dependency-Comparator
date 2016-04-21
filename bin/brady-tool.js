@@ -42,7 +42,7 @@ function printCliTable(table) {
 	console.log(table.toString());
 }
 
-function exportTable(dependencies) {
+function createTable(dependencies) {
     var table = new cliTable({
         head: ["Module Name", "NPM Version"],
         style: {
@@ -164,7 +164,8 @@ function compareProjects(projects) {
 	
     matchDependencies(allDependenciesFound, function(matchedDependencies) {
         logger.logDependencies(matchedDependencies);
-		var table = exportTable(matchedDependencies);
+		var table = createTable(matchedDependencies);
+		var tableCopy = JSON.parse(JSON.stringify(table));
 		
 		if (process.argv[2] === "compare" ||
                 process.argv[1] === "compare" ||
@@ -186,8 +187,8 @@ function compareProjects(projects) {
             }
             summarizer.printSummaryTable();
         }
-        
-		server.start(table);
+		
+		server.start(tableCopy);
         htmlOpener.openHTML(table);
     });
 }

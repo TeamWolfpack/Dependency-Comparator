@@ -16,7 +16,7 @@ app.use(express.static(path.normalize(__dirname + "/../html")));
 
 function start(table){
 	app.get('/', function (req, res) {
-		res.render("dep-tool", { table: table });
+		res.render("dep-tool", { table: JSON.stringify(table) });
 	});
 
 	app.listen(45101, function () {
