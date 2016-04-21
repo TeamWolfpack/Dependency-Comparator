@@ -11,16 +11,19 @@ for (var r = 0; r < rowCount; r++) {
 	var row = table[r];
 	var depName = row[0].content;
 	var npmVersion = row[1].version;
-	//TODO add color support (row[1].color)
+	var npmColor = row[1].color;
 	
 	var rowString = "<tr>";
-	rowString += "<td>" + depName + "</td><td>" + npmVersion + "</td>";
+	rowString += "<td>" + depName + "</td>";
+	rowString += "<td class=\"" + npmColor + "\">" + npmVersion + "</td>";
+	
 	for (var c = 2; c < row.length; c += 2) {
 		var version = row[c] ? row[c].version : "";
-		//TODO add color support (row[c].color)
+		var color = row[c] ? row[c].color : "";
 		
 		var path = row[c + 1];
-		rowString += "<td>" + version + "</td><td>" + path + "</td>";
+		rowString += "<td class=\"" + color + "\">" + version + "</td>";
+		rowString += "<td>" + path + "</td>";
 
 	}
 	rowString += "</tr>";

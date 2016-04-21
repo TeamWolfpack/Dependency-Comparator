@@ -34,3 +34,19 @@ body {
 #resultTable td, th {
     border: solid black 1px;
 }
+
+.major {
+	color: red;
+}
+
+.minor {
+	color: orange;
+}
+
+.patch {
+	color: yellow;
+}
+
+.upToDate {
+	color: green;
+}
