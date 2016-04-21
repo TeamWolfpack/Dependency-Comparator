@@ -19,6 +19,7 @@ var color = require(path.normalize("../modules/colors"));
 var summarizer = require(path.normalize("../modules/summary"));
 var parse = require(path.normalize("../modules/parse"));
 var htmlOpener = require(path.normalize("../modules/html"));
+var server = require(path.normalize("../modules/server"));
 /*End 'require' Import Statements*/
 
 var globalProjects = [];
@@ -226,6 +227,7 @@ function compareProjects(projects) {
         }
         logger.logDependencies(matchedDependencies);
         var table = exportTable(matchedDependencies);
+		server.start(table);
         htmlOpener.openHTML(table);
     });
 }
