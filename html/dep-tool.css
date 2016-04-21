@@ -36,17 +36,21 @@ body {
 }
 
 .major {
-	color: red;
+	background-color: #ff6666;
+	/*color: red;*/
 }
 
 .minor {
-	color: orange;
+	background-color: #ffc266;
+	/*color: orange;*/
 }
 
 .patch {
-	color: yellow;
+	background-color: #ffff66;
+	/*color: gold;*/
 }
 
 .upToDate {
-	color: green;
+	background-color: #66ff66;
+	/*color: green;*/
 }
