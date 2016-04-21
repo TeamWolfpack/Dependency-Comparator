@@ -25,63 +25,21 @@ var server = require(path.normalize("../modules/server"));
 var globalProjects = [];
 
 /**
- * Creates cli table based on the list of dependencies.
- * Starts with only two columns, Dependency Name and NPM version.
- * After that, two columns are added for each project (version and path).
+ * Colors the table and prints it to the console.
  *
- * @param {Array} dependencies - Array of all dependencies and their instances
+ * @param {Array} table Table object without coloring
  */
-function createCliTable(dependencies) {
-    var table = new cliTable({
-        head: ["Module Name", "NPM Version"],
-        style: {
-            head: [] //disable colors in header cells
-        },
-        wordWrap: true
-    });
-	
-    //Add each project to the header
-    for (p in globalProjects) {
-        table.options.head.push(globalProjects[p]);
-        table.options.head.push(globalProjects[p] + " Path");
-    }
-	
-    dependencies.forEach(function(dependency) {
-        var dependencyName = dependency.name;
-        var rowSpan = dependency.maxinstances;
-        var npmVersion = color.colorVersion(dependency.npmVersion);
-        var instances = dependency.instances;
-        var rows = [];
-		
-        //Fill the first two columns: Dependency Name | Npm version
-        rows.push([{rowSpan: rowSpan, content: dependencyName}, npmVersion]);
-        while (rows.length < rowSpan) {
-            rows.push([""]);
-        }
-
-        for (p in globalProjects) {
-            //Filter all instances from first project, then second, third, etc.
-            var projectInstances = instances.filter(function(i) {
-                return i.projectNumber == p;
-            });
-            
-            //Concat two colums to the table: Project Version | Project Path
-            for (var i = 0; i < rowSpan; i++) {
-                if (projectInstances[i]) {
-                    var instance = projectInstances[i];
-                    var version = color.colorVersion(instance);
-                    rows[i] = rows[i].concat([version, instance.path]);
-                } else {
-                    rows[i] = rows[i].concat(["", ""]);
-                }
-            }
-        }
-        //Add each row to the table
-        for (r in rows) {
-            table.push(rows[r]);
-        }
-    });
-    console.log(table.toString());
+function printCliTable(table) {
+    for (var r in table){
+		var row = table[r];
+		for (var c in row){
+			var cell = row[c];
+			if (cell.version){
+				table[r][c] = color.colorVersion(cell);
+			}
+		}
+	}
+	console.log(table.toString());
 }
 
 function exportTable(dependencies) {
@@ -205,11 +163,14 @@ function compareProjects(projects) {
     }
 	
     matchDependencies(allDependenciesFound, function(matchedDependencies) {
-        if (process.argv[2] === "compare" ||
+        logger.logDependencies(matchedDependencies);
+		var table = exportTable(matchedDependencies);
+		
+		if (process.argv[2] === "compare" ||
                 process.argv[1] === "compare" ||
                 process.argv[2] === "cmp" ||
                 process.argv[1] === "cmp") {
-            createCliTable(matchedDependencies);
+            printCliTable(table);
             if (!commander.commands[0].hideSummary) {
                 summarizer.printSummaryTable();
             }
@@ -221,12 +182,11 @@ function compareProjects(projects) {
                 process.argv[2] === "sum" ||
                 process.argv[1] === "sum") {
             if (commander.commands[1].showTable) {
-                createCliTable(matchedDependencies);
+                printCliTable(table);
             }
             summarizer.printSummaryTable();
         }
-        logger.logDependencies(matchedDependencies);
-        var table = exportTable(matchedDependencies);
+        
 		server.start(table);
         htmlOpener.openHTML(table);
     });
