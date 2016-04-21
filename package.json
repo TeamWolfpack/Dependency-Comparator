@@ -51,6 +51,7 @@
     "cli-color": "^1.1.0",
     "cli-table2": "^0.2.0",
     "commander": "^2.9.0",
+    "ejs": "^2.4.1",
     "express": "^4.13.4",
     "fs": "0.0.2",
     "jsonfile": "^2.2.3",

@@ -16,10 +16,10 @@ function openHTML(matchedDependencies){
 		if(err){
 			console.log("Can't make the logfiles json file:\n"+err);
 		}
-
 	});
 	try {
-		open(path.normalize(__dirname + "/../html/dep-tool.html"));
+		//open(path.normalize(__dirname + "/../html/dep-tool.html"));
+		open("http://localhost:45101");
 	}catch(err){
 		return false;
 	}
@@ -29,5 +29,6 @@ function openHTML(matchedDependencies){
 
 
 function getLogger(){
-	open(path.normalize(__dirname+"/../logfiles/dep-tool.html"));
+	//open(path.normalize(__dirname+"/../logfiles/dep-tool.html"));
+	open("http://localhost:45101");
 }
