@@ -13,6 +13,7 @@ body {
 .affix {
     width: 100%;
     top: 0;
+    padding-bottom: 10px;
     /*position: center;*/
  }
 
@@ -27,7 +28,7 @@ body {
 #resultDiv {
     overflow-y: auto;
     overflow-x: auto;
-    top: 15%;
+    padding-top: 12.5%;
 }
 
 #resultTable table tr td {
