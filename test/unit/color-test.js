@@ -115,22 +115,22 @@ describe("Color Tests", function() {
         var npmVersion = "1.13.1";
 
         beforeEach(function() {
-			var totals = [{
-				name: "Project1",
-				major: 0,
-				minor: 0,
-				patch: 0,
-				unmatched: 0
-			}, {
-				name: "Project2",
-				major: 0,
-				minor: 0,
-				patch: 0,
-				unmatched: 0
+            var totals = [{
+                name: "Project1",
+                major: 0,
+                minor: 0,
+                patch: 0,
+                unmatched: 0
+            }, {
+                name: "Project2",
+                major: 0,
+                minor: 0,
+                patch: 0,
+                unmatched: 0
             }];
-			summarizer.totals.length = 0;
-			summarizer.totals.push(totals[0]);
-			summarizer.totals.push(totals[1]);
+            summarizer.totals.length = 0;
+            summarizer.totals.push(totals[0]);
+            summarizer.totals.push(totals[1]);
 			
             for (i in instances) {
                 instances[i].color = "upToDate";
@@ -140,7 +140,6 @@ describe("Color Tests", function() {
         it("should apply the appropiate colors to each instance and npmversion", function() {
             colors.assignColor(instances, npmVersion,
                 summarizer, function(coloredVersion) {
-					console.log(npmVersion);
                     assert.equal(instances[0].color, "upToDate");
                     assert.equal(instances[1].color, "upToDate");
                     assert.equal(instances[2].color, "patch");

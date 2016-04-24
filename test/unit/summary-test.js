@@ -10,29 +10,29 @@ var summary = require("../../modules/summary");
 
 describe("Summary Tests", function() {
     describe("Create Summary Table", function() {
-		afterEach(function(done) {
-		   summary.totals.length = 0;
-		   done();
-		});
+        afterEach(function(done) {
+            summary.totals.length = 0;
+            done();
+        });
         it("createSummaryTable should be a function", function() {
             assert.isFunction(summary.printSummaryTable, "true");
         });
         it("Should create a table with proper input", function() {
-			var totals = [{
-				name: "Project1",
-				major: 2,
-				minor: 4,
-				patch: 1,
-				unmatched: 0
-			}, {
-				name: "Project2",
-				major: 1,
-				minor: 3,
-				patch: 2,
-				unmatched: 0
+            var totals = [{
+                name: "Project1",
+                major: 2,
+                minor: 4,
+                patch: 1,
+                unmatched: 0
+            }, {
+                name: "Project2",
+                major: 1,
+                minor: 3,
+                patch: 2,
+                unmatched: 0
             }];
-			summary.totals.push(totals[0]);
-			summary.totals.push(totals[1]);
+            summary.totals.push(totals[0]);
+            summary.totals.push(totals[1]);
 						
             var summaryTable = summary.printSummaryTable();
             assert.isDefined(summaryTable, "Summary table is defined");
@@ -48,12 +48,12 @@ describe("Summary Tests", function() {
         });
         it("Should not create a table with only project 1 input", function() {
             var totals = [{
-					name: "Project1",
-                    major: 1,
-                    minor: 3,
-                    patch: 2,
-                    unmatched: 0
-                }];
+                name: "Project1",
+                major: 1,
+                minor: 3,
+                patch: 2,
+                unmatched: 0
+            }];
             summary.totals.push(totals[0]);
 						
             var summaryTable = summary.printSummaryTable();
@@ -74,13 +74,13 @@ describe("Summary Tests", function() {
                 "Dependency Totals is empty");
         });
         it("Should throw an error with a negative input in project 1 major", function() {
-			var totals = [{
-					name: "Project1",
-                    major: -1,
-                    minor: 3,
-                    patch: 2,
-                    unmatched: 0
-                }];
+            var totals = [{
+                name: "Project1",
+                major: -1,
+                minor: 3,
+                patch: 2,
+                unmatched: 0
+            }];
             summary.totals.push(totals[0]);
             assert.throws(function() {summary.printSummaryTable();}
                 ,"Summary table error: Project1 " +
@@ -88,12 +88,12 @@ describe("Summary Tests", function() {
         });
         it("Should throw an error with a negative input in project 1 minor", function() {
             var totals = [{
-					name: "Project1",
-                    major: 1,
-                    minor: -3,
-                    patch: 2,
-                    unmatched: 0
-                }];
+                name: "Project1",
+                major: 1,
+                minor: -3,
+                patch: 2,
+                unmatched: 0
+            }];
             summary.totals.push(totals[0]);
             assert.throws(function() {summary.printSummaryTable();}
                 ,"Summary table error: Project1 " +
@@ -101,12 +101,12 @@ describe("Summary Tests", function() {
         });
         it("Should throw an error with a negative input in project 1 patch", function() {
             var totals = [{
-					name: "Project1",
-                    major: 1,
-                    minor: 3,
-                    patch: -2,
-                    unmatched: 0
-                }];
+                name: "Project1",
+                major: 1,
+                minor: 3,
+                patch: -2,
+                unmatched: 0
+            }];
             summary.totals.push(totals[0]);
             assert.throws(function() {summary.printSummaryTable();}
                 ,"Summary table error: Project1 " +
@@ -114,12 +114,12 @@ describe("Summary Tests", function() {
         });
         it("Should throw an error with a negative input in project 1 unmatched", function() {
             var totals = [{
-					name: "Project1",
-                    major: 1,
-                    minor: 3,
-                    patch: 2,
-                    unmatched: -1
-                }];
+                name: "Project1",
+                major: 1,
+                minor: 3,
+                patch: 2,
+                unmatched: -1
+            }];
             summary.totals.push(totals[0]);
             assert.throws(function() {summary.printSummaryTable();}
                 ,"Summary table error: Project1 " +
@@ -127,11 +127,11 @@ describe("Summary Tests", function() {
         });
         it("Should throw an error with project 1 major missing", function() {
             var totals = [{
-					name: "Project1",
-                    minor: 3,
-                    patch: 2,
-                    unmatched: 0
-                }];
+                name: "Project1",
+                minor: 3,
+                patch: 2,
+                unmatched: 0
+            }];
             summary.totals.push(totals[0]);
             assert.throws(function() {summary.printSummaryTable();}
                 ,"Summary table error: Project1 " +
@@ -139,11 +139,11 @@ describe("Summary Tests", function() {
         });
         it("Should throw an error with project 1 minor missing", function() {
             var totals = [{
-					name: "Project1",
-                    major: 1,
-                    patch: 2,
-                    unmatched: 0
-                }];
+                name: "Project1",
+                major: 1,
+                patch: 2,
+                unmatched: 0
+            }];
             summary.totals.push(totals[0]);
             assert.throws(function() {summary.printSummaryTable();}
                 ,"Summary table error: Project1 " +
@@ -151,11 +151,11 @@ describe("Summary Tests", function() {
         });
         it("Should throw an error with project 1 patch missing", function() {
             var totals = [{
-					name: "Project1",
-                    major: 1,
-                    minor: 3,
-                    unmatched: 0
-                }];
+                name: "Project1",
+                major: 1,
+                minor: 3,
+                unmatched: 0
+            }];
             summary.totals.push(totals[0]);
             assert.throws(function() {summary.printSummaryTable();}
                 ,"Summary table error: Project1 " +
@@ -163,11 +163,11 @@ describe("Summary Tests", function() {
         });
         it("Should throw an error with project 1 unmatched missing", function() {
             var totals = [{
-					name: "Project1",
-                    major: 1,
-                    minor: 3,
-                    patch: 2,
-                }];
+                name: "Project1",
+                major: 1,
+                minor: 3,
+                patch: 2,
+            }];
             summary.totals.push(totals[0]);
             assert.throws(function() {summary.printSummaryTable();}
                 ,"Summary table error: Project1 " +

@@ -29,16 +29,16 @@ var globalProjects = [];
  * @param {Array} table Table object without coloring
  */
 function printCliTable(table) {
-    for (var r in table){
-		var row = table[r];
-		for (var c in row){
-			var cell = row[c];
-			if (cell.version){
-				table[r][c] = color.colorVersion(cell);
-			}
-		}
-	}
-	console.log(table.toString());
+    for (var r in table) {
+        var row = table[r];
+        for (var c in row) {
+            var cell = row[c];
+            if (cell.version) {
+                table[r][c] = color.colorVersion(cell);
+            }
+        }
+    }
+    console.log(table.toString());
 }
 
 function createTable(dependencies) {
@@ -163,13 +163,13 @@ function compareProjects(projects) {
 	
     matchDependencies(allDependenciesFound, function(matchedDependencies) {
         logger.logDependencies(matchedDependencies);
-		var table = createTable(matchedDependencies);
-		var tableCopy = JSON.parse(JSON.stringify(table));
+        var table = createTable(matchedDependencies);
+        var tableCopy = JSON.parse(JSON.stringify(table));
 		
-		if (process.argv[2] === "compare" ||
-                process.argv[1] === "compare" ||
-                process.argv[2] === "cmp" ||
-                process.argv[1] === "cmp") {
+        if (process.argv[2] === "compare" ||
+                        process.argv[1] === "compare" ||
+                        process.argv[2] === "cmp" ||
+                        process.argv[1] === "cmp") {
             printCliTable(table);
             if (!commander.commands[0].hideSummary) {
                 summarizer.printSummaryTable();
@@ -187,7 +187,7 @@ function compareProjects(projects) {
             summarizer.printSummaryTable();
         }
 		
-		server.start(tableCopy);
+        server.start(tableCopy);
     });
 }
 

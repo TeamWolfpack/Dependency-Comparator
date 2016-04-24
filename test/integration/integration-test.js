@@ -19,8 +19,7 @@ describe("Test Paths", function() {
         var capturedStdout;
         before(function(done) {
             childProcess.exec("node bin/brady-tool compare", function(error, stdout, stderr) {
-                if (error) { capturedStdout = "error: missing required argument"; }
-                else { capturedStdout = stdout; }
+                if (error) { capturedStdout = "error: missing required argument"; } else { capturedStdout = stdout; }
                 return done();
             });
         });
@@ -39,20 +38,20 @@ describe("Test Paths", function() {
         });
         it("should log project was not found", function() {
             expect(capturedStdout).to.contain("Project path is invalid: .jkbkjnkj");
-			expect(capturedStdout).to.contain("No projects found");
+            expect(capturedStdout).to.contain("No projects found");
         });
     });
     describe("Relative paths should work", function() {
         var capturedStdout;
         before(function(done) {
             var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", "."]);
-			child.stdout.on('data', function(stdout) {
-				capturedStdout += stdout;
-				if (capturedStdout.indexOf("Listening on localhost:") > -1){
-					child.kill();
-					return done();
-				}
-			});
+            child.stdout.on("data", function(stdout) {
+                capturedStdout += stdout;
+                if (capturedStdout.indexOf("Listening on localhost:") > -1) {
+                    child.kill();
+                    return done();
+                }
+            });
         });
         it("should compare itself and log the table", function() {
             expect(capturedStdout).to.contain("dependency-comparator");
@@ -65,13 +64,13 @@ describe("Test Compare", function() {
         var capturedStdout;
         before(function(done) {
             var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", ".", "-a"]);
-			child.stdout.on('data', function(stdout) {
-				capturedStdout += stdout;
-				if (capturedStdout.indexOf("Listening on localhost:") > -1){
-					child.kill();
-					return done();
-				}
-			});
+            child.stdout.on("data", function(stdout) {
+                capturedStdout += stdout;
+                if (capturedStdout.indexOf("Listening on localhost:") > -1) {
+                    child.kill();
+                    return done();
+                }
+            });
         });
         it("should log a table that includes devDeps", function() {
             expect(capturedStdout).to.contain("mocha");
@@ -86,13 +85,13 @@ describe("Test Compare", function() {
         var capturedStdout;
         before(function(done) {
             var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", ".", "-s"]);
-			child.stdout.on('data', function(stdout) {
-				capturedStdout += stdout;
-				if (capturedStdout.indexOf("Listening on localhost:") > -1){
-					child.kill();
-					return done();
-				}
-			});
+            child.stdout.on("data", function(stdout) {
+                capturedStdout += stdout;
+                if (capturedStdout.indexOf("Listening on localhost:") > -1) {
+                    child.kill();
+                    return done();
+                }
+            });
         });
         it("should hide the summary", function() {
             expect(capturedStdout).to.not.contain("major");
@@ -106,13 +105,13 @@ describe("Test Compare", function() {
         var capturedStdout;
         before(function(done) {
             var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", ".", "-l"]);
-			child.stdout.on('data', function(stdout) {
-				capturedStdout += stdout;
-				if (capturedStdout.indexOf("Listening on localhost:") > -1){
-					child.kill();
-					return done();
-				}
-			});
+            child.stdout.on("data", function(stdout) {
+                capturedStdout += stdout;
+                if (capturedStdout.indexOf("Listening on localhost:") > -1) {
+                    child.kill();
+                    return done();
+                }
+            });
         });
         it("should log the color legend", function() {
             expect(capturedStdout).to.contain("major");
@@ -128,13 +127,13 @@ describe("Test Compare", function() {
         var capturedStdout;
         before(function(done) {
             var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", ".", "-d", "2"]);
-			child.stdout.on('data', function(stdout) {
-				capturedStdout += stdout;
-				if (capturedStdout.indexOf("Listening on localhost:") > -1){
-					child.kill();
-					return done();
-				}
-			});
+            child.stdout.on("data", function(stdout) {
+                capturedStdout += stdout;
+                if (capturedStdout.indexOf("Listening on localhost:") > -1) {
+                    child.kill();
+                    return done();
+                }
+            });
         });
         it("should log a table that is a depth of two", function() {
             expect(capturedStdout).to.contain(path.normalize("/node_modules/minimist"));
@@ -153,13 +152,13 @@ describe("Test Summary", function() {
         var capturedStdout;
         before(function(done) {
             var child = childProcess.spawn("node", ["bin/brady-tool.js", "summary", ".", "."]);
-			child.stdout.on('data', function(stdout) {
-				capturedStdout += stdout;
-				if (capturedStdout.indexOf("Listening on localhost:") > -1){
-					child.kill();
-					return done();
-				}
-			});
+            child.stdout.on("data", function(stdout) {
+                capturedStdout += stdout;
+                if (capturedStdout.indexOf("Listening on localhost:") > -1) {
+                    child.kill();
+                    return done();
+                }
+            });
         });
         it("should include color legend", function() {
             expect(capturedStdout).to.contain("major");
@@ -175,24 +174,24 @@ describe("Compare and Summary", function() {
     var capturedSummary;
     before(function(done) {
         var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", "."]);
-		child.stdout.on('data', function(stdout) {
-			capturedCompare += stdout;
-			if (capturedCompare.indexOf("Listening on localhost:") > -1){
-				child.kill();
-				return done();
-			}
-		});
+        child.stdout.on("data", function(stdout) {
+            capturedCompare += stdout;
+            if (capturedCompare.indexOf("Listening on localhost:") > -1) {
+                child.kill();
+                return done();
+            }
+        });
 		
     });
     before(function(done) {
         var child = childProcess.spawn("node", ["bin/brady-tool.js", "summary", ".", ".", "-t"]);
-		child.stdout.on('data', function(stdout) {
-			capturedSummary += stdout;
-			if (capturedSummary.indexOf("Listening on localhost:") > -1){
-				child.kill();
-				return done();
-			}
-		});
+        child.stdout.on("data", function(stdout) {
+            capturedSummary += stdout;
+            if (capturedSummary.indexOf("Listening on localhost:") > -1) {
+                child.kill();
+                return done();
+            }
+        });
     });
     it("should log a table that is a depth of two", function() {
         expect(capturedCompare.length).to.equal(capturedSummary.length);
