@@ -4,13 +4,6 @@
 var textTable = require("text-table");
 
 var totals = [];
-	
-//	[project: {
-//    major: 0,
-//    minor: 0,
-//    patch: 0,
-//    unmatched: 0
-//}];
 
 function createSummaryTable(){
     checkTotalsForErrors();
@@ -39,6 +32,7 @@ function createSummaryTable(){
 	]);
 
     console.log(table);
+	return table;
 }
 
 function checkTotalsForErrors(){  
@@ -46,34 +40,41 @@ function checkTotalsForErrors(){
         throw new Error("Summary table error: " +
             "Dependency Totals is undefined");
     }
+	if (totals.length == 0) {
+		throw new Error("Summary table error: " +
+            "Dependency Totals is empty");
+	} 
 	for(i in totals){
 		var tots = totals[i];
 		if(tots == undefined){
 	        throw new Error("Summary table error: " +
 	            "Project " + i + " Totals is undefined");
-	    }else if(tots.major<0){
-	        throw new Error("Summary table error: Project " + i +
+		}else if(!tots.name) {
+			throw new Error("Summary table error: Project " + i +
+	            " does not have a name")
+		}else if(tots.major<0){
+	        throw new Error("Summary table error: " + tots.name +
 	            " major difference count is negative")
 	    }else if(tots.minor<0){
-	        throw new Error("Summary table error: Project " + i +
+	        throw new Error("Summary table error: " + tots.name +
 	            " minor difference count is negative")
 	    }else if(tots.patch<0){
-	        throw new Error("Summary table error: Project " + i +
+	        throw new Error("Summary table error: " + tots.name +
 	            " patch difference count is negative")
 	    }else if(tots.unmatched<0){
-	        throw new Error("Summary table error: Project " + i +
+	        throw new Error("Summary table error: " + tots.name +
 	            " unmatched difference count is negative")
 	    }else if(! tots.hasOwnProperty("major")){
-	        throw new Error("Summary table error: Project " + i +
+	        throw new Error("Summary table error: " + tots.name +
 	            " major difference count is missing")
 	    }else if(! tots.hasOwnProperty("minor")){
-	        throw new Error("Summary table error: Project " + i +
+	        throw new Error("Summary table error: " + tots.name +
 	            " minor difference count is missing")
 	    }else if(! tots.hasOwnProperty("patch")){
-	        throw new Error("Summary table error: Project " + i +
+	        throw new Error("Summary table error: " + tots.name +
 	            " patch difference count is missing")
 	    }else if(! tots.hasOwnProperty("unmatched")){
-	        throw new Error("Summary table error: Project " + i +
+	        throw new Error("Summary table error: " + tots.name +
 	            " unmatched difference count is missing")
 	    }
     }	

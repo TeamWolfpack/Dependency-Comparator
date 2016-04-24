@@ -2,6 +2,7 @@ var expect = require("chai").expect;
 var sinon = require("mocha-sinon");
 var childProcess = require("child_process");
 var path = require("path");
+var server = require(path.normalize("../../modules/server"));
 
 /**
  Simple unit test for testing in the CI
@@ -18,36 +19,40 @@ describe("Test Paths", function() {
         var capturedStdout;
         before(function(done) {
             childProcess.exec("node bin/brady-tool compare", function(error, stdout, stderr) {
-                if (error) { console.log(error); } // Handle errors.
-                capturedStdout = stdout;
+                if (error) { capturedStdout = "error: missing required argument"; }
+                else { capturedStdout = stdout; }
                 return done();
             });
         });
         it("should log file was not found", function() {
-            expect(capturedStdout).to.contain("Project path is invalid: undefined");
+            expect(capturedStdout).to.contain("error: missing required argument");
         });
     });
-    describe("Only one project path entered", function() {
+    describe("invalid project path entered", function() {
         var capturedStdout;
         before(function(done) {
-            childProcess.exec("node bin/brady-tool compare ..", function(error, stdout, stderr) {
+            childProcess.exec("node bin/brady-tool compare .jkbkjnkj", function(error, stdout, stderr) {
                 if (error) { console.log(error); } // Handle errors.
                 capturedStdout = stdout;
                 return done();
             });
         });
-        it("should log file was not found", function() {
-            expect(capturedStdout).to.contain("Project path is invalid: undefined");
+        it("should log project was not found", function() {
+            expect(capturedStdout).to.contain("Project path is invalid: .jkbkjnkj");
+			expect(capturedStdout).to.contain("No projects found");
         });
     });
     describe("Relative paths should work", function() {
         var capturedStdout;
         before(function(done) {
-            childProcess.exec("node bin/brady-tool compare . .", function(error, stdout, stderr) {
-                if (error) { console.log(error); } // Handle errors.
-                capturedStdout = stdout;
-                return done();
-            });
+            var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", "."]);
+			child.stdout.on('data', function(stdout) {
+				capturedStdout += stdout;
+				if (capturedStdout.indexOf("Listening on localhost:") > -1){
+					child.kill();
+					return done();
+				}
+			});
         });
         it("should compare itself and log the table", function() {
             expect(capturedStdout).to.contain("dependency-comparator");
@@ -56,15 +61,17 @@ describe("Test Paths", function() {
 });
 
 describe("Test Compare", function() {
-    this.timeout(0);
     describe("devDependencies", function() {
         var capturedStdout;
         before(function(done) {
-            childProcess.exec("node bin/brady-tool compare . . -a", function(error, stdout, stderr) {
-                if (error) { console.log(error); } // Handle errors.
-                capturedStdout = stdout;
-                return done();
-            });
+            var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", ".", "-a"]);
+			child.stdout.on('data', function(stdout) {
+				capturedStdout += stdout;
+				if (capturedStdout.indexOf("Listening on localhost:") > -1){
+					child.kill();
+					return done();
+				}
+			});
         });
         it("should log a table that includes devDeps", function() {
             expect(capturedStdout).to.contain("mocha");
@@ -78,11 +85,14 @@ describe("Test Compare", function() {
     describe("Hide Summary", function() {
         var capturedStdout;
         before(function(done) {
-            childProcess.exec("node bin/brady-tool compare . . -s", function(error, stdout, stderr) {
-                if (error) { console.log(error); } // Handle errors.
-                capturedStdout = stdout;
-                return done();
-            });
+            var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", ".", "-s"]);
+			child.stdout.on('data', function(stdout) {
+				capturedStdout += stdout;
+				if (capturedStdout.indexOf("Listening on localhost:") > -1){
+					child.kill();
+					return done();
+				}
+			});
         });
         it("should hide the summary", function() {
             expect(capturedStdout).to.not.contain("major");
@@ -95,11 +105,14 @@ describe("Test Compare", function() {
     describe("Color Legend", function() {
         var capturedStdout;
         before(function(done) {
-            childProcess.exec("node bin/brady-tool compare . . -l", function(error, stdout, stderr) {
-                if (error) { console.log(error); } // Handle errors.
-                capturedStdout = stdout;
-                return done();
-            });
+            var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", ".", "-l"]);
+			child.stdout.on('data', function(stdout) {
+				capturedStdout += stdout;
+				if (capturedStdout.indexOf("Listening on localhost:") > -1){
+					child.kill();
+					return done();
+				}
+			});
         });
         it("should log the color legend", function() {
             expect(capturedStdout).to.contain("major");
@@ -114,11 +127,14 @@ describe("Test Compare", function() {
     describe("Depth", function() {
         var capturedStdout;
         before(function(done) {
-            childProcess.exec("node bin/brady-tool compare . . -d 2", function(error, stdout, stderr) {
-                if (error) { console.log(error); } // Handle errors.
-                capturedStdout = stdout;
-                return done();
-            });
+            var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", ".", "-d", "2"]);
+			child.stdout.on('data', function(stdout) {
+				capturedStdout += stdout;
+				if (capturedStdout.indexOf("Listening on localhost:") > -1){
+					child.kill();
+					return done();
+				}
+			});
         });
         it("should log a table that is a depth of two", function() {
             expect(capturedStdout).to.contain(path.normalize("/node_modules/minimist"));
@@ -136,11 +152,14 @@ describe("Test Summary", function() {
     describe("Print Summary", function() {
         var capturedStdout;
         before(function(done) {
-            childProcess.exec("node bin/brady-tool summary . .", function(error, stdout, stderr) {
-                if (error) { console.log(error); } // Handle errors.
-                capturedStdout = stdout;
-                return done();
-            });
+            var child = childProcess.spawn("node", ["bin/brady-tool.js", "summary", ".", "."]);
+			child.stdout.on('data', function(stdout) {
+				capturedStdout += stdout;
+				if (capturedStdout.indexOf("Listening on localhost:") > -1){
+					child.kill();
+					return done();
+				}
+			});
         });
         it("should include color legend", function() {
             expect(capturedStdout).to.contain("major");
@@ -155,20 +174,27 @@ describe("Compare and Summary", function() {
     var capturedCompare;
     var capturedSummary;
     before(function(done) {
-        childProcess.exec("node bin/brady-tool compare . . -a", function(error, stdout, stderr) {
-            if (error) { console.log(error); } // Handle errors.
-            capturedCompare = stdout;
-            return done();
-        });
+        var child = childProcess.spawn("node", ["bin/brady-tool.js", "compare", ".", "."]);
+		child.stdout.on('data', function(stdout) {
+			capturedCompare += stdout;
+			if (capturedCompare.indexOf("Listening on localhost:") > -1){
+				child.kill();
+				return done();
+			}
+		});
+		
     });
     before(function(done) {
-        childProcess.exec("node bin/brady-tool summary . . -at", function(error, stdout, stderr) {
-            if (error) { console.log(error); } // Handle errors.
-            capturedSummary = stdout;
-            return done();
-        });
+        var child = childProcess.spawn("node", ["bin/brady-tool.js", "summary", ".", ".", "-t"]);
+		child.stdout.on('data', function(stdout) {
+			capturedSummary += stdout;
+			if (capturedSummary.indexOf("Listening on localhost:") > -1){
+				child.kill();
+				return done();
+			}
+		});
     });
     it("should log a table that is a depth of two", function() {
-        expect(capturedCompare).to.equal(capturedSummary);
+        expect(capturedCompare.length).to.equal(capturedSummary.length);
     });
 });

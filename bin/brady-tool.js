@@ -18,7 +18,6 @@ var logger = require(path.normalize("../modules/logger"));
 var color = require(path.normalize("../modules/colors"));
 var summarizer = require(path.normalize("../modules/summary"));
 var parse = require(path.normalize("../modules/parse"));
-var htmlOpener = require(path.normalize("../modules/html"));
 var server = require(path.normalize("../modules/server"));
 /*End 'require' Import Statements*/
 
@@ -189,7 +188,6 @@ function compareProjects(projects) {
         }
 		
 		server.start(tableCopy);
-        htmlOpener.openHTML(table);
     });
 }
 
