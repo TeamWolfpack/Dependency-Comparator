@@ -31,6 +31,26 @@ body {
     padding-top: 15%;
 }
 
-#resultTable table tr td {
+#resultTable td, th {
     border: solid black 1px;
+}
+
+.major {
+	background-color: #ff6666;
+	/*color: red;*/
+}
+
+.minor {
+	background-color: #ffc266;
+	/*color: orange;*/
+}
+
+.patch {
+	background-color: #ffff66;
+	/*color: gold;*/
+}
+
+.upToDate {
+	background-color: #66ff66;
+	/*color: green;*/
 }

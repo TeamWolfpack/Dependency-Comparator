@@ -84,43 +84,54 @@ describe("Color Tests", function() {
         var instances = [{
             "version": "2.0.0", //ahead
             "Project": "dependency-comparator",
-            "projectNumber": 1,
+            "projectNumber": 0,
             "path": "node_modules/jenkins",
             "color": "upToDate"
         }, {
             "version": "1.13.1", //up to date
             "Project": "sample-webservice",
-            "projectNumber": 1,
+            "projectNumber": 0,
             "path": "node_modules/jenkins",
             "color": "upToDate"
         }, {
             "version": "1.13.0", //patch
             "Project": "sample-webservice",
-            "projectNumber": 2,
+            "projectNumber": 1,
             "path": "node_modules/jenkins",
             "color": "upToDate"
         }, {
             "version": "1.10.0", //minor
             "Project": "sample-webservice",
-            "projectNumber": 2,
+            "projectNumber": 1,
             "path": "node_modules/jenkins",
             "color": "upToDate"
         }, {
             "version": "0.10.0", //major
             "Project": "sample-webservice",
-            "projectNumber": 2,
+            "projectNumber": 1,
             "path": "node_modules/jenkins",
             "color": "upToDate"
         }];
         var npmVersion = "1.13.1";
 
         beforeEach(function() {
-            summarizer.totals.projectOne.patch = 0;
-            summarizer.totals.projectOne.minor = 0;
-            summarizer.totals.projectOne.major = 0;
-            summarizer.totals.projectTwo.patch = 0;
-            summarizer.totals.projectTwo.minor = 0;
-            summarizer.totals.projectTwo.major = 0;
+            var totals = [{
+                name: "Project1",
+                major: 0,
+                minor: 0,
+                patch: 0,
+                unmatched: 0
+            }, {
+                name: "Project2",
+                major: 0,
+                minor: 0,
+                patch: 0,
+                unmatched: 0
+            }];
+            summarizer.totals.length = 0;
+            summarizer.totals.push(totals[0]);
+            summarizer.totals.push(totals[1]);
+			
             for (i in instances) {
                 instances[i].color = "upToDate";
             }
@@ -136,14 +147,14 @@ describe("Color Tests", function() {
                     assert.equal(instances[4].color, "major");
                     assert.equal(coloredVersion.version, npmVersion, "npmVersion");
                     assert.equal(coloredVersion.color, "major", "npmVersion colored to the most outdated version");
-                    assert.equal(summarizer.totals.projectOne.major, 0, "no major changes in P1");
-                    assert.equal(summarizer.totals.projectOne.minor, 0, "no minor changes in P1");
-                    assert.equal(summarizer.totals.projectOne.patch, 0, "no patch changes in P1");
-                    assert.equal(summarizer.totals.projectOne.unmatched, 0, "same dependency");
-                    assert.equal(summarizer.totals.projectTwo.major, 1, "no major changes in P1");
-                    assert.equal(summarizer.totals.projectTwo.minor, 1, "no minor changes in P1");
-                    assert.equal(summarizer.totals.projectTwo.patch, 1, "no patch changes in P1");
-                    assert.equal(summarizer.totals.projectOne.unmatched, 0, "same dependency");
+                    assert.equal(summarizer.totals[0].major, 0, "no major changes in P1");
+                    assert.equal(summarizer.totals[0].minor, 0, "no minor changes in P1");
+                    assert.equal(summarizer.totals[0].patch, 0, "no patch changes in P1");
+                    assert.equal(summarizer.totals[0].unmatched, 0, "same dependency");
+                    assert.equal(summarizer.totals[1].major, 1, "no major changes in P1");
+                    assert.equal(summarizer.totals[1].minor, 1, "no minor changes in P1");
+                    assert.equal(summarizer.totals[1].patch, 1, "no patch changes in P1");
+                    assert.equal(summarizer.totals[1].unmatched, 0, "same dependency");
                 });
         });
         it("should color the npmversion to match the lowest version: aheadOfDate", function() {
@@ -171,7 +182,7 @@ describe("Color Tests", function() {
                     assert.equal(subInstances[0].color, "patch");
                     assert.equal(coloredVersion.version, npmVersion, "npmVersion");
                     assert.equal(coloredVersion.color, "patch", "npmVersion color matches most outdated version");
-                    assert.equal(summarizer.totals.projectTwo.patch, 1, "patch increased by one");
+                    assert.equal(summarizer.totals[1].patch, 1, "patch increased by one");
                 });
         });
         it("should color the npmversion to match the lowest version: minor", function() {
@@ -181,7 +192,7 @@ describe("Color Tests", function() {
                     assert.equal(subInstances[0].color, "minor");
                     assert.equal(coloredVersion.version, npmVersion, "npmVersion");
                     assert.equal(coloredVersion.color, "minor", "npmVersion color matches most outdated version");
-                    assert.equal(summarizer.totals.projectTwo.minor, 1, "minor increased by one");
+                    assert.equal(summarizer.totals[1].minor, 1, "minor increased by one");
                 });
         });
         it("should color the npmversion to match the lowest version: major", function() {
@@ -191,7 +202,7 @@ describe("Color Tests", function() {
                     assert.equal(subInstances[0].color, "major");
                     assert.equal(coloredVersion.version, npmVersion, "npmVersion");
                     assert.equal(coloredVersion.color, "major", "npmVersion color matches most outdated version");
-                    assert.equal(summarizer.totals.projectTwo.major, 1, "major increased by one");
+                    assert.equal(summarizer.totals[1].major, 1, "major increased by one");
                 });
         });
         it("should not change color if npmVersion unavaliable or not found", function() {
