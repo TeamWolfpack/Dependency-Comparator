@@ -291,9 +291,24 @@ function getNPMVersions(dependencies, done) {
         latestVersion(name).then(function(version) {
             color.assignColor(dependency.instances, version.trim(),
 				summarizer, function(coloredVersion) {
-    dependency.npmVersion = coloredVersion;
-    tick(bar);
-    return callback();
+					if (!dependency.npmVersion){
+						dependency.npmVersion = {color: "upToDate"};
+					}
+					if (coloredVersion.color == "major"){
+						dependency.npmVersion = coloredVersion;
+					} else if (coloredVersion.color == "minor" && 
+								dependency.npmVersion.color != "major") {
+						dependency.npmVersion = coloredVersion;
+					} else if (coloredVersion.color == "patch" &&
+								dependency.npmVersion.color != "minor"){
+						dependency.npmVersion = coloredVersion;
+					} else if (coloredVersion.color == "upToDate" &&
+								dependency.npmVersion.color != "patch"){
+						dependency.npmVersion = coloredVersion;
+					}
+					dependency.npmVersion = coloredVersion;
+					tick(bar);
+					return callback();
 			});
         });
     }, function(err) { //Called when every dependency is finished
