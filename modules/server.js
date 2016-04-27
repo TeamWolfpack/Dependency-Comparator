@@ -2,9 +2,8 @@ var express = require('express');
 var portscanner = require('portscanner');
 var path = require("path");
 var open = require("open");
-var http = require("http"); //this is needed
 var app = express();
-var server;
+var server = require("http").Server(app);
 
 //use .html extension instead of .ejs
 app.engine('html', require('ejs').renderFile);
@@ -23,11 +22,11 @@ app.use(express.static(path.normalize(__dirname + "/../html")));
 
 function start(table){
 	app.get('/', function (req, res) {
-		res.render("dep-tool", { table: JSON.stringify(table) });
+		res.render("dep-tool", {port: app.get("port"), table: JSON.stringify(table)});
 	});
 	
 	portscanner.findAPortNotInUse(45000, 45100, "127.0.0.1", function(err, port){
-		server = app.listen(port, function () {
+		server.listen(port, function () {
 			console.log('Listening on localhost:' + port);
 			app.set("port", port);
 			openHTML(table);
@@ -44,6 +43,21 @@ function openHTML(table){
 		return false;
 	}
 }
+
+var io = require('socket.io').listen(server);
+io.on('connection', function(socket) {
+	connectionCount++;
+    socket.on('disconnect', function() {
+        connectionCount--;
+		if (connectionCount == 0){
+			server.close();
+			socket.disconnect();
+			process.exit()
+		}
+    });
+});
+
+var connectionCount = 0;
 
 module.exports = {
     start: start,

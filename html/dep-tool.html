@@ -14,6 +14,8 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <!--Include jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>io.connect('localhost:' + <%= port %>);</script>
 </head>
 <body>
 <div class="container-fluid" id="menu" data-spy="affix" data-offset-top="-1">
