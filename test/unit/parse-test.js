@@ -1,6 +1,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 var assert = chai.assert;
+require('mocha-sinon');
 
 var parse = require("../../modules/parse");
 
@@ -86,4 +87,34 @@ describe("Parse Tests", function() {
             assert.isDefined(project.dependencies.glob, "Glob is a dep of npm");
         });
     });
+	describe("Is Node Project", function() {
+        it("isNodeProject should be a function", function() {
+            assert.isFunction(parse.isNodeProject, "true");
+        });
+        it("should be a Node project", function() {
+			assert.isTrue(parse.isNodeProject("."));
+        });
+		it("should not be a Node project", function() {
+			assert.isUndefined(parse.isNodeProject(".."));
+		});
+    });
+	describe("Get Node Projects", function() {
+		it("getNodeProjects should be a function", function() {
+			assert.isFunction(parse.getNodeProjects, "true");
+		});
+		it("should return a array of Node projects", function() {
+			parse.getNodeProjects("..", function(projects) {
+				assert.isArray(projects);
+				assert.include(projects.toString(), "Dependency-Comparator");
+			});
+		});
+		it("should log an error on invalid dir", function() {
+			this.sinon.stub(console, 'log');
+			parse.getNodeProjects("invalid dir", function(projects) { 
+				assert.isUndefined(projects);
+			});
+			expect(console.log.calledWith(
+				"Error: Directory not found 'invalid dir'")).to.be.true;
+		});
+	})
 });
