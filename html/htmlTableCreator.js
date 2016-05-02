@@ -16,7 +16,7 @@ for (var r = 0; r < rowCount; r++) {
         var npmVersion = row[1].version;
         var npmColor = row[1].color;
 
-        rowString += "<td>" + depName + "</td>";
+        rowString += "<td class=\"name\">" + depName + "</td>";
         rowString += "<td class=\"" + npmColor + "\">" + npmVersion + "</td>";
 
         for (var c = 2; c < row.length; c += 2) {
@@ -31,7 +31,7 @@ for (var r = 0; r < rowCount; r++) {
     }
     else{
 
-        rowString += "<td>" + "</td>" + "<td>" + "</td>";
+        rowString += "<td class=\"name\">" + "</td>" + "<td>" + "</td>";
 
         for (var c = 1; c < row.length; c += 2) {
             var version = row[c] ? row[c].version : "";
@@ -47,3 +47,27 @@ for (var r = 0; r < rowCount; r++) {
 	tableText += rowString;
 }
 htmlTable.innerHTML = tableText;
+
+function download(name) {
+    var a = document.getElementById("a");
+    var htmlHeaders = "<html><head></head><body><table>";
+    var htmlHeadersEnd = "</table></body></html>";
+    var tbl = document.getElementById("htmlTable");
+    var text = tbl.innerHTML;
+    var file = new Blob([htmlHeaders+text+htmlHeadersEnd], {type: "text/html"});
+    a.href = URL.createObjectURL(file);
+    a.download = name;
+    console.log("Saved at "+name);
+}
+function filterDepNames(name){
+    var tbl = document.getElementById("htmlTable");
+}
+
+$( "#saveButton" ).click(function() {
+    console.log("Saving");
+    download("table.html");
+});
+
+$( "#moreButton" ).click(function() {
+    filterDepNames(document.getElementById("projectFilter").value);
+});
