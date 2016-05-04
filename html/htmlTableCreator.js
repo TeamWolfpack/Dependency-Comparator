@@ -23,7 +23,6 @@ var rowCount = table.length - 1;
 for (var r = 0; r < rowCount; r++) {
     var rowString = "<tr>";
 	var row = table[r];
-	console.log(row.rowSpan);
     var depName = "";
     if(row[0].rowSpan >= 1){
         var writeHeaderIterator = 0;
@@ -32,8 +31,8 @@ for (var r = 0; r < rowCount; r++) {
         var npmVersion = row[1].version;
         var npmColor = row[1].color;
 
-        rowString += "<td class=\"name\">" + depName + "</td>";
-        rowString += "<td class=\"" + npmColor + "\">" + npmVersion + "</td>";
+        rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"name\">" + depName + "</td>";
+        rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"" + npmColor + "\">" + npmVersion + "</td>";
 
         for (var c = 2; c < row.length; c += 2) {
             var version = row[c] ? row[c].version : "";
