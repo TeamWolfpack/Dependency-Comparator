@@ -40,8 +40,9 @@ for (var r = 0; r < rowCount; r++) {
 
             var path = row[c + 1];
             rowString += "<td class=\"" + color + " DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
-            rowString += "<td class=\"DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
-            writeHeaderIterator++;
+            var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
+            rowString += "<td class=\"DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + path +
+                "<div class='popup'>" + infoString + "</div></a></td>";
         }
     }
     else{
@@ -59,8 +60,9 @@ for (var r = 0; r < rowCount; r++) {
         }
     }
 	rowString += "</tr>";
-	tableText += rowString;
+    tableText += rowString;
 }
+
 htmlTable.innerHTML = tableText;
 
 function download(name) {
@@ -74,6 +76,7 @@ function download(name) {
     a.download = name;
     console.log("Saved at "+name);
 }
+
 function filterDepNames(name){
     name = String(name);
     var names = name.split("; ");

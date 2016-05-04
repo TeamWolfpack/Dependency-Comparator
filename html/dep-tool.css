@@ -26,12 +26,24 @@ body {
 }
 
 #resultDiv {
-    overflow-y: auto;
+    /*overflow-y: auto;*/
     overflow-x: auto;
     padding-top: 15%;
 }
 
 #resultTable td, th {
+    border: solid black 1px;
+}
+
+#htmlTable .popup {
+    display: none;
+    position: absolute;
+}
+
+#htmlTable a:hover .popup {
+    display: block;
+    background-color: white;
+    color: black;
     border: solid black 1px;
 }
 
@@ -54,3 +66,40 @@ body {
 	background-color: #66ff66;
 	/*color: green;*/
 }
+
+/*********** Copied code ***********/
+
+/*.fixed-table .header-fixed {*/
+    /*position: absolute;*/
+    /*top: 0px;*/
+    /*z-index: 1020; !* 10 less than .navbar-fixed to prevent any overlap *!*/
+    /*border-bottom: 2px solid #d5d5d5;*/
+    /*-webkit-border-radius: 0;*/
+    /*-moz-border-radius: 0;*/
+    /*border-radius: 0;*/
+/*}*/
+/*.fixed-table{*/
+    /*display:block;*/
+    /*position:relative;*/
+/*}*/
+/*.fixed-table th{*/
+    /*padding: 8px;*/
+    /*line-height: 18px;*/
+    /*text-align: left;*/
+/*}*/
+/*.fixed-table .table-content{*/
+    /*display:block;*/
+    /*position: relative;*/
+    /*height: 500px; !*FIX THE HEIGHT YOU NEED*!*/
+    /*overflow-y: auto;*/
+/*}*/
+/*.fixed-table .header-copy{*/
+    /*position:absolute;*/
+    /*top:0;*/
+    /*left:0;*/
+/*}*/
+/*.fixed-table .header-copy th{*/
+    /*background-color:#fff;*/
+/*}*/
+
+/***********************************/
