@@ -60,6 +60,7 @@
     "open": "0.0.5",
     "portscanner": "^1.0.0",
     "progress": "^1.1.8",
+    "socket.io": "^1.4.5",
     "text-table": "^0.2.0"
   }
 }
