@@ -21,19 +21,29 @@
 <div class="container-fluid" id="menu" data-spy="affix" data-offset-top="-1">
     <div id="mainFilters">
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="form-group">
                     <input type="text" class="form-control" id="projectFilter">
                     Project Filter
                 </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-1">
+                <div class="checkbox">
+                    <label><input id="projectExclude" type="checkbox" value="">Exclude</label>
+                </div>
+            </div>
+            <div class="col-sm-3 col-sm-offset-1">
                 <div class="form-group">
                     <input type="text" class="form-control" id="dependencyFilter">
                     Dependency Filter
                 </div>
             </div>
-            <div class="col-sm-1 col-sm-offset-3">
+            <div class="col-sm-1">
+                <div class="checkbox">
+                    <label><input id="depExclude" type="checkbox" value="" checked>Exclude</label>
+                </div>
+            </div>
+            <div class="col-sm-1 col-sm-offset-2">
                 <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#moreFilters" id="moreButton">More</button>
             </div>
         </div>
