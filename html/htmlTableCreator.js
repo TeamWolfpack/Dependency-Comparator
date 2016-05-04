@@ -75,18 +75,45 @@ function download(name) {
     a.download = name;
     console.log("Saved at "+name);
 }
-function filterDepNames(name){
+function showOrHideElementWithFilter(depRow){
+    if(document.getElementById("exclude").checked){
+        depRow.style = "display: none";
+    }
+    else{
+        depRow.style = "display: show";
+    }
+}
+function filterProjNames(name){
     name = String(name);
     var names = name.split("; ");
     for(var i = 0; i<names.length; i++) {
-        var tbl = document.getElementById("htmlTable");
         var length = document.getElementsByClassName("PROJ" + names[i]).length;
         for (var j = 0; j < length; j++) {
-            document.getElementsByClassName("PROJ" + names[i])[j].style = "display: none";
+            showOrHideElementWithFilter(document.getElementsByClassName("PROJ" + names[i])[j].style);
         }
         console.log("Filtering by " + "PROJ" + names[i]);
     }
 
+}
+function filterDepNames(name){
+    name = String(name);
+    var names = name.split("; ");
+    for(var i = 0; i<names.length; i++) {
+        var length = document.getElementsByClassName("DEP" + names[i]).length;
+        for (var j = 0; j < length; j++) {
+            showOrHideElementWithFilter(document.getElementsByClassName("DEP" + names[i])[j].style);
+        }
+        console.log("Filtering by " + "DEP" + names[i]);
+    }
+}
+
+function initializeShowOrHide(element){
+    if(document.getElementById("exclude").checked){
+        depRow.style = "display: none";
+    }
+    else{
+        depRow.style = "display: show";
+    }
 }
 
 $( "#saveButton" ).click(function() {
@@ -97,14 +124,15 @@ $( "#saveButton" ).click(function() {
 $( "#filterButton" ).click(function() {
     var length = document.getElementsByTagName("td").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByTagName("td")[i].parentNode.style="display: show";
-        document.getElementsByTagName("td")[i].style="display: show";
+        initializeShowOrHide(document.getElementsByTagName("td")[i].parentNode.style);
+        initializeShowOrHide(document.getElementsByTagName("td")[i].style);
     }
     var length = document.getElementsByTagName("th").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByTagName("th")[i].parentNode.style="display: show";
-        document.getElementsByTagName("th")[i].style="display: show";
+        initializeShowOrHide(document.getElementsByTagName("th")[i].parentNode.style);
+        initializeShowOrHide(document.getElementsByTagName("th")[i].style);
     }
-    filterDepNames(document.getElementById("projectFilter").value);
+    filterProjNames(document.getElementById("projectFilter").value);
+    filterDepNames(document.getElementById("dependencyFilter").value);
     console.log("Filtering");
 });
