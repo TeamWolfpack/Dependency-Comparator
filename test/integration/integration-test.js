@@ -197,53 +197,53 @@ describe("Compare and Summary", function() {
 });
 
 describe("Test topDir", function() {
-	describe("Valid Directory", function() {
-		var capturedOutput;
-		before(function(done) {
-			var child = childProcess.spawn("node", ["bin/brady-tool.js", "topDir", ".."]);
-			child.stdout.on("data", function(stdout) {
-				capturedOutput += stdout;
-				if (capturedOutput.indexOf("Listening on localhost:") > -1) {
-					child.kill();
-					return done();
-				}
-			});
-		});
-		it("should log a table that is a depth of two", function() {
-			expect(capturedOutput).to.contain("Listening on localhost:");
-		});
-	});
-	describe("Invalid Directory", function() {
-		var capturedOutput;
-		before(function(done) {
-			var child = childProcess.spawn("node", ["bin/brady-tool.js", "topDir", "jshdasae"]);
-			child.stdout.on("data", function(stdout) {
-				capturedOutput += stdout;
-				if (capturedOutput.indexOf("Error:") > -1) {
-					child.kill();
-					return done();
-				}
-			});
-		});
-		it("should log a table that is a depth of two", function() {
-			expect(capturedOutput).to.contain("Error:");
-			expect(capturedOutput).to.contain("jshdasae");
-		});
-	});
-	describe("No Projects in Directory", function() {
-		var capturedOutput;
-		before(function(done) {
-			var child = childProcess.spawn("node", ["bin/brady-tool.js", "topDir", "."]);
-			child.stdout.on("data", function(stdout) {
-				capturedOutput += stdout;
-				if (capturedOutput.indexOf("No projects in directory") > -1) {
-					child.kill();
-					return done();
-				}
-			});
-		});
-		it("should log a table that is a depth of two", function() {
-			expect(capturedOutput).to.contain("No projects in directory: '.'");
-		});
-	});
+    describe("Valid Directory", function() {
+        var capturedOutput;
+        before(function(done) {
+            var child = childProcess.spawn("node", ["bin/brady-tool.js", "topDir", ".."]);
+            child.stdout.on("data", function(stdout) {
+                capturedOutput += stdout;
+                if (capturedOutput.indexOf("Listening on localhost:") > -1) {
+                    child.kill();
+                    return done();
+                }
+            });
+        });
+        it("should log a table that is a depth of two", function() {
+            expect(capturedOutput).to.contain("Listening on localhost:");
+        });
+    });
+    describe("Invalid Directory", function() {
+        var capturedOutput;
+        before(function(done) {
+            var child = childProcess.spawn("node", ["bin/brady-tool.js", "topDir", "jshdasae"]);
+            child.stdout.on("data", function(stdout) {
+                capturedOutput += stdout;
+                if (capturedOutput.indexOf("Error:") > -1) {
+                    child.kill();
+                    return done();
+                }
+            });
+        });
+        it("should log a table that is a depth of two", function() {
+            expect(capturedOutput).to.contain("Error:");
+            expect(capturedOutput).to.contain("jshdasae");
+        });
+    });
+    describe("No Projects in Directory", function() {
+        var capturedOutput;
+        before(function(done) {
+            var child = childProcess.spawn("node", ["bin/brady-tool.js", "topDir", "."]);
+            child.stdout.on("data", function(stdout) {
+                capturedOutput += stdout;
+                if (capturedOutput.indexOf("No projects in directory") > -1) {
+                    child.kill();
+                    return done();
+                }
+            });
+        });
+        it("should log a table that is a depth of two", function() {
+            expect(capturedOutput).to.contain("No projects in directory: '.'");
+        });
+    });
 });
