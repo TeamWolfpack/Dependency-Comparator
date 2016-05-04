@@ -5,6 +5,7 @@ var headerIterator = 0;
 var IteratorLimiter = 0;
 for (var header in table.options.head) {
     if(headerIterator!=0){
+
         headers+= "<th class=\"PROJ" + table.options.head[header] + "\">";
         headerArray[headerIterator-1] = "PROJ"+table.options.head[header];
     }
@@ -94,6 +95,16 @@ $( "#saveButton" ).click(function() {
 });
 
 $( "#filterButton" ).click(function() {
+    var length = document.getElementsByTagName("td").length;
+    for(var i = 0; i < length; i++){
+        document.getElementsByTagName("td")[i].parentNode.style="display: show";
+        document.getElementsByTagName("td")[i].style="display: show";
+    }
+    var length = document.getElementsByTagName("th").length;
+    for(var i = 0; i < length; i++){
+        document.getElementsByTagName("th")[i].parentNode.style="display: show";
+        document.getElementsByTagName("th")[i].style="display: show";
+    }
     filterDepNames(document.getElementById("projectFilter").value);
     console.log("Filtering");
 });
