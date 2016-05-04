@@ -50,9 +50,13 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         connectionCount--;
 		if (connectionCount == 0){
-			server.close();
-			socket.disconnect();
-			process.exit()
+			setTimeout(function() {
+				if (connectionCount == 0){
+					server.close();
+					socket.disconnect();
+					process.exit()
+				}
+			}, 1000)
 		}
     });
 });
