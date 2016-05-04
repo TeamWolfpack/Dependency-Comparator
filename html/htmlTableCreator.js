@@ -1,5 +1,3 @@
-//var tableHeaderText = "";
-//var tableBodyText = "";
 var tableText = "";
 
 var headers = "<thead><tr>";
@@ -7,8 +5,6 @@ for (var header in table.options.head) {
 	headers += "<th>" + table.options.head[header] + "</th>";
 }
 headers += "</tr></thead>";
-//tableHeaderText += headers;
-//tableBodyText += "<tbody>";
 tableText += headers + "<tbody>";
 
 var rowCount = table.length - 1;
@@ -16,11 +12,10 @@ for (var r = 0; r < rowCount; r++) {
     var rowString = "<tr>";
 	var row = table[r];
 	console.log(row.rowSpan);
+    var depName = row[0].content;
+    var npmVersion = row[1].version;
+    var npmColor = row[1].color;
     if(row[0].rowSpan >= 1){
-        var depName = row[0].content;
-        var npmVersion = row[1].version;
-        var npmColor = row[1].color;
-
         rowString += "<td class=\"filterable-cell\">" + depName + "</td>";
         rowString += "<td class=\"filterable-cell " + npmColor + "\">" + npmVersion + "</td>";
 
@@ -30,8 +25,10 @@ for (var r = 0; r < rowCount; r++) {
 
             var path = row[c + 1];
             rowString += "<td class=\"filterable-cell " + color + "\">" + version + "</td>";
-            rowString += "<td class=\"filterable-cell\">" + path + "</td>";
 
+            var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
+            rowString += "<td class=\"filterable-cell\"><a href=\"#\">" + path +
+                "<div class='popup'>" + infoString + "</div></a></td>";
         }
     }
     else{
@@ -44,48 +41,12 @@ for (var r = 0; r < rowCount; r++) {
 
             var path = row[c + 1];
             rowString += "<td class=\"filterable-cell " + color + "\">" + version + "</td>";
-            rowString += "<td>" + path + "</td>";
-
+            rowString += "<td class=\"filterable-cell\">" + path + "</td>";
         }
     }
 	rowString += "</tr>";
-    //tableBodyText += rowString;
     tableText += rowString;
 }
-//tableBodyText += "</tbody>";
 tableText += "</tbody>";
 
-////freeze pane
-//var updateFreezePane = function() {
-//    var tableHeader = $("#tableHeader");
-//    var tableBody = $("#tableBody");
-//    var tableOffset = tableBody.offset().top;
-//    var tableWidth = tableBody.width();
-//    var offset = $(this).scrollTop();
-//    var header = $("#tableHeader > thead");
-//
-//    if (offset >= 0) {
-//        tableHeader.show();
-//
-//        var tableHeaderThs = tableHeader.find('tr > th');
-//
-//        //dynamically copy the width of each original th to the fixed header th
-//
-//        $.each(header.find('tr > th'), function(ind, val){
-//            var originalWidth = $(val).width();
-//            $(tableHeaderThs[ind]).width(originalWidth);
-//        });
-//    } else {
-//        tableHeader.hide();
-//    }
-//};
-//
-//$(window).bind("scroll", updateFreezePane);
-//$(window).bind("resize", updateFreezePane);
-
-/*** hover over element to show info for cell ***/
-//function getCellInfo()
-
-//tableBody.innerHTML = tableBodyText;
-//tableHeader.innerHTML = tableHeaderText;
-.innerHTML = tableText;
+htmlTable.innerHTML = tableText;

@@ -35,29 +35,17 @@ body {
     border: solid black 1px;
 }
 
-#tableHeader {
-
+#htmlTable .popup {
+    display: none;
+    position: absolute;
 }
 
-/*#htmlTable {*/
-    /*width: 100%;*/
-/*}*/
-
-/*#htmlTable thead, tbody, th, tr, td {*/
-    /*display: block;*/
-/*}*/
-
-/*#htmlTable tr:after {*/
-    /*content: ' ';*/
-    /*display: block;*/
-    /*visibility: hidden;*/
-    /*clear: both;*/
-/*}*/
-
-/*#htmlTable tbody {*/
-    /*height: 80%;*/
-    /*overflow-y: auto;*/
-/*}*/
+#htmlTable a:hover .popup {
+    display: block;
+    background-color: white;
+    color: black;
+    border: solid black 1px;
+}
 
 .major {
 	background-color: #ff6666;
