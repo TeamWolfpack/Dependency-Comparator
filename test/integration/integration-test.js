@@ -2,7 +2,6 @@ var expect = require("chai").expect;
 var sinon = require("mocha-sinon");
 var childProcess = require("child_process");
 var path = require("path");
-var server = require(path.normalize("../../modules/server"));
 
 /**
  Simple unit test for testing in the CI
