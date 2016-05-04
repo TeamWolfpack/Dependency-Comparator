@@ -260,7 +260,15 @@ function matchDependencies(allDependencies, done) {
         return projectCallback();
     }, function(err) { //Called when every dependency is finished
         getNPMVersions(dependencies, function() {
-            return done(dependencies);
+			async.each(dependencies, function(dependency, callback) {
+				if (dependency.instances.length == 1){
+					var index = dependency.instances[0].projectNumber;
+					summarizer.totals[index].unmatched++;
+				}
+				return callback();
+			}, function(err) { //Called when every dependency is finished
+				return done(dependencies);
+			});
         });
     });
 }
