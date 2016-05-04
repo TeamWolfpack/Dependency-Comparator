@@ -28,7 +28,7 @@ body {
 #resultDiv {
     overflow-y: auto;
     overflow-x: auto;
-    padding-top: 12.5%;
+    padding-top: 15%;
 }
 
 #resultTable td, th {
