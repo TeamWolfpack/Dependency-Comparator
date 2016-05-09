@@ -31,8 +31,8 @@ for (var r = 0; r < rowCount; r++) {
         var npmVersion = row[1].version;
         var npmColor = row[1].color;
 
-        rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"name\">" + depName + "</td>";
-        rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"" + npmColor + "\">" + npmVersion + "</td>";
+        rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"name DEP"+depName+"\">" + depName + "</td>";
+        rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"" + npmColor + " DEP"+depName+"\">" + npmVersion + "</td>";
 
         for (var c = 2; c < row.length; c += 2) {
             var version = row[c] ? row[c].version : "";
@@ -93,19 +93,45 @@ function download(name) {
         document.getElementsByClassName("popup")[i].style = "display: show";
     }
 }
-
-function filterDepNames(name){
+function showOrHideElementWithFilter(element){
+    if(document.getElementById("exclude").checked){
+        element.style = "display: none";
+    }
+    else{
+        element.style = "display: show";
+    }
+}
+function filterProjNames(name){
     name = String(name);
     var names = name.split("; ");
     for(var i = 0; i<names.length; i++) {
-        var tbl = document.getElementById("htmlTable");
         var length = document.getElementsByClassName("PROJ" + names[i]).length;
         for (var j = 0; j < length; j++) {
-            document.getElementsByClassName("PROJ" + names[i])[j].style = "display: none";
+            showOrHideElementWithFilter(document.getElementsByClassName("PROJ" + names[i])[j]);
         }
         console.log("Filtering by " + "PROJ" + names[i]);
     }
 
+}
+function filterDepNames(name){
+    name = String(name);
+    var names = name.split("; ");
+    for(var i = 0; i<names.length; i++) {
+        var length = document.getElementsByClassName("DEP" + names[i]).length;
+        for (var j = 0; j < length; j++) {
+            showOrHideElementWithFilter(document.getElementsByClassName("DEP" + names[i])[j]);
+        }
+        console.log("Filtering by " + "DEP" + names[i]);
+    }
+}
+
+function initializeShowOrHide(element){
+    if(document.getElementById("exclude").checked){
+        element.style = "display: show";
+    }
+    else{
+        element.style = "display: none";
+    }
 }
 
 $( "#saveButton" ).click(function() {
@@ -116,14 +142,15 @@ $( "#saveButton" ).click(function() {
 $( "#filterButton" ).click(function() {
     var length = document.getElementsByTagName("td").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByTagName("td")[i].parentNode.style="display: show";
-        document.getElementsByTagName("td")[i].style="display: show";
+        initializeShowOrHide(document.getElementsByTagName("td")[i].parentNode);
+        initializeShowOrHide(document.getElementsByTagName("td")[i]);
     }
     var length = document.getElementsByTagName("th").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByTagName("th")[i].parentNode.style="display: show";
-        document.getElementsByTagName("th")[i].style="display: show";
+        initializeShowOrHide(document.getElementsByTagName("th")[i].parentNode);
+        initializeShowOrHide(document.getElementsByTagName("th")[i]);
     }
-    filterDepNames(document.getElementById("projectFilter").value);
+    filterProjNames(document.getElementById("projectFilter").value);
+    filterDepNames(document.getElementById("dependencyFilter").value);
     console.log("Filtering");
 });
