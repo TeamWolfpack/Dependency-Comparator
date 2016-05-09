@@ -38,6 +38,8 @@ body {
 #htmlTable .popup {
     display: none;
     position: absolute;
+    pointer-events: none;
+    cursor: default;
 }
 
 #htmlTable a:hover .popup {
@@ -45,6 +47,8 @@ body {
     background-color: white;
     color: black;
     border: solid black 1px;
+    pointer-events: none;
+    cursor: default;
 }
 
 .major {

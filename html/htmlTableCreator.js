@@ -41,7 +41,7 @@ for (var r = 0; r < rowCount; r++) {
             var path = row[c + 1];
             rowString += "<td class=\"" + color + " DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
             var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
-            rowString += "<td class=\"DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + path +
+            rowString += "<td class=\"DEP" + depName + " " + headerArray[writeHeaderIterator] + "\"><a href=\"\">" + path +
                 "<div class='popup'>" + infoString + "</div></a></td>";
         }
     }
@@ -67,14 +67,31 @@ htmlTable.innerHTML = tableText;
 
 function download(name) {
     var a = document.getElementById("a");
-    var htmlHeaders = "<html><head></head><body><table>";
+    var htmlHeaders = "<html><head>"
+            +"<meta charset=\"UTF-8\">"
+            + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+            + "<title>dep-tool</title>"
+            + "<link rel=\"stylesheet\" type=\"text/css\" href=\"dep-tool.css\">"
+            + "<link rel=\"stylesheet\" href=\"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\">"
+            + "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js\"></script>"
+            + "<script src=\"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\"></script>"
+            + "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script>"
+            + "</head><body><table>";
     var htmlHeadersEnd = "</table></body></html>";
+    var length = document.getElementsByClassName("popup").length;
+    for(var i = 0; i < length; i++){
+        document.getElementsByClassName("popup")[i].style = "display: none";
+    }
     var tbl = document.getElementById("htmlTable");
     var text = tbl.innerHTML;
+    //var popup = document.getElementsByClassName("popup");
     var file = new Blob([htmlHeaders+text+htmlHeadersEnd], {type: "text/html"});
     a.href = URL.createObjectURL(file);
     a.download = name;
     console.log("Saved at "+name);
+    for(var i = 0; i < length; i++){
+        document.getElementsByClassName("popup")[i].style = "display: show";
+    }
 }
 
 function filterDepNames(name){
