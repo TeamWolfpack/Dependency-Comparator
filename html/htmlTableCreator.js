@@ -23,7 +23,6 @@ var rowCount = table.length - 1;
 for (var r = 0; r < rowCount; r++) {
     var rowString = "<tr>";
 	var row = table[r];
-	console.log(row.rowSpan);
     var depName = "";
     if(row[0].rowSpan >= 1){
         var writeHeaderIterator = 0;
@@ -32,8 +31,8 @@ for (var r = 0; r < rowCount; r++) {
         var npmVersion = row[1].version;
         var npmColor = row[1].color;
 
-        rowString += "<td class=\"name DEP"+depName+"\">" + depName + "</td>";
-        rowString += "<td class=\"" + npmColor + " DEP"+depName+"\">" + npmVersion + "</td>";
+        rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"name DEP"+depName+"\">" + depName + "</td>";
+        rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"" + npmColor + " DEP"+depName+"\">" + npmVersion + "</td>";
 
         for (var c = 2; c < row.length; c += 2) {
             var version = row[c] ? row[c].version : "";
@@ -41,8 +40,9 @@ for (var r = 0; r < rowCount; r++) {
 
             var path = row[c + 1];
             rowString += "<td class=\"" + color + " DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
-            rowString += "<td class=\"DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
-            writeHeaderIterator++;
+            var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
+            rowString += "<td class=\"DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + path +
+                "<div class='popup'>" + infoString + "</div></a></td>";
         }
     }
     else{
@@ -60,8 +60,9 @@ for (var r = 0; r < rowCount; r++) {
         }
     }
 	rowString += "</tr>";
-	tableText += rowString;
+    tableText += rowString;
 }
+
 htmlTable.innerHTML = tableText;
 
 function download(name) {

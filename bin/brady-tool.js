@@ -260,7 +260,15 @@ function matchDependencies(allDependencies, done) {
         return projectCallback();
     }, function(err) { //Called when every dependency is finished
         getNPMVersions(dependencies, function() {
-            return done(dependencies);
+            async.each(dependencies, function(dependency, callback) {
+                if (dependency.instances.length == 1) {
+                    var index = dependency.instances[0].projectNumber;
+                    summarizer.totals[index].unmatched++;
+                }
+                return callback();
+            }, function(err) { //Called when every dependency is finished
+                return done(dependencies);
+            });
         });
     });
 }
@@ -291,24 +299,24 @@ function getNPMVersions(dependencies, done) {
         latestVersion(name).then(function(version) {
             color.assignColor(dependency.instances, version.trim(),
 				summarizer, function(coloredVersion) {
-					if (!dependency.npmVersion){
-						dependency.npmVersion = {color: "upToDate"};
-					}
-					if (coloredVersion.color == "major"){
-						dependency.npmVersion = coloredVersion;
-					} else if (coloredVersion.color == "minor" && 
+    if (!dependency.npmVersion) {
+        dependency.npmVersion = {color: "upToDate"};
+    }
+    if (coloredVersion.color == "major") {
+        dependency.npmVersion = coloredVersion;
+    } else if (coloredVersion.color == "minor" &&
 								dependency.npmVersion.color != "major") {
-						dependency.npmVersion = coloredVersion;
-					} else if (coloredVersion.color == "patch" &&
-								dependency.npmVersion.color != "minor"){
-						dependency.npmVersion = coloredVersion;
-					} else if (coloredVersion.color == "upToDate" &&
-								dependency.npmVersion.color != "patch"){
-						dependency.npmVersion = coloredVersion;
-					}
-					dependency.npmVersion = coloredVersion;
-					tick(bar);
-					return callback();
+        dependency.npmVersion = coloredVersion;
+    } else if (coloredVersion.color == "patch" &&
+    dependency.npmVersion.color != "minor") {
+        dependency.npmVersion = coloredVersion;
+    } else if (coloredVersion.color == "upToDate" &&
+    dependency.npmVersion.color != "patch") {
+        dependency.npmVersion = coloredVersion;
+    }
+    dependency.npmVersion = coloredVersion;
+    tick(bar);
+    return callback();
 			});
         });
     }, function(err) { //Called when every dependency is finished
