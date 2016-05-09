@@ -10,7 +10,7 @@ for (var header in table.options.head) {
         headerArray[headerIterator-1] = "PROJ"+table.options.head[header];
     }
     else{
-        headers+= "<th>";
+        headers+= "<th class=\"depNameOrVer\">";
     }
 	headers += table.options.head[header] + "</th>";
     headerIterator+=IteratorLimiter;
@@ -39,23 +39,22 @@ for (var r = 0; r < rowCount; r++) {
             var color = row[c] ? row[c].color : "";
 
             var path = row[c + 1];
-            rowString += "<td class=\"" + color + " DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
+            rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
             var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
-            rowString += "<td class=\"DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + path +
+            rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\">" + path +
                 "<div class='popup'>" + infoString + "</div></a></td>";
         }
     }
     else{
         var writeHeaderIterator = 0;
-        rowString += "<td class=\"name\">" + "</td>" + "<td>" + "</td>";
 
         for (var c = 1; c < row.length; c += 2) {
             var version = row[c] ? row[c].version : "";
             var color = row[c] ? row[c].color : "";
 
             var path = row[c + 1];
-            rowString += "<td class=\"" + color + " DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
-            rowString += "<td class=\"DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
+            rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
+            rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
             writeHeaderIterator++;
         }
     }
@@ -108,12 +107,47 @@ function filterDepNames(name){
     }
 }
 
+function filterMajor(isChecked){
+    if(isChecked){return;}
+    var length = document.getElementsByClassName("major").length;
+    for(var i = 0; i < length; i++){
+        document.getElementsByClassName("major")[i].parentNode.style="display: none";
+    }
+
+}
+function filterMinor(isChecked){
+    if(isChecked){return;}
+    var length = document.getElementsByClassName("minor").length;
+    for(var i = 0; i < length; i++){
+        document.getElementsByClassName("minor")[i].parentNode.style="display: none";
+    }
+
+}
+function filterPatch(isChecked){
+    if(isChecked){return;}
+    var length = document.getElementsByClassName("patch").length;
+    for(var i = 0; i < length; i++){
+        document.getElementsByClassName("patch")[i].parentNode.style="display: none";
+    }
+
+}
+function filterUpToDate(isChecked){
+    if(isChecked){return;}
+    var length = document.getElementsByClassName("upToDate").length;
+    for(var i = 0; i < length; i++){
+        document.getElementsByClassName("upToDate")[i].parentNode.style="display: none";
+    }
+
+}
+
 function initializeShowOrHide(element){
     if(document.getElementById("exclude").checked){
         element.style = "display: show";
     }
     else{
-        element.style = "display: none";
+        if(!element.classList.contains("depNameOrVer")){
+            element.style = "display: none";
+        }
     }
 }
 
@@ -130,10 +164,14 @@ $( "#filterButton" ).click(function() {
     }
     var length = document.getElementsByTagName("th").length;
     for(var i = 0; i < length; i++){
-        initializeShowOrHide(document.getElementsByTagName("th")[i].parentNode);
+        //initializeShowOrHide(document.getElementsByTagName("th")[i].parentNode);
         initializeShowOrHide(document.getElementsByTagName("th")[i]);
     }
     filterProjNames(document.getElementById("projectFilter").value);
     filterDepNames(document.getElementById("dependencyFilter").value);
+    filterMajor(document.getElementById("Mjr").checked);
+    filterMinor(document.getElementById("Mnr").checked);
+    filterPatch(document.getElementById("Ptch").checked);
+    filterUpToDate(document.getElementById("UTD").checked);
     console.log("Filtering");
 });
