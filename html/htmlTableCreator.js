@@ -39,9 +39,9 @@ for (var r = 0; r < rowCount; r++) {
             var color = row[c] ? row[c].color : "";
 
             var path = row[c + 1] ? row[c + 1].path : "";
-            rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
+            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] + "\"><div class=\"cellDiv " + color + "\">" + version + "</div></td>";
             var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
-            rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\"><a href=\"\">" + path +
+            rowString += "<td class=\"" + color + "Version " + headerArray[writeHeaderIterator] + "\"><a href=\"\">" + path +
                 "<div class='popup'>" + infoString + "</div></a></td>";
         }
     }
@@ -53,8 +53,8 @@ for (var r = 0; r < rowCount; r++) {
             var color = row[c] ? row[c].color : "";
 
             var path = row[c + 1] ? row[c + 1].path : "";
-            rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
-            rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
+            rowString += "<td class=\"" + color + " " + color + "Version " + headerArray[writeHeaderIterator] + "\"><div>" + version + "</div></td>";
+            rowString += "<td class=\"" + color + "Version " + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
             writeHeaderIterator++;
         }
     }
@@ -151,38 +151,39 @@ function filterDepNames(expression){
 
 function filterMajor(isChecked){
     if(isChecked){return;}
-    var length = document.getElementsByClassName("major").length;
+    var length = document.getElementsByClassName("majorVersion").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByClassName("major")[i].parentNode.style="display: none";
+        document.getElementsByClassName("majorVersion")[i].firstChild.style="display:none;";
     }
 
 }
 function filterMinor(isChecked){
     if(isChecked){return;}
-    var length = document.getElementsByClassName("minor").length;
+    var length = document.getElementsByClassName("minorVersion").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByClassName("minor")[i].parentNode.style="display: none";
+        document.getElementsByClassName("minorVersion")[i].firstChild.style="display:none;";
     }
 
 }
 function filterPatch(isChecked){
     if(isChecked){return;}
-    var length = document.getElementsByClassName("patch").length;
+    var length = document.getElementsByClassName("patchVersion").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByClassName("patch")[i].parentNode.style="display: none";
+        document.getElementsByClassName("patchVersion")[i].firstChild.style="display:none;";
     }
 
 }
 function filterUpToDate(isChecked){
     if(isChecked){return;}
-    var length = document.getElementsByClassName("upToDate").length;
+    var length = document.getElementsByClassName("upToDateVersion").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByClassName("upToDate")[i].parentNode.style="display: none";
+        document.getElementsByClassName("upToDateVersion")[i].firstChild.style="display:none;";
     }
 
 }
 
 function initializeShowOrHide(element){
+	
     if(document.getElementById("exclude").checked){
         element.style = "display: show";
     }
@@ -203,6 +204,10 @@ $( "#filterButton" ).click(function() {
     for(var i = 0; i < length; i++){
         initializeShowOrHide(document.getElementsByTagName("td")[i].parentNode);
         initializeShowOrHide(document.getElementsByTagName("td")[i]);
+        document.getElementsByTagName("td")[i].style.padding="0px";
+		if(document.getElementsByTagName("td")[i].firstChild){
+			initializeShowOrHide(document.getElementsByTagName("td")[i].firstChild);
+		}
     }
     var length = document.getElementsByTagName("th").length;
     for(var i = 0; i < length; i++){

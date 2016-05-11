@@ -51,6 +51,12 @@ body {
     cursor: default;
 }
 
+.cellDiv {
+	display: inline-block;
+	height: 100%;
+	width: 100%;
+}
+
 .major {
 	background-color: #ff6666;
 	/*color: red;*/
