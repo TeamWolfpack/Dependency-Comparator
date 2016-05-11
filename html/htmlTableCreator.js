@@ -38,7 +38,7 @@ for (var r = 0; r < rowCount; r++) {
             var version = row[c] ? row[c].version : "";
             var color = row[c] ? row[c].color : "";
 
-            var path = row[c + 1];
+            var path = row[c + 1] ? row[c + 1].path : "";
             rowString += "<td class=\"" + color + " DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
             var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
             rowString += "<td class=\"DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + path +
@@ -53,7 +53,7 @@ for (var r = 0; r < rowCount; r++) {
             var version = row[c] ? row[c].version : "";
             var color = row[c] ? row[c].color : "";
 
-            var path = row[c + 1];
+            var path = row[c + 1].path;
             rowString += "<td class=\"" + color + " DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
             rowString += "<td class=\"DEP" + depName + " " + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
             writeHeaderIterator++;
@@ -107,6 +107,32 @@ function filterDepNames(name){
         console.log("Filtering by " + "DEP" + names[i]);
     }
 }
+
+/*
+Filters dependencies by regex
+
+function filterDepNames(expression){
+	var dependencies = $.map(document.getElementsByTagName("tr"),
+		function(value, index) {return [value]});
+	var pattern = new RegExp(expression);
+	
+	var deps;
+	if(document.getElementById("exclude").checked){
+        deps = dependencies.filter(function(d) {
+			return pattern.test(d.className);
+		});
+    }
+    else{
+        deps = dependencies.filter(function(d) {
+			return !pattern.test(d.className);
+		});
+    }
+    
+	for (var j = 0; j < deps.length; j++) {
+		deps[j].style = "display: none";
+	}
+}
+*/
 
 function initializeShowOrHide(element){
     if(document.getElementById("exclude").checked){
