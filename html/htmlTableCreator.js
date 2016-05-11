@@ -65,6 +65,14 @@ for (var r = 0; r < rowCount; r++) {
 
 htmlTable.innerHTML = tableText;
 
+//var affixHeight = document.getElementById("menu").getAttribute("height");
+//var affixHeight = document.getElementsByClassName("container-fluid affix")[0].offsetHeight;
+var resultDiv = document.getElementById("resultDiv");
+//console.log(affixHeight);
+console.log(document.getElementsByClassName("container-fluid affix"));
+console.log(document.getElementById("menu"));
+//resultDiv.setAttribute("top", affixHeight);
+
 function download(name) {
     var a = document.getElementById("a");
     var htmlHeaders = "<html><head>"
