@@ -23,13 +23,17 @@ var rowCount = table.length - 1;
 for (var r = 0; r < rowCount; r++) {
     var rowString = "<tr>";
 	var row = table[r];
-    var depName = "";
+    var depName = row[0].content;
+    var npmVersion = row[1].version;
+    var npmColor = row[1].color;
+
     if(row[0].rowSpan >= 1){
         var writeHeaderIterator = 0;
-        var depName = row[0].content;
+        //depName = row[0].content;
+        //npmVersion = row[1].version;
+        //npmColor = row[1].color;
         rowString = "<tr class=\"DEP"+depName+"\">";
-        var npmVersion = row[1].version;
-        var npmColor = row[1].color;
+
 
         rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"name DEP"+depName+"\">" + depName + "</td>";
         rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"" + npmColor + " DEP"+depName+"\">" + npmVersion + "</td>";
@@ -52,9 +56,15 @@ for (var r = 0; r < rowCount; r++) {
             var version = row[c] ? row[c].version : "";
             var color = row[c] ? row[c].color : "";
 
+            //var path = row[c + 1] ? row[c + 1].path : "";
+            //rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
+            //rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
             var path = row[c + 1] ? row[c + 1].path : "";
-            rowString += "<td class=\"" + color + " " + color + "Version " + headerArray[writeHeaderIterator] + "\"><div>" + version + "</div></td>";
-            rowString += "<td class=\"" + color + "Version " + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
+            rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
+            var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
+            rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\"><a href=\"\">" + path +
+                "<div class='popup'>" + infoString + "</div></a></td>";
+
             writeHeaderIterator++;
         }
     }
@@ -63,6 +73,14 @@ for (var r = 0; r < rowCount; r++) {
 }
 
 htmlTable.innerHTML = tableText;
+
+//var affixHeight = document.getElementById("menu").getAttribute("height");
+//var affixHeight = document.getElementsByClassName("container-fluid affix")[0].offsetHeight;
+var resultDiv = document.getElementById("resultDiv");
+//console.log(affixHeight);
+console.log(document.getElementsByClassName("container-fluid affix"));
+console.log(document.getElementById("menu"));
+//resultDiv.setAttribute("top", affixHeight);
 
 function download(name) {
     var a = document.getElementById("a");
@@ -183,7 +201,6 @@ function filterUpToDate(isChecked){
 }
 
 function initializeShowOrHide(element){
-	
     if(document.getElementById("exclude").checked){
         element.style = "display: show";
     }
