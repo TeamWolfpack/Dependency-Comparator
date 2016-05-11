@@ -20,9 +20,10 @@ app.set('views', path.normalize(__dirname + "/../html"));
 //link css, js, and other files to express
 app.use(express.static(path.normalize(__dirname + "/../html")));
 
-function start(table){
+function start(table, maxDepth){
 	app.get('/', function (req, res) {
-		res.render("dep-tool", {port: app.get("port"), table: JSON.stringify(table)});
+		res.render("dep-tool",
+			{port: app.get("port"), table: JSON.stringify(table), depth: maxDepth});
 	});
 	
 	portscanner.findAPortNotInUse(45000, 45100, "127.0.0.1", function(err, port){
