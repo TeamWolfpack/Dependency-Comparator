@@ -8,12 +8,13 @@ body {
     background-color: white;
     overflow: hidden;
     min-height: 50px;
+    height: auto;
 }
 
 .affix {
     width: 100%;
     top: 0;
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
     /*position: center;*/
  }
 
@@ -49,6 +50,12 @@ body {
     border: solid black 1px;
     pointer-events: none;
     cursor: default;
+}
+
+.cellDiv {
+	display: inline-block;
+	height: 100%;
+	width: 100%;
 }
 
 .major {

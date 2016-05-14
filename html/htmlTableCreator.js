@@ -23,13 +23,17 @@ var rowCount = table.length - 1;
 for (var r = 0; r < rowCount; r++) {
     var rowString = "<tr>";
 	var row = table[r];
-    var depName = "";
+    var depName = row[0].content;
+    var npmVersion = row[1].version;
+    var npmColor = row[1].color;
+
     if(row[0].rowSpan >= 1){
         var writeHeaderIterator = 0;
-        var depName = row[0].content;
+        //depName = row[0].content;
+        //npmVersion = row[1].version;
+        //npmColor = row[1].color;
         rowString = "<tr class=\"DEP"+depName+"\">";
-        var npmVersion = row[1].version;
-        var npmColor = row[1].color;
+
 
         rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"name DEP"+depName+"\">" + depName + "</td>";
         rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"" + npmColor + " DEP"+depName+"\">" + npmVersion + "</td>";
@@ -38,10 +42,10 @@ for (var r = 0; r < rowCount; r++) {
             var version = row[c] ? row[c].version : "";
             var color = row[c] ? row[c].color : "";
 
-            var path = row[c + 1];
-            rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
+            var path = row[c + 1] ? row[c + 1].path : "";
+            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] + "\"><div class=\"cellDiv " + color + "\">" + version + "</div></td>";
             var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
-            rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\"><a href=\"\">" + path +
+            rowString += "<td class=\"" + color + "Version " + headerArray[writeHeaderIterator] + "\"><a href=\"\">" + path +
                 "<div class='popup'>" + infoString + "</div></a></td>";
         }
     }
@@ -52,9 +56,15 @@ for (var r = 0; r < rowCount; r++) {
             var version = row[c] ? row[c].version : "";
             var color = row[c] ? row[c].color : "";
 
-            var path = row[c + 1];
+            //var path = row[c + 1] ? row[c + 1].path : "";
+            //rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
+            //rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
+            var path = row[c + 1] ? row[c + 1].path : "";
             rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
-            rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
+            var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
+            rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\"><a href=\"\">" + path +
+                "<div class='popup'>" + infoString + "</div></a></td>";
+
             writeHeaderIterator++;
         }
     }
@@ -63,6 +73,14 @@ for (var r = 0; r < rowCount; r++) {
 }
 
 htmlTable.innerHTML = tableText;
+
+//var affixHeight = document.getElementById("menu").getAttribute("height");
+//var affixHeight = document.getElementsByClassName("container-fluid affix")[0].offsetHeight;
+var resultDiv = document.getElementById("resultDiv");
+//console.log(affixHeight);
+console.log(document.getElementsByClassName("container-fluid affix"));
+console.log(document.getElementById("menu"));
+//resultDiv.setAttribute("top", affixHeight);
 
 function download(name) {
     var a = document.getElementById("a");
@@ -116,7 +134,6 @@ function filterProjNames(name){
         }
         console.log("Filtering by " + "PROJ" + names[i]);
     }
-
 }
 function filterDepNames(name){
     name = String(name);
@@ -130,35 +147,61 @@ function filterDepNames(name){
     }
 }
 
+/*
+Filters dependencies by regex
+
+function filterDepNames(expression){
+	var dependencies = $.map(document.getElementsByTagName("tr"),
+		function(value, index) {return [value]});
+	var pattern = new RegExp(expression);
+	
+	var deps;
+	if(document.getElementById("exclude").checked){
+        deps = dependencies.filter(function(d) {
+			return pattern.test(d.className);
+		});
+    }
+    else{
+        deps = dependencies.filter(function(d) {
+			return !pattern.test(d.className);
+		});
+    }
+    
+	for (var j = 0; j < deps.length; j++) {
+		deps[j].style = "display: none";
+	}
+}
+*/
+
 function filterMajor(isChecked){
     if(isChecked){return;}
-    var length = document.getElementsByClassName("major").length;
+    var length = document.getElementsByClassName("majorVersion").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByClassName("major")[i].parentNode.style="display: none";
+        document.getElementsByClassName("majorVersion")[i].firstChild.style="display:none;";
     }
 
 }
 function filterMinor(isChecked){
     if(isChecked){return;}
-    var length = document.getElementsByClassName("minor").length;
+    var length = document.getElementsByClassName("minorVersion").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByClassName("minor")[i].parentNode.style="display: none";
+        document.getElementsByClassName("minorVersion")[i].firstChild.style="display:none;";
     }
 
 }
 function filterPatch(isChecked){
     if(isChecked){return;}
-    var length = document.getElementsByClassName("patch").length;
+    var length = document.getElementsByClassName("patchVersion").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByClassName("patch")[i].parentNode.style="display: none";
+        document.getElementsByClassName("patchVersion")[i].firstChild.style="display:none;";
     }
 
 }
 function filterUpToDate(isChecked){
     if(isChecked){return;}
-    var length = document.getElementsByClassName("upToDate").length;
+    var length = document.getElementsByClassName("upToDateVersion").length;
     for(var i = 0; i < length; i++){
-        document.getElementsByClassName("upToDate")[i].parentNode.style="display: none";
+        document.getElementsByClassName("upToDateVersion")[i].firstChild.style="display:none;";
     }
 
 }
@@ -184,6 +227,10 @@ $( "#filterButton" ).click(function() {
     for(var i = 0; i < length; i++){
         initializeShowOrHide(document.getElementsByTagName("td")[i].parentNode);
         initializeShowOrHide(document.getElementsByTagName("td")[i]);
+        document.getElementsByTagName("td")[i].style.padding="0px";
+		if(document.getElementsByTagName("td")[i].firstChild){
+			initializeShowOrHide(document.getElementsByTagName("td")[i].firstChild);
+		}
     }
     var length = document.getElementsByTagName("th").length;
     for(var i = 0; i < length; i++){

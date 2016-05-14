@@ -1,6 +1,7 @@
 var path = require("path");
 var fs = require("fs");
 var allDependencies;
+var maxDepth;
 
 /**
  * Turns the string representation of a version into a
@@ -78,6 +79,7 @@ function isNodeProject(dir){
  */
 function parseDependencies(project, depth, includeDev) {
     allDependencies = includeDev;
+	maxDepth = depth;
     
 	var pathToPackageJSON = path.join(project, "package.json");
 	var packageJSON = JSON.parse(fs.readFileSync(pathToPackageJSON));
@@ -118,7 +120,8 @@ function parseDependenciesRecursively(baseProject, packageJSON, depth,
             dependencies[dep][dependencies[dep].length] =
             {
                 version: subPackageJSON.version,
-                path: pathToSubDependency
+                path: pathToSubDependency,
+				depth: maxDepth - depth + 1
             };
 
             if (depth - 1 >= 0) {
