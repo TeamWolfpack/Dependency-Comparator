@@ -82,7 +82,13 @@ function download(name) {
         document.getElementsByClassName("popup")[i].style = "display: none";
     }
     var tbl = document.getElementById("htmlTable");
+    var tblHeaders = document.getElementsByTagName("th");
+    for(var j = 0;j<tblHeaders.length;j++){
+        console.log(tblHeaders.innerHTML);
+        tblHeaders[j].cellPadding = 10;
+    }
     var text = tbl.innerHTML;
+
     //var popup = document.getElementsByClassName("popup");
     var file = new Blob([htmlHeaders+text+htmlHeadersEnd], {type: "text/html"});
     a.href = URL.createObjectURL(file);
