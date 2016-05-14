@@ -43,9 +43,10 @@ for (var r = 0; r < rowCount; r++) {
             var color = row[c] ? row[c].color : "";
 
             var path = row[c + 1] ? row[c + 1].path : "";
-            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] + "\"><div class=\"cellDiv " + color + "\">" + version + "</div></td>";
+            var depth = row[c + 1] ? row[c + 1].depth : "";
+            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] + " depth"+depth+" \"><div class=\"cellDiv " + color + "\">" + version + "</div></td>";
             var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
-            rowString += "<td class=\"" + color + "Version " + headerArray[writeHeaderIterator] + "\"><a href=\"\">" + path +
+            rowString += "<td class=\"" + color + "Version " + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><a href=\"\">" + path +
                 "<div class='popup'>" + infoString + "</div></a></td>";
         }
     }
@@ -59,10 +60,11 @@ for (var r = 0; r < rowCount; r++) {
             //var path = row[c + 1] ? row[c + 1].path : "";
             //rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
             //rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
+            var depth = row[c + 1] ? row[c + 1].depth : "";
             var path = row[c + 1] ? row[c + 1].path : "";
-            rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
+            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><div class=\"cellDiv " + color + "\">" + version + "</div></td>";
             var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
-            rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\"><a href=\"\">" + path +
+            rowString += "<td class=\"" + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><a href=\"\">" + path +
                 "<div class='popup'>" + infoString + "</div></a></td>";
 
             writeHeaderIterator++;
@@ -172,7 +174,21 @@ function filterDepNames(expression){
 	}
 }
 */
+function filterDepth(depth){
+    console.log("Filtering for depth " + depth);
+    for(var depthIterator = depth-1; depthIterator>0;depthIterator--) {
+        var length = document.getElementsByClassName("depth"+depthIterator).length;
+        console.log("Depth: "+depth);
+        console.log("Length: "+length);
+        if(length>0) {
+            for (var i = 0; i < length; i++) {
+                console.log(i);
+                document.getElementsByClassName("depth"+depthIterator)[i].firstChild.style = "display:none;";
+            }
+        }
+    }
 
+}
 function filterMajor(isChecked){
     if(isChecked){return;}
     var length = document.getElementsByClassName("majorVersion").length;
@@ -239,6 +255,7 @@ $( "#filterButton" ).click(function() {
     }
     filterProjNames(document.getElementById("projectFilter").value);
     filterDepNames(document.getElementById("dependencyFilter").value);
+    filterDepth(document.getElementById("depthFilter").value);
     filterMajor(document.getElementById("Mjr").checked);
     filterMinor(document.getElementById("Mnr").checked);
     filterPatch(document.getElementById("Ptch").checked);
