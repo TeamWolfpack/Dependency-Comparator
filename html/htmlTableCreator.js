@@ -134,7 +134,6 @@ function filterProjNames(name){
         for (var j = 0; j < length; j++) {
             showOrHideElementWithFilter(document.getElementsByClassName("PROJ" + names[i])[j]);
         }
-        console.log("Filtering by " + "PROJ" + names[i]);
     }
 }
 function filterDepNames(name){
@@ -145,7 +144,6 @@ function filterDepNames(name){
         for (var j = 0; j < length; j++) {
             showOrHideElementWithFilter(document.getElementsByClassName("DEP" + names[i])[j]);
         }
-        console.log("Filtering by " + "DEP" + names[i]);
     }
 }
 
@@ -175,14 +173,10 @@ function filterDepNames(expression){
 }
 */
 function filterDepth(depth){
-    console.log("Filtering for depth " + depth);
     for(var depthIterator = depth-1; depthIterator>0;depthIterator--) {
         var length = document.getElementsByClassName("depth"+depthIterator).length;
-        console.log("Depth: "+depth);
-        console.log("Length: "+length);
         if(length>0) {
             for (var i = 0; i < length; i++) {
-                console.log(i);
                 document.getElementsByClassName("depth"+depthIterator)[i].firstChild.style = "display:none;";
             }
         }
@@ -260,5 +254,4 @@ $( "#filterButton" ).click(function() {
     filterMinor(document.getElementById("Mnr").checked);
     filterPatch(document.getElementById("Ptch").checked);
     filterUpToDate(document.getElementById("UTD").checked);
-    console.log("Filtering");
 });
