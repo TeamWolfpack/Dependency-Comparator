@@ -36,9 +36,9 @@ function printCliTable(table) {
             if (cell.version) {
                 table[r][c] = color.colorVersion(cell);
             }
-			if (cell.path) {
-				table[r][c] = cell.path;
-			}
+            if (cell.path) {
+                table[r][c] = cell.path;
+            }
         }
     }
     console.log(table.toString());
@@ -82,7 +82,7 @@ function createTable(dependencies) {
                 if (projectInstances[i]) {
                     var instance = projectInstances[i];
                     var version = {version: instance.version, color: instance.color};
-					var path = {path: instance.path, depth: instance.depth};
+                    var path = {path: instance.path, depth: instance.depth};
                     rows[i] = rows[i].concat([version, path]);
                 } else {
                     rows[i] = rows[i].concat(["", ""]);
@@ -165,10 +165,10 @@ function compareProjects(projects) {
         }
     }
 	
-    matchDependencies(allDependenciesFound, function(matchedDependencies) {		
+    matchDependencies(allDependenciesFound, function(matchedDependencies) {
         logger.logDependencies(matchedDependencies);
         var table = createTable(matchedDependencies);
-		var tableCopy = JSON.parse(JSON.stringify(table));
+        var tableCopy = JSON.parse(JSON.stringify(table));
 		
         if (process.argv[2] === "compare" ||
                         process.argv[1] === "compare" ||
@@ -190,7 +190,7 @@ function compareProjects(projects) {
             }
             summarizer.printSummaryTable();
         }
-		server.start(tableCopy, commander.depth);
+        server.start(tableCopy, commander.depth);
     });
 }
 
@@ -242,7 +242,7 @@ function matchDependencies(allDependencies, done) {
                     Project: projectName,
                     projectNumber: projectNumber,
                     path: dependency[i].path,
-					depth: dependency[i].depth,
+                    depth: dependency[i].depth,
                     color: "white"
                 };
                 instances.push(instance);
