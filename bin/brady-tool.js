@@ -404,11 +404,11 @@ commander
     .option("-t, --showTable", "Shows the table.")
     .action(normalizeProjectPaths);
 
-commander
-	.command("topDir [topDirectory]")
-	.alias("dir")
-	.description("Parses through the directory for node projects.")
-	.action(parseDirectory);
+//commander
+//	.command("topDir [topDirectory]")
+//	.alias("dir")
+//	.description("Parses through the directory for node projects.")
+//	.action(parseDirectory);
 
 commander.parse(process.argv);
 
