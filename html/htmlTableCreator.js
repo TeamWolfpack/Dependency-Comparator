@@ -23,15 +23,18 @@ var rowCount = table.length - 1;
 for (var r = 0; r < rowCount; r++) {
     var rowString = "<tr>";
 	var row = table[r];
-    var depName = row[0].content;
-    var npmVersion = row[1].version;
-    var npmColor = row[1].color;
+    //var depName = row[0].content;
+    //var npmVersion = row[1].version;
+    //var npmColor = row[1].color;
+    var depName;
+    var npmVersion;
+    var npmColor;
 
     if(row[0].rowSpan >= 1){
         var writeHeaderIterator = 0;
-        //depName = row[0].content;
-        //npmVersion = row[1].version;
-        //npmColor = row[1].color;
+        depName = row[0].content;
+        npmVersion = row[1].version;
+        npmColor = row[1].color;
         rowString = "<tr class=\"DEP"+depName+"\">";
 
 
