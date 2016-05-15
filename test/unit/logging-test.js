@@ -16,12 +16,14 @@ var testJSON = [{
         "Project": "dependency-comparator",
         "projectNumber": 1,
         "path": "node_modules/jenkins",
+		"depth": 1,
         "color": "minor"
     }, {
         "version": "0.10.1",
         "Project": "sample-webservice",
         "projectNumber": 2,
         "path": "node_modules/jenkins",
+		"depth": 1,
         "color": "minor"
     }],
     "npmVersion": {
@@ -36,6 +38,7 @@ var testJSON = [{
         "Project": "dependency-comparator",
         "projectNumber": 1,
         "path": "node_modules/async",
+		"depth": 1,
         "color": "major"
     }],
     "npmVersion": {
