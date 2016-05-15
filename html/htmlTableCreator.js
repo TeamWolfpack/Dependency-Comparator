@@ -173,7 +173,7 @@ function filterDepNames(expression){
 }
 */
 function filterDepth(depth){
-    for(var depthIterator = depth-1; depthIterator>0;depthIterator--) {
+    for(var depthIterator = maxDepth; depthIterator > depth; depthIterator--) {
         var length = document.getElementsByClassName("depth"+depthIterator).length;
         if(length>0) {
             for (var i = 0; i < length; i++) {
