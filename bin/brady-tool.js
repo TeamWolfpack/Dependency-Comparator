@@ -190,7 +190,7 @@ function compareProjects(projects) {
             }
             summarizer.printSummaryTable();
         }
-        server.start(tableCopy, commander.depth);
+        //server.start(tableCopy, commander.depth);
     });
 }
 
