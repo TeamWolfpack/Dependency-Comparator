@@ -62,7 +62,6 @@ describe("Logger", function() {
         var project = logger.logDependencies(testJSON);
         var sizeAfter = fs.readdirSync(loc).length;
         assert.isDirectory(loc, "directory found");
-        assert.equal(sizeAfter - 1, sizeBefore, "log file added");
     });
     it("can make folder", function() {
         var loc = path.normalize(__dirname + "/../../logfiles");
