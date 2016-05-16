@@ -203,7 +203,7 @@ describe("Compare and Summary", function() {
         expect(capturedCompare.length).to.equal(capturedSummary.length);
     });
 });
-/*
+
 describe("Test topDir", function() {
     describe("Valid Directory", function() {
         var capturedOutput;
@@ -255,4 +255,3 @@ describe("Test topDir", function() {
         });
     });
 });
-*/
