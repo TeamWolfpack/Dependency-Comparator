@@ -29,37 +29,37 @@ or
 <pre><code>dep-tool cmp "[project_path]"</code></pre>
 
 <details>
-	<summary>More on Compare...</summary>
+  <summary>More on Compare...</summary>
     
-    <h3 id="devDependencies">Compare with devDependencies</h3>
-    The command above will look through the package.json file to find the list of dependencies before going through the node_modules package to get the current versions of each dependency. However, you may want to have both the list of dependencies and devDependencies being compared. In order to compare both, all you need to do is add the option "-a" or "--all".
+  <h3 id="devDependencies">Compare with devDependencies</h3>
+  The command above will look through the package.json file to find the list of dependencies before going through the node_modules package to get the current versions of each dependency. However, you may want to have both the list of dependencies and devDependencies being compared. In order to compare both, all you need to do is add the option "-a" or "--all".
     
-    <pre><code>dep-tool compare "[project_path]" -a</code></pre>
+  <pre><code>dep-tool compare "[project_path]" -a</code></pre>
     
-    or
+  or
     
-    <pre><code>dep-tool compare "[project_path]" --all</code></pre>
+  <pre><code>dep-tool compare "[project_path]" --all</code></pre>
     
-    <h3 id="CompareDepth">Compare with Depth</h3>
-    Since Node dependencies have dependencies of their own, if you want to include the dependencies of other dependencies (especially if the node_module contains private dependencies), you can specify how many layers deep the comparison will look.
+  <h3 id="CompareDepth">Compare with Depth</h3>
+  Since Node dependencies have dependencies of their own, if you want to include the dependencies of other dependencies (especially if the node_module contains private dependencies), you can specify how many layers deep the comparison will look.
     
-    <pre><code>dep-tool compare "[project_path]" -d 2</code></pre>
+  <pre><code>dep-tool compare "[project_path]" -d 2</code></pre>
     
-    or
+  or
     
-    <pre><code>dep-tool compare "[project_path]" --depth 2</code></pre>
+  <pre><code>dep-tool compare "[project_path]" --depth 2</code></pre>
     
-    <h3 id="HideUnmatched">Compare without Unmatched Dependencies</h3>
-    <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Unhide%20Compare.JPG" alt="Failed to load screenshot Unhide Unmatched">
-    <p>becomes</p>
-    <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Hide%20Compare.JPG" alt="Failed to load screenshot Hide Unmatched">
-    <p>By default, the compare method will compare and match all dependencies. If you want to only see the matched dependencies, you can hide the unmatched dependencies with a simple flag.</p>
+  <h3 id="HideUnmatched">Compare without Unmatched Dependencies</h3>
+  <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Unhide%20Compare.JPG" alt="Failed to load screenshot Unhide Unmatched">
+  <p>becomes</p>
+  <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Hide%20Compare.JPG" alt="Failed to load screenshot Hide Unmatched">
+  <p>By default, the compare method will compare and match all dependencies. If you want to only see the matched dependencies, you can hide the unmatched dependencies with a simple flag.</p>
     
-    <pre><code>dep-tool compare "[project_path]" -u</code></pre>
+  <pre><code>dep-tool compare "[project_path]" -u</code></pre>
     
-    or
+  or
     
-    <pre><code>dep-tool compare "[project_path]" --hideUnmatched</code></pre>
+  <pre><code>dep-tool compare "[project_path]" --hideUnmatched</code></pre>
 </details>
 
 <h2 id="Filtering">Filtering</h2>
