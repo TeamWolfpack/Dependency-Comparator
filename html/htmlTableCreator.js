@@ -19,9 +19,14 @@ for (var header in table.options.head) {
 headers += "</tr>";
 tableText += headers;
 
+var maxDepth = 0;
 var rowCount = table.length - 1;
 for (var r = 0; r < rowCount; r++) {
-    var rowString = "<tr>";
+    /*
+     * Even though depName is declared after this line, some voodoo magic
+     * happened and it fixed our problem... this is bull
+     */
+    var rowString = "<tr class=\"DEP"+depName+"\">";
 	var row = table[r];
     var depName;
     var npmVersion;
@@ -42,10 +47,10 @@ for (var r = 0; r < rowCount; r++) {
             var color = row[c] ? row[c].color : "";
             var path = row[c + 1] ? row[c + 1].path : "";
             var depth = row[c + 1] ? row[c + 1].depth : "";
-            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] + " depth"+depth+" \"><div class=\"cellDiv " + color + "\">" + version + "</div></td>";
+            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] + " depth"+depth+" \"><div class=\"cellDiv " + color + " DEP"+depName+"\">" + version + "</div></td>";
             var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
-            rowString += "<td class=\"" + color + "Version " + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><a href=\"\">" + path +
-                "<div class='popup'>" + infoString + "</div></a></td>";
+            rowString += "<td class=\"" + color + "Version " + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><a href=\"\" class=\" DEP"+depName+"\">" + path +
+                "<div class=\"popup DEP"+depName+"\">" + infoString + "</div></a></td>";
         }
     }
     else{
@@ -55,17 +60,26 @@ for (var r = 0; r < rowCount; r++) {
             var version = row[c] ? row[c].version : "";
             var color = row[c] ? row[c].color : "";
             var depth = row[c + 1] ? row[c + 1].depth : "";
+            maxDepth = Math.max(depth,maxDepth);
             var path = row[c + 1] ? row[c + 1].path : "";
-            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><div class=\"cellDiv " + color + "\">" + version + "</div></td>";
+            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><div class=\"cellDiv " + color + " DEP"+depName+"\">" + version + "</div></td>";
             var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
-            rowString += "<td class=\"" + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><a href=\"\">" + path +
-                "<div class='popup'>" + infoString + "</div></a></td>";
+            rowString += "<td class=\"" + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><a href=\"\" class=\" DEP"+depName+"\">" + path +
+                "<div class=\"popup\">" + infoString + "</div></a></td>";
 
             writeHeaderIterator++;
         }
     }
 	rowString += "</tr>";
     tableText += rowString;
+}
+for(var depth = 1 ; depth<=maxDepth ; depth ++){
+    if(depth==maxDepth){
+        document.getElementById("depthFilter").innerHTML+="<option selected='selected'>"+depth+"</option>";
+    }
+    else{
+        document.getElementById("depthFilter").innerHTML+="<option>"+depth+"</option>";
+    }
 }
 
 htmlTable.innerHTML = tableText;
@@ -116,6 +130,7 @@ function showOrHideElementWithFilter(element){
     }
     else{
         element.style = "display: show";
+        element.style.padding="0px";
     }
 }
 function filterProjNames(name){
@@ -213,7 +228,8 @@ function initializeShowOrHide(element){
         element.style = "display: show";
     }
     else{
-        if(!element.classList.contains("depNameOrVer")){
+        if(element.classList &&
+            !(element.classList.contains("depNameOrVer"))) {
             element.style = "display: none";
         }
     }
