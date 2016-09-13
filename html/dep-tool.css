@@ -34,6 +34,7 @@ body {
 
 #resultTable td, th {
     border: solid black 1px;
+    padding: 5px;
 }
 
 #htmlTable .popup {

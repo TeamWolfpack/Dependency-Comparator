@@ -19,13 +19,15 @@ for (var header in table.options.head) {
 headers += "</tr>";
 tableText += headers;
 
+var maxDepth = 0;
 var rowCount = table.length - 1;
 for (var r = 0; r < rowCount; r++) {
-    var rowString = "<tr>";
+    /*
+     * Even though depName is declared after this line, some voodoo magic
+     * happened and it fixed our problem... this is bull
+     */
+    var rowString = "<tr class=\"DEP"+depName+"\">";
 	var row = table[r];
-    //var depName = row[0].content;
-    //var npmVersion = row[1].version;
-    //var npmColor = row[1].color;
     var depName;
     var npmVersion;
     var npmColor;
@@ -37,20 +39,18 @@ for (var r = 0; r < rowCount; r++) {
         npmColor = row[1].color;
         rowString = "<tr class=\"DEP"+depName+"\">";
 
-
         rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"name DEP"+depName+"\">" + depName + "</td>";
         rowString += "<td rowspan=\""+row[0].rowSpan+"\" class=\"" + npmColor + " DEP"+depName+"\">" + npmVersion + "</td>";
 
         for (var c = 2; c < row.length; c += 2) {
             var version = row[c] ? row[c].version : "";
             var color = row[c] ? row[c].color : "";
-
             var path = row[c + 1] ? row[c + 1].path : "";
             var depth = row[c + 1] ? row[c + 1].depth : "";
-            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] + " depth"+depth+" \"><div class=\"cellDiv " + color + "\">" + version + "</div></td>";
+            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] + " depth"+depth+" \"><div class=\"cellDiv " + color + " DEP"+depName+"\">" + version + "</div></td>";
             var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
-            rowString += "<td class=\"" + color + "Version " + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><a href=\"\">" + path +
-                "<div class='popup'>" + infoString + "</div></a></td>";
+            rowString += "<td class=\"" + color + "Version " + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><a href=\"\" class=\" DEP"+depName+"\">" + path +
+                "<div class=\"popup DEP"+depName+"\">" + infoString + "</div></a></td>";
         }
     }
     else{
@@ -59,22 +59,27 @@ for (var r = 0; r < rowCount; r++) {
         for (var c = 1; c < row.length; c += 2) {
             var version = row[c] ? row[c].version : "";
             var color = row[c] ? row[c].color : "";
-
-            //var path = row[c + 1] ? row[c + 1].path : "";
-            //rowString += "<td class=\"" + color + " " + headerArray[writeHeaderIterator] + "\">" + version + "</td>";
-            //rowString += "<td class=\"" + headerArray[writeHeaderIterator] + "\">" + path + "</td>";
             var depth = row[c + 1] ? row[c + 1].depth : "";
+            maxDepth = Math.max(depth,maxDepth);
             var path = row[c + 1] ? row[c + 1].path : "";
-            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><div class=\"cellDiv " + color + "\">" + version + "</div></td>";
+            rowString += "<td style=\"padding: 0px\" class=\"" + color + "Version " + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><div class=\"cellDiv " + color + " DEP"+depName+"\">" + version + "</div></td>";
             var infoString = "Dependency: " + depName + "<br>Latest: " + npmVersion + "<br>Project: " + table.options.head[c];
-            rowString += "<td class=\"" + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><a href=\"\">" + path +
-                "<div class='popup'>" + infoString + "</div></a></td>";
+            rowString += "<td class=\"" + headerArray[writeHeaderIterator] +  " depth"+depth+"\"><a href=\"\" class=\" DEP"+depName+"\">" + path +
+                "<div class=\"popup\">" + infoString + "</div></a></td>";
 
             writeHeaderIterator++;
         }
     }
 	rowString += "</tr>";
     tableText += rowString;
+}
+for(var depth = 1 ; depth<=maxDepth ; depth ++){
+    if(depth==maxDepth){
+        document.getElementById("depthFilter").innerHTML+="<option selected='selected'>"+depth+"</option>";
+    }
+    else{
+        document.getElementById("depthFilter").innerHTML+="<option>"+depth+"</option>";
+    }
 }
 
 htmlTable.innerHTML = tableText;
@@ -93,12 +98,11 @@ function download(name) {
             + "<meta charset=\"UTF-8\">"
             + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
             + "<title>dep-tool</title>"
-            + "<link rel=\"stylesheet\" type=\"text/css\" href=\"dep-tool.css\">"
             + "<link rel=\"stylesheet\" href=\"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\">"
             + "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js\"></script>"
             + "<script src=\"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\"></script>"
             + "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script>"
-            + "</head><body><table>";
+            + "</head><body><table class=\"table table-bordered table-striped\">";
     var htmlHeadersEnd = "</table></body></html>";
     var length = document.getElementsByClassName("popup").length;
     for(var i = 0; i < length; i++){
@@ -112,7 +116,6 @@ function download(name) {
     }
     var text = tbl.innerHTML;
 
-    //var popup = document.getElementsByClassName("popup");
     var file = new Blob([htmlHeaders+text+htmlHeadersEnd], {type: "text/html"});
     a.href = URL.createObjectURL(file);
     a.download = name;
@@ -127,6 +130,7 @@ function showOrHideElementWithFilter(element){
     }
     else{
         element.style = "display: show";
+        element.style.padding="0px";
     }
 }
 function filterProjNames(name){
@@ -224,7 +228,8 @@ function initializeShowOrHide(element){
         element.style = "display: show";
     }
     else{
-        if(!element.classList.contains("depNameOrVer")){
+        if(element.classList &&
+            !(element.classList.contains("depNameOrVer"))) {
             element.style = "display: none";
         }
     }
