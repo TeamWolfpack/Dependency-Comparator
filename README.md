@@ -59,56 +59,57 @@ OR
 
 <code>dep-tool compare "[project_path]" --hideUnmatched</code></pre>
 
-<h3 id="CompareColorConfig">Compare Color Configuration</h3>
-Since the default color scheme for identifying how out-of-date a dependency is consists of red and green, a common colorblind color pair, we added a Color Blind color configuration to help solve that. These color schemes can be changed and this is explain more in the <a href="#ColorConfig">Color Configuration</a> section. <b>NOTE:</b> In order to use this option, xTerm needs to be supported in your OS.
+<details>
+  <summary>Information specific to CLI use...</summary>
 
-<pre><code>dep-tool compare "[project_path]" -c "ColorBlind"</code>
+  <h3 id="CompareColorConfig">Compare Color Configuration</h3>
+  Since the default color scheme for identifying how out-of-date a dependency is consists of red and green, a common colorblind color pair, we added a Color Blind color configuration to help solve that. These color schemes can be changed and this is explain more in the <a href="#ColorConfig">Color Configuration</a> section. <b>NOTE:</b> In order to use this option, xTerm needs to be supported in your OS.
 
-OR
+  <pre><code>dep-tool compare "[project_path]" -c "ColorBlind"</code>
 
-<code>dep-tool compare "[project_path]" --colorConfig "ColorBlind"</code></pre>
+  OR
 
-<h3 id="ColorLegend">Compare with a Color Legend</h3>
-<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Color%20Legend.JPG" alt="Failed to load screenshot of Color Legend Command">
-<p>When running the compare method, the dependencies in the table are colored depending on how out-of-date they are. If you want to see a color legend, you just need to add a flag to the command to have it displayed below your table.</p>
+  <code>dep-tool compare "[project_path]" --colorConfig "ColorBlind"</code></pre>
 
-<pre><code>dep-tool compare "[project_path]" -l</code>
+  <h3 id="ColorLegend">Compare with a Color Legend</h3>
+  <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Color%20Legend.JPG" alt="Failed to load screenshot of Color Legend Command">
+  <p>When running the compare method, the dependencies in the table are colored depending on how out-of-date they are. If you want to see a color legend, you just need to add a flag to the command to have it displayed below your table.</p>
 
-OR
+  <pre><code>dep-tool compare "[project_path]" -l</code>
 
-<code>dep-tool compare "[project_path]" --colorLegend</code></pre>
+  OR
 
-<h3 id="SummaryTable">Compare without a Summary Table</h3>
-<p>By default, a summary of the results will be displayed below the comparison table. If you want to hide the summary from being displayed, you can add the following flag to your command.</p>
+  <code>dep-tool compare "[project_path]" --colorLegend</code></pre>
 
-<pre><code>dep-tool compare "[project_path]" -s</code>
+  <h3 id="SummaryTable">Compare without a Summary Table</h3>
+  <p>By default, a summary of the results will be displayed below the comparison table. If you want to hide the summary from being displayed, you can add the following flag to your command.</p>
 
-OR
+  <pre><code>dep-tool compare "[project_path]" -s</code>
 
-<code>dep-tool compare "[project_path]" --hideSummary</code></pre>
+  OR
 
-<h3 id="Summary">Summary</h3>
-<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Summary.JPG" alt="Failed to load screenshot of Summary Command">
-<p>By default, a summary of the results will be displayed below the comparison table. If you want to hide the summary from being displayed, you can add the following flag to your command. The <a href="#CompareDepth">depth</a>, <a href="#devDependencies">all</a>, and <a href="#HideUnmatched">hideUnmatched</a> flags can also be used with the summary command.</p>
+  <code>dep-tool compare "[project_path]" --hideSummary</code></pre>
 
-<pre><code>dep-tool summary "[project_path]"</code>
+  <h3 id="Summary">Summary</h3>
+  <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Summary.JPG" alt="Failed to load screenshot of Summary Command">
+  <p>By default, a summary of the results will be displayed below the comparison table. If you want to hide the summary from being displayed, you can add the following flag to your command. The <a href="#CompareDepth">depth</a>, <a href="#devDependencies">all</a>, and <a href="#HideUnmatched">hideUnmatched</a> flags can also be used with the summary command.</p>
 
-OR
+  <pre><code>dep-tool summary "[project_path]"</code>
 
-<code>dep-tool sum "[project_path]"</code></pre>
+  OR
 
-<h3 id="SummaryWithTable">Summary With Table</h3>
-<p>In case you are using the summary command and realize you want to see a table, instead of having to retype a new command, you can just use the showTable flag.</p>
+  <code>dep-tool sum "[project_path]"</code></pre>
 
-<pre><code>dep-tool summary "[project_path]" -t</code>
+  <h3 id="SummaryWithTable">Summary With Table</h3>
+  <p>In case you are using the summary command and realize you want to see a table, instead of having to retype a new command, you can just use the showTable flag.</p>
 
-OR
+  <pre><code>dep-tool summary "[project_path]" -t</code>
 
-<code>dep-tool summary "[project_path]" --showTable</code></pre>
+  OR
 
-<h2 id="ColorConfig">Color Configuration</h2>
-In order to color code the version number of each dependency to show any differences, the program looks at the colorConfig.json file. The program uses the [cli-color](https://www.npmjs.com/package/cli-color) node module in order to color the text in the terminal. If the terminal being used supports [xTerm colors](https://gist.github.com/jasonm23/2868981), then the colorConfig.json file can be modified to the users preference. <b>NOTE:</b> When updating to a newer version of the tool, the colorConfig.json file may be reset to the default values.
+  <code>dep-tool summary "[project_path]" --showTable</code></pre>
 
-<h2 id="RelativePathSupport">Relative Path Support</h2>
-<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Relative%20Paths.JPG" alt="Failed to load screenshot Relative Support">
-<p>We support support relative paths now so that you can be more lazy! Who wants to type so much anyways? Now with relative paths you can type less!</p>
+  <h2 id="ColorConfig">Color Configuration</h2>
+  In order to color code the version number of each dependency to show any differences, the program looks at the colorConfig.json file. The program uses the [cli-color](https://www.npmjs.com/package/cli-color) node module in order to color the text in the terminal. If the terminal being used supports [xTerm colors](https://gist.github.com/jasonm23/2868981), then the colorConfig.json file can be modified to the users preference. <b>NOTE:</b> When updating to a newer version of the tool, the colorConfig.json file may be reset to the default values.
+
+</details>
