@@ -17,9 +17,8 @@ If you don't wish to install the dependency-comparator globally, all you need to
 
 <pre><code>npm install dependency-comparator</code></pre>
 
-##Examples
+##Compare
 
-<h3 id="Compare">Compare</h3>
 <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Compare.JPG" atl="Failed to load screenshot of Compare Command">
 <p>If you want to compare the dependencies between multiple Node projects, you will want to use the compare method. This will produce a table that will shows the path and version of each dependency in all projects, as well as match and compare them with the other project. All dependencies that are found in all projects appear at the top of the table while all dependencies that don't exist in all projects are listed toward the bottom of the table. In addition, a logfile is stored in the directory where the program is saved by npm (by default in the global npm modules folder under dependency-comparator).  This logfile contains a json file that contains the information about the comparison.</p>
 
@@ -29,42 +28,46 @@ or
 
 <pre><code>dep-tool cmp "[project_path]"</code></pre>
 
-<h3 id="devDependencies">Compare with devDependencies</h3>
-The command above will look through the package.json file to find the list of dependencies before going through the node_modules package to get the current versions of each dependency. However, you may want to have both the list of dependencies and devDependencies being compared. In order to compare both, all you need to do is add the option "-a" or "--all".
-
-<pre><code>dep-tool compare "[project_path]" -a</code></pre>
-
-or
-
-<pre><code>dep-tool compare "[project_path]" --all</code></pre>
-
-<h3 id="CompareDepth">Compare with Depth</h3>
-Since Node dependencies have dependencies of their own, if you want to include the dependencies of other dependencies (especially if the node_module contains private dependencies), you can specify how many layers deep the comparison will look.
-
-<pre><code>dep-tool compare "[project_path]" -d 2</code></pre>
-
-or
-
-<pre><code>dep-tool compare "[project_path]" --depth 2</code></pre>
-
-<h3 id="HideUnmatched">Compare without Unmatched Dependencies</h3>
-<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Unhide%20Compare.JPG" alt="Failed to load screenshot Unhide Unmatched">
-<p>becomes</p>
-<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Hide%20Compare.JPG" alt="Failed to load screenshot Hide Unmatched">
-<p>By default, the compare method will compare and match all dependencies. If you want to only see the matched dependencies, you can hide the unmatched dependencies with a simple flag.</p>
-
-<pre><code>dep-tool compare "[project_path]" -u</code></pre>
-
-or
-
-<pre><code>dep-tool compare "[project_path]" --hideUnmatched</code></pre>
+<details>
+	<summary><h2>More on Compare...</h2></summary>
+    
+    <h3 id="devDependencies">Compare with devDependencies</h3>
+    The command above will look through the package.json file to find the list of dependencies before going through the node_modules package to get the current versions of each dependency. However, you may want to have both the list of dependencies and devDependencies being compared. In order to compare both, all you need to do is add the option "-a" or "--all".
+    
+    <pre><code>dep-tool compare "[project_path]" -a</code></pre>
+    
+    or
+    
+    <pre><code>dep-tool compare "[project_path]" --all</code></pre>
+    
+    <h3 id="CompareDepth">Compare with Depth</h3>
+    Since Node dependencies have dependencies of their own, if you want to include the dependencies of other dependencies (especially if the node_module contains private dependencies), you can specify how many layers deep the comparison will look.
+    
+    <pre><code>dep-tool compare "[project_path]" -d 2</code></pre>
+    
+    or
+    
+    <pre><code>dep-tool compare "[project_path]" --depth 2</code></pre>
+    
+    <h3 id="HideUnmatched">Compare without Unmatched Dependencies</h3>
+    <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Unhide%20Compare.JPG" alt="Failed to load screenshot Unhide Unmatched">
+    <p>becomes</p>
+    <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Hide%20Compare.JPG" alt="Failed to load screenshot Hide Unmatched">
+    <p>By default, the compare method will compare and match all dependencies. If you want to only see the matched dependencies, you can hide the unmatched dependencies with a simple flag.</p>
+    
+    <pre><code>dep-tool compare "[project_path]" -u</code></pre>
+    
+    or
+    
+    <pre><code>dep-tool compare "[project_path]" --hideUnmatched</code></pre>
+</details>
 
 <h2 id="Filtering">Filtering</h2>
 <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/filter.PNG" alt="Failed to load screenshot Relative Support">
 In the web page, there is the ability to filter the contents of the table. The filters include: project names, dependency names, versions, and unmatched dependencies. 
 
 <details>
-  <summary>Information specific to CLI use...</summary>
+  <summary><h2>Information specific to CLI use...</h2></summary>
 
   <h3 id="CompareColorConfig">Compare Color Configuration</h3>
   Since the default color scheme for identifying how out-of-date a dependency is consists of red and green, a common colorblind color pair, we added a Color Blind color configuration to help solve that. These color schemes can be changed and this is explain more in the <a href="#ColorConfig">Color Configuration</a> section. <b>NOTE:</b> In order to use this option, xTerm needs to be supported in your OS.
