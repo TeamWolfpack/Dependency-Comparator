@@ -29,7 +29,6 @@ function logDependencies(dependencies){
         if(err){
 			console.log("Can't make the logfiles json file:\n"+err);           
         }
-
-    })
+    });
 
 }

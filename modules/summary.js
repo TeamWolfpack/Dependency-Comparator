@@ -1,115 +1,86 @@
 /**
  * Created by farrowc on 3/7/2016.
  */
-
 var textTable = require("text-table");
 
+var totals = [];
 
-var totals = {
-    projectOne: {
-        major: 0,
-        minor: 0,
-        patch: 0,
-        unmatched: 0
-    },
-    projectTwo: {
-        major: 0,
-        minor: 0,
-        patch: 0,
-        unmatched: 0
+function createSummaryTable(){
+    checkTotalsForErrors();
+	
+	var rows = [];
+	rows.push([""]);
+    rows.push(["major"]);
+    rows.push(["minor"]);
+    rows.push(["patch"]);
+    rows.push(["unmatched"]);
+    
+    for (t in totals) {
+        rows[0].push(totals[t].name);
+        rows[1].push(totals[t].major);
+        rows[2].push(totals[t].minor);
+        rows[3].push(totals[t].patch);
+        rows[4].push(totals[t].unmatched);
     }
-};
+	
+	var table = textTable([
+        rows[0],
+        rows[1],
+        rows[2],
+        rows[3],
+        rows[4]
+	]);
 
-/**
- * Prints the summary table.
- */
-function printSummaryTable() {
-    var summaryTable = createSummaryTable(totals);
-    console.log(summaryTable);
+    console.log(table);
+	return table;
 }
 
-/**
- *  Creates a table of the totals
- * @param dependencyTotals the totals of the dependency attributesg
- * @returns {*}
- */
-function createSummaryTable(dependencyTotals){
-    checkTotals(dependencyTotals);
-    var summaryTable = textTable([
-        ["", "Project One", "Project Two"],
-        ["major", dependencyTotals.projectOne.major,
-            dependencyTotals.projectTwo.major],
-        ["minor", dependencyTotals.projectOne.minor,
-            dependencyTotals.projectTwo.minor],
-        ["patch", dependencyTotals.projectOne.patch,
-            dependencyTotals.projectTwo.patch],
-        ["unmatched", dependencyTotals.projectOne.unmatched,
-            dependencyTotals.projectTwo.unmatched]
-    ], {align: ["l", "l", "l"]});
-    return summaryTable;
-}
-
-function checkTotals(dependencyTotals){
-    if(dependencyTotals == undefined){
+function checkTotalsForErrors(){  
+	if(totals == undefined){
         throw new Error("Summary table error: " +
             "Dependency Totals is undefined");
-    }else if(dependencyTotals.projectOne == undefined){
-        throw new Error("Summary table error: " +
-            "Project One Totals is undefined");
-    }else if(dependencyTotals.projectTwo == undefined){
-        throw new Error("Summary table error: " +
-            "Project Two Totals is undefined");
-    }else if(dependencyTotals.projectOne.major<0){
-        throw new Error("Summary table error: Project One " +
-            "major difference count is negative")
-    }else if(dependencyTotals.projectOne.minor<0){
-        throw new Error("Summary table error: Project One " +
-            "minor difference count is negative")
-    }else if(dependencyTotals.projectOne.patch<0){
-        throw new Error("Summary table error: Project One " +
-            "patch difference count is negative")
-    }else if(dependencyTotals.projectOne.unmatched<0){
-        throw new Error("Summary table error: Project One " +
-            "unmatched difference count is negative")
-    }else if(dependencyTotals.projectTwo.major<0){
-        throw new Error("Summary table error: Project Two " +
-            "major difference count is negative")
-    }else if(dependencyTotals.projectTwo.minor<0){
-        throw new Error("Summary table error: Project Two " +
-            "minor difference count is negative")
-    }else if(dependencyTotals.projectTwo.patch<0){
-        throw new Error("Summary table error: Project Two " +
-            "patch difference count is negative")
-    }else if(dependencyTotals.projectTwo.unmatched<0){
-        throw new Error("Summary table error: Project Two " +
-            "unmatched difference count is negative")
-    }else if(! dependencyTotals.projectOne.hasOwnProperty("major")){
-        throw new Error("Summary table error: Project One " +
-            "major difference count is missing")
-    }else if(! dependencyTotals.projectOne.hasOwnProperty("minor")){
-        throw new Error("Summary table error: Project One " +
-            "minor difference count is missing")
-    }else if(! dependencyTotals.projectOne.hasOwnProperty("patch")){
-        throw new Error("Summary table error: Project One " +
-            "patch difference count is missing")
-    }else if(! dependencyTotals.projectOne.hasOwnProperty("unmatched")){
-        throw new Error("Summary table error: Project One " +
-            "unmatched difference count is missing")
-    }else if(! dependencyTotals.projectTwo.hasOwnProperty("major")){
-        throw new Error("Summary table error: Project Two " +
-            "major difference count is missing")
-    }else if(! dependencyTotals.projectTwo.hasOwnProperty("minor")){
-        throw new Error("Summary table error: Project Two " +
-            "minor difference count is missing")
-    }else if(! dependencyTotals.projectTwo.hasOwnProperty("patch")){
-        throw new Error("Summary table error: Project Two " +
-            "patch difference count is missing")
-    }else if(! dependencyTotals.projectTwo.hasOwnProperty("unmatched")){
-        throw new Error("Summary table error: Project Two " +
-            "unmatched difference count is missing")
     }
+	if (totals.length == 0) {
+		throw new Error("Summary table error: " +
+            "Dependency Totals is empty");
+	} 
+	for(i in totals){
+		var tots = totals[i];
+		if(tots == undefined){
+	        throw new Error("Summary table error: " +
+	            "Project " + i + " Totals is undefined");
+		}else if(!tots.name) {
+			throw new Error("Summary table error: Project " + i +
+	            " does not have a name")
+		}else if(tots.major<0){
+	        throw new Error("Summary table error: " + tots.name +
+	            " major difference count is negative")
+	    }else if(tots.minor<0){
+	        throw new Error("Summary table error: " + tots.name +
+	            " minor difference count is negative")
+	    }else if(tots.patch<0){
+	        throw new Error("Summary table error: " + tots.name +
+	            " patch difference count is negative")
+	    }else if(tots.unmatched<0){
+	        throw new Error("Summary table error: " + tots.name +
+	            " unmatched difference count is negative")
+	    }else if(! tots.hasOwnProperty("major")){
+	        throw new Error("Summary table error: " + tots.name +
+	            " major difference count is missing")
+	    }else if(! tots.hasOwnProperty("minor")){
+	        throw new Error("Summary table error: " + tots.name +
+	            " minor difference count is missing")
+	    }else if(! tots.hasOwnProperty("patch")){
+	        throw new Error("Summary table error: " + tots.name +
+	            " patch difference count is missing")
+	    }else if(! tots.hasOwnProperty("unmatched")){
+	        throw new Error("Summary table error: " + tots.name +
+	            " unmatched difference count is missing")
+	    }
+    }	
 }
 
-module.exports = {printSummaryTable: printSummaryTable,
-    createSummaryTable: createSummaryTable,
-    totals: totals}
+module.exports = {
+    printSummaryTable: createSummaryTable,
+    totals: totals
+}

@@ -1,6 +1,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 var assert = chai.assert;
+require("mocha-sinon");
 
 var parse = require("../../modules/parse");
 
@@ -67,23 +68,53 @@ describe("Parse Tests", function() {
             assert.isFunction(parse.parseDependencies, "true");
         }); // might not be needed
         it("should parse dependencies", function() {
-            var project = parse.parseDependencies("..", 1, false);
+            var project = parse.parseDependencies(".", 1, false);
             assert.isArray(project.dependencies, "Array of dependencies is made");
             assert.isDefined(project.dependencies.async, "Async is in the list");
             assert.isUndefined(project.dependencies.mocha, "Mocha is a devDep");
         });
         it("should parse all dependencies including dev", function() {
-            var project = parse.parseDependencies("..", 1, true);
+            var project = parse.parseDependencies(".", 1, true);
             assert.isArray(project.dependencies, "Array of dependencies is made");
             assert.isDefined(project.dependencies.async, "Async is in the list");
             assert.isDefined(project.dependencies.mocha, "Mocha is included");
         });
         it("should parse all dependencies depth 2", function() {
-            var project = parse.parseDependencies("..", 2, true);
+            var project = parse.parseDependencies(".", 2, true);
             assert.isArray(project.dependencies, "Array of dependencies is made");
             assert.isDefined(project.dependencies.async, "Async is in the list");
             assert.isDefined(project.dependencies.mocha, "Mocha is included");
             assert.isDefined(project.dependencies.glob, "Glob is a dep of npm");
+        });
+    });
+    describe("Is Node Project", function() {
+        it("isNodeProject should be a function", function() {
+            assert.isFunction(parse.isNodeProject, "true");
+        });
+        it("should be a Node project", function() {
+            assert.isTrue(parse.isNodeProject("."));
+        });
+        it("should not be a Node project", function() {
+            assert.isUndefined(parse.isNodeProject(".."));
+        });
+    });
+    describe("Get Node Projects", function() {
+        it("getNodeProjects should be a function", function() {
+            assert.isFunction(parse.getNodeProjects, "true");
+        });
+        it("should return a array of Node projects", function() {
+            parse.getNodeProjects("..", function(projects) {
+                assert.isArray(projects);
+                assert.include(projects.toString(), "Dependency-Comparator");
+            });
+        });
+        it("should log an error on invalid dir", function() {
+            this.sinon.stub(console, "log");
+            parse.getNodeProjects("invalid dir", function(projects) {
+                assert.isUndefined(projects);
+            });
+            expect(console.log.calledWith(
+            "Error: Directory not found 'invalid dir'")).to.be.true;
         });
     });
 });

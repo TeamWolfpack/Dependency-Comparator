@@ -1,5 +1,7 @@
 var path = require("path");
+var fs = require("fs");
 var allDependencies;
+var maxDepth;
 
 /**
  * Turns the string representation of a version into a
@@ -26,6 +28,46 @@ function parseVersion(stringVersion) {
 }
 
 /**
+ * Returns all the node projects in the given directory
+ *
+ * @param {string} directory String representation of a directory
+ */
+function getNodeProjects(directory, callback) {
+	var projects = [];
+	try {
+		directory = path.normalize(directory);
+		var content = fs.readdirSync(directory);
+		for (d in content){
+			var dir = path.join(directory, content[d]);
+			if (isNodeProject(dir)){
+				projects.push(dir);
+			}
+		}
+	} catch (err) {
+		var message = err.code === "ENOENT" ? 
+			"Error: Directory not found \'" + directory + "\'" :
+			"Error: Failure reading directory \'" + directory + "\'";
+		console.log(message);
+		return;
+	}
+	if (projects.length < 1){
+		console.log("No projects in directory: \'" + directory + "\'");
+		return;
+	}
+	return callback(projects);
+}
+
+function isNodeProject(dir){
+	var stats = fs.statSync(dir);
+	if (stats && stats.isDirectory()){
+		var project = fs.readdirSync(dir);
+		if (project && project.indexOf("package.json") > -1){
+			return true;
+		}
+	}
+}
+
+/**
  * Takes in the location of the root file of the project and outputs
  * an object with the name, path, and dependencies of the project.
  *
@@ -37,24 +79,25 @@ function parseVersion(stringVersion) {
  */
 function parseDependencies(project, depth, includeDev) {
     allDependencies = includeDev;
-    var packageJSON = require(path.normalize(project + "/package.json"));
-
+	maxDepth = depth;
+    
+	var pathToPackageJSON = path.join(project, "package.json");
+	var packageJSON = JSON.parse(fs.readFileSync(pathToPackageJSON));
+	
     var fileParsedDependencies = {
-        name: packageJSON.name.toString(),
-        path: project.toString(),
+        name: packageJSON.name,
+        path: project,
         dependencies: []
     };
 
-    parseDependenciesRecursively(project, depth,
+    parseDependenciesRecursively(project, packageJSON, depth,
         fileParsedDependencies.dependencies, ".");
 
     return fileParsedDependencies;
 }
 
-function parseDependenciesRecursively(project, depth, dependencies,
-                                      previousDependencyPath) {
-    //Get the package.json for the project
-    var packageJSON = require(path.normalize(project + "/package.json"));
+function parseDependenciesRecursively(baseProject, packageJSON, depth,
+										dependencies, parentPath) {
     //Get the dependencies of the project
     var fileDep = packageJSON.dependencies;
     if (allDependencies) {
@@ -66,24 +109,24 @@ function parseDependenciesRecursively(project, depth, dependencies,
     }
     for (dep in fileDep) {
         try {
-            if (!dependencies[dep]) {
+			var pathToSubJSON = path.join(baseProject, "node_modules", dep, "package.json");
+			var subPackageJSON = JSON.parse(fs.readFileSync(pathToSubJSON));
+			var pathToSubDependency = path.join(parentPath, "node_modules", dep);
+			
+			if (!dependencies[dep]) {
                 dependencies[dep] = [];
             }
-            var dependency = require(path.normalize(project +
-                "/node_modules/" + dep + "/package.json"));
+			
             dependencies[dep][dependencies[dep].length] =
             {
-                version: dependency.version,
-                path: path.normalize(previousDependencyPath +
-                    "/node_modules/" + dep)
+                version: subPackageJSON.version,
+                path: pathToSubDependency,
+				depth: maxDepth - depth + 1
             };
 
             if (depth - 1 >= 0) {
-                parseDependenciesRecursively(path.normalize(project +
-                        "/node_modules/" + dep), depth - 1, dependencies,
-                    path.normalize(previousDependencyPath +
-                        "/node_modules/" + dep));
-
+                parseDependenciesRecursively(pathToSubDependency, subPackageJSON,
+												depth - 1, dependencies, pathToSubDependency);
             }
         } catch (err) {
             // No node_modules after a certain depth so module not
@@ -94,5 +137,7 @@ function parseDependenciesRecursively(project, depth, dependencies,
 
 module.exports = {
     parseVersion: parseVersion,
-    parseDependencies: parseDependencies
+    parseDependencies: parseDependencies,
+	getNodeProjects: getNodeProjects,
+	isNodeProject: isNodeProject
 }

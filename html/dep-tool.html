@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>dep-tool</title>
+    <link rel="stylesheet" type="text/css" href="dep-tool.css">
+    <!--Include BootStrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!--Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>io.connect('localhost:' + <%= port %>);</script>
+	<script type="text/javascript">var maxDepth = <%= depth %></script>
+</head>
+<body>
+<div class="container-fluid" id="menu" data-spy="affix" data-offset-top="-1">
+    <div id="mainFilters">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="projectFilter">
+                    Project Filter
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="dependencyFilter">
+                    Dependency Filter
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <div class="checkbox">
+                    <label><input id="exclude" type="checkbox" value="" checked>Exclude Filters</label>
+                </div>
+            </div>
+            <div class="col-sm-1 col-sm-offset-2">
+                <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#moreFilters" id="moreButton">More</button>
+            </div>
+        </div>
+    </div>
+    <div id="moreFilters" class="collapse">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <select class="form-control" id="depthFilter">
+                    </select>
+                    Depth Filter
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input id="Mjr" type="checkbox" value="" checked>Major</label>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input id="Mnr" type="checkbox" value="" checked>Minor</label>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input id="Ptch" type="checkbox" value="" checked>Patch</label>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input id="UTD" type="checkbox" value="" checked>Up To Date</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input type="checkbox" value="">Unmatched</label>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="checkbox">
+                    <label><input type="checkbox" value="">devDependencies</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="submitButtonRow" class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-primary" id="filterButton">Filter</button>
+            </div>
+            <!--    The save button is being commented out.
+                    When saving the table, we were just saving the html code for the table without the css
+                    or the javascript code. This caused the saved table to have no color or have the hover
+                    feature which helped when the table because really big. -->
+            <!--<div class="col-sm-3">-->
+                <!--<a href="" id="a"><button type="button" class="btn btn-primary" id="saveButton">Save</button></a>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+
+<div id="resultDiv" class="container-fluid">
+    <div id="resultTable">
+        <table id="htmlTable" class="table table-bordered table-striped"></table>
+	</div>
+	<script type="text/javascript">var table = <%- table %></script>
+    <script src="htmlTableCreator.js"></script>
+</div>
+</body>
+</html>
