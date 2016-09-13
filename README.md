@@ -60,7 +60,7 @@ OR
 <code>dep-tool compare "[project_path]" --hideUnmatched</code></pre>
 
 <h2 id="Filtering">Filtering</h2>
-<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/filter.JPG" alt="Failed to load screenshot Relative Support">
+<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/filter.PNG" alt="Failed to load screenshot Relative Support">
 In the web page, there is the ability to filter the contents of the table. The filters include: project names, dependency names, versions, and unmatched dependencies. 
 
 <details>
