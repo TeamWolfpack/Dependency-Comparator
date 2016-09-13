@@ -62,6 +62,10 @@ or
   <pre><code>dep-tool compare "[project_path]" --hideUnmatched</code></pre>
 </details>
 
+<h2 id="DependencyTable">Dependency Table</h2>
+<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Dependency%20Table.JPG" alt="Failed to load screenshot Dependecy Table">
+The Dependency Table allows the user to view all dependencies of the provided project(s). It is served on a web page via a built in web server that will close when the page is closed. It allows for user interaction. If the user hovers over a path cell then a tooltip will display extra information about that dependency.
+
 <h2 id="Filtering">Filtering</h2>
 <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/filter.PNG" alt="Failed to load screenshot Relative Support">
 In the web page, there is the ability to filter the contents of the table. The filters include: project names, dependency names, versions, and unmatched dependencies. 
