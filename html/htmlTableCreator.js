@@ -90,7 +90,7 @@ console.log(document.getElementById("menu"));
 function download(name) {
     var a = document.getElementById("a");
     var htmlHeaders = "<html><head>"
-            +"<meta charset=\"UTF-8\">"
+            + "<meta charset=\"UTF-8\">"
             + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
             + "<title>dep-tool</title>"
             + "<link rel=\"stylesheet\" type=\"text/css\" href=\"dep-tool.css\">"
