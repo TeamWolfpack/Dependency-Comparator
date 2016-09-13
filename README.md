@@ -29,7 +29,7 @@ or
 <pre><code>dep-tool cmp "[project_path]"</code></pre>
 
 <details>
-	<summary><h2>More on Compare...</h2></summary>
+	<summary>More on Compare...</summary>
     
     <h3 id="devDependencies">Compare with devDependencies</h3>
     The command above will look through the package.json file to find the list of dependencies before going through the node_modules package to get the current versions of each dependency. However, you may want to have both the list of dependencies and devDependencies being compared. In order to compare both, all you need to do is add the option "-a" or "--all".
@@ -67,7 +67,7 @@ or
 In the web page, there is the ability to filter the contents of the table. The filters include: project names, dependency names, versions, and unmatched dependencies. 
 
 <details>
-  <summary><h2>Information specific to CLI use...</h2></summary>
+  <summary>Information specific to CLI use...</summary>
 
   <h3 id="CompareColorConfig">Compare Color Configuration</h3>
   Since the default color scheme for identifying how out-of-date a dependency is consists of red and green, a common colorblind color pair, we added a Color Blind color configuration to help solve that. These color schemes can be changed and this is explain more in the <a href="#ColorConfig">Color Configuration</a> section. <b>NOTE:</b> In order to use this option, xTerm needs to be supported in your OS.
