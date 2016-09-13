@@ -20,7 +20,7 @@ If you don't wish to install the dependency-comparator globally, all you need to
 ##Compare
 
 <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Compare.JPG" atl="Failed to load screenshot of Compare Command">
-<p>If you want to compare the dependencies between multiple Node projects, you will want to use the compare method. This will produce a table that will shows the path and version of each dependency in all projects, as well as match and compare them with the other project. All dependencies that are found in all projects appear at the top of the table while all dependencies that don't exist in all projects are listed toward the bottom of the table. In addition, a logfile is stored in the directory where the program is saved by npm (by default in the global npm modules folder under dependency-comparator).  This logfile contains a json file that contains the information about the comparison.</p>
+<p>Use the compare method to compare the dependencies between one or more Node projects. Projects can be entered as relative or absolute paths. The command will produce a table that will shows the path and version of each dependency in all projects, matching them with the other projects. Dependencies found in all projects appear at the top of the table while dependencies that only exist in some projects are listed toward the bottom of the table. In addition, a logfile is stored in the directory where the program is saved by npm (by default in the global npm modules folder under dependency-comparator). This logfile contains a json representation of the information about the comparison.</p>
 
 <pre><code>dep-tool compare "[project_path]"</code></pre>
 
@@ -69,7 +69,7 @@ The Dependency Table allows the user to view all dependencies of the provided pr
 <h2 id="Filtering">Filtering</h2>
 <img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/filter.PNG" alt="Failed to load screenshot Relative Support">
 In the web page, there is the ability to filter the contents of the table. The filters include: project names, dependency names, versions, and unmatched dependencies.
-**NOTE:** Multiple projects and dependencies can be entered by separating them with a semicolon.
+**NOTE:** Multiple projects and dependencies can be entered by separating them with a semicolon and space.
 
 <details>
   <summary>Information specific to CLI use...</summary>
