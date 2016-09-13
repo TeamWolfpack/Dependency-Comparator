@@ -2,7 +2,7 @@
 [![Dependency Status](https://david-dm.org/TeamWolfpack/Dependency-Comparator.svg)](https://david-dm.org/TeamWolfpack/Dependency-Comparator)
 
 <p>
-<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/Juicy Demo.gif" atl="Failed to load juicy demo">
+<img src="https://raw.githubusercontent.com/TeamWolfpack/Dependency-Comparator/dev/screenshots/guigif.gif" atl="Failed to load juicy demo">
 </p>
 
 ##Synopsis
